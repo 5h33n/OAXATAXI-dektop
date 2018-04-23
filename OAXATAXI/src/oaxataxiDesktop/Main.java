@@ -1,7 +1,16 @@
 package oaxataxiDesktop;
+import java.io.IOException;
+import ifg.*;
 
 public class Main {
 	public static void main(String...args){
-		System.out.println("hola wey :(");
+		//Login l = new Login();
+				try {
+					Principal p = new Principal();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 	}
 }

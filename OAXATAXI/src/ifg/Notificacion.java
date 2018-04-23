@@ -52,12 +52,12 @@ public class Notificacion extends JFrame
         adFoto.setBounds(50, 140, 150, 40);
         sPanel.add(adFoto);
         
-        Button añadir = new Button();
-        añadir.setText("Añadir");
-        añadir.setFont(new Font("Arial", Font.BOLD, 12));
-        añadir.setColor1(Color.white.brighter());
-        añadir.setBounds(185,180,90,30);
-        sPanel.add(añadir);
+        Button anadir = new Button();
+        anadir.setText("Añadir");
+        anadir.setFont(new Font("Arial", Font.BOLD, 12));
+        anadir.setColor1(Color.white.brighter());
+        anadir.setBounds(185,180,90,30);
+        sPanel.add(anadir);
         
         foto.setIcon(new ImageIcon("../foto base.jpg"));
         foto.setBounds(180,140,100,100);

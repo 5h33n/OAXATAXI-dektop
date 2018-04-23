@@ -47,23 +47,23 @@ public class Principal extends JFrame implements Runnable
         cerrar = new JButton();
         
         JLabel barra = new JLabel();
-        barra.setIcon(new ImageIcon("../barra.jpg"));
+        barra.setIcon(new ImageIcon("../img/barra.jpg"));
         barra.setBounds(0,0,823,45);
         this.add(barra);
         
-        alerta.setIcon(new ImageIcon("../alerta.PNG"));
+        alerta.setIcon(new ImageIcon("../img/alerta.png"));
         alerta.setBounds(823,0,65,45);
         this.add(alerta);
         
-        notif.setIcon(new ImageIcon("../notificacion.PNG"));
+        notif.setIcon(new ImageIcon("../img/notificacion.png"));
         notif.setBounds(888,0,65,45);
         this.add(notif);
         
-        admin.setIcon(new ImageIcon("../admin.PNG"));
+        admin.setIcon(new ImageIcon("../img/admin.PNG"));
         admin.setBounds(953,0,192,45);
         this.add(admin);
         
-        cerrar.setIcon(new ImageIcon("../cerrar.PNG"));
+        cerrar.setIcon(new ImageIcon("../img/cerrar.png"));
         cerrar.setBounds(1145,0,55,45);
         this.add(cerrar);  
         
@@ -114,13 +114,15 @@ public class Principal extends JFrame implements Runnable
         lbHora.setBounds(900,100,200,50);
         this.add(lbHora);
         
+        ImageIcon l = new ImageIcon(getClass().getResource("/img/logo.jpg"));
         JLabel logo = new JLabel();
-        logo.setIcon(new ImageIcon("../logo.jpg"));
+        logo.setIcon(l);
         logo.setBounds(850,400,280,100);
         this.add(logo);
         
+        ImageIcon f = new ImageIcon(getClass().getResource("/img/fondo.png"));
         fondo = new JLabel();
-        fondo.setIcon(new ImageIcon("fondo.png"));
+        fondo.setIcon(f);
         fondo.setBounds(0,45,1200,550);
         this.add(fondo);
     }
