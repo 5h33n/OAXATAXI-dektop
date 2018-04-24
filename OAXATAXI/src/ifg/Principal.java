@@ -5,13 +5,12 @@ import java.awt.event.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.*;
 import java.io.*;
-public class Principal extends JFrame implements Runnable
-{
+public class Principal extends JFrame implements Runnable {
     
     private JButton cerrar,notif, alerta;
     private JLabel titulo = new JLabel("OAXATAXI");
     private JLabel admin = new JLabel();
-    private JLabel viajes = new JLabel("Viajes del dÃ­a");
+    private JLabel viajes = new JLabel("Viajes del día");
     private Button verMapa, notificar;
     private JTable tabla1 = new JTable();
     private String hora, minutos, segundos, ampm;
@@ -33,8 +32,7 @@ public class Principal extends JFrame implements Runnable
         h1.start();
     }
     
-    public void crearComponentes()
-    {
+    public void crearComponentes() {
         this.setSize(1200, 600);
         this.setLayout(null);  
         
@@ -45,25 +43,31 @@ public class Principal extends JFrame implements Runnable
         alerta = new JButton();
         notif = new JButton();
         cerrar = new JButton();
-        
+        cerrar.addMouseListener(new Click());
         JLabel barra = new JLabel();
-        barra.setIcon(new ImageIcon("../img/barra.jpg"));
+        
+        ImageIcon b = new ImageIcon(getClass().getResource("/img/barra.jpg"));
+        barra.setIcon(b);
         barra.setBounds(0,0,823,45);
         this.add(barra);
         
-        alerta.setIcon(new ImageIcon("../img/alerta.png"));
+        ImageIcon al = new ImageIcon(getClass().getResource("/img/alerta.png"));
+        alerta.setIcon(al);
         alerta.setBounds(823,0,65,45);
         this.add(alerta);
         
-        notif.setIcon(new ImageIcon("../img/notificacion.png"));
+        ImageIcon n = new ImageIcon(getClass().getResource("/img/notificacion.png"));
+        notif.setIcon(n);
         notif.setBounds(888,0,65,45);
         this.add(notif);
         
-        admin.setIcon(new ImageIcon("../img/admin.PNG"));
+        ImageIcon a = new ImageIcon(getClass().getResource("/img/admin.png"));
+        admin.setIcon(a);
         admin.setBounds(953,0,192,45);
         this.add(admin);
         
-        cerrar.setIcon(new ImageIcon("../img/cerrar.png"));
+        ImageIcon c= new ImageIcon(getClass().getResource("/img/cerrar.png"));
+        cerrar.setIcon(c);
         cerrar.setBounds(1145,0,55,45);
         this.add(cerrar);  
         
@@ -144,7 +148,16 @@ public class Principal extends JFrame implements Runnable
         minutos = calendario.get(Calendar.MINUTE)>9?""+calendario.get(Calendar.MINUTE):"0"+calendario.get(Calendar.MINUTE);
         segundos = calendario.get(Calendar.SECOND)>9?""+calendario.get(Calendar.SECOND):"0"+calendario.get(Calendar.SECOND);
     }
-
+    private class Click extends MouseAdapter{
+    	public void mouseClicked(MouseEvent e) {
+    		if (e.getSource() == cerrar) {
+    			cerrar();
+    		}
+    	}
+    }
+    public void cerrar() {
+    	System.exit(0);
+    }
     public void run()
     {
         Thread ct = Thread.currentThread();

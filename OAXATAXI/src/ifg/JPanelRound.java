@@ -8,10 +8,6 @@ import java.awt.Paint;
 import java.awt.RenderingHints; import java.awt.geom.RoundRectangle2D;
 import javax.swing.JPanel;
 
-/**
-*
-* @author Edisoncor
-*/
 public class JPanelRound extends JPanel{
 
     private Color colorPrimario = new Color(255,255,255);

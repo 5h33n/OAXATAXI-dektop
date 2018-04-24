@@ -2,9 +2,7 @@ package ifg;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-public class Notificacion extends JFrame
-{
-    JFrame principal = new JFrame();
+public class Notificacion extends JFrame {
     JLabel envNot = new JLabel("Enviar Notificación");
     JLabel adFoto = new JLabel("Adjuntar Foto");
     JLabel asunto = new JLabel("Asunto:");
@@ -12,20 +10,19 @@ public class Notificacion extends JFrame
     JLabel foto = new JLabel();
     JTextArea desAsunto = new JTextArea();
     Button botAgregar,cancelar;
-    public Notificacion()
-    {
-        principal.setUndecorated(true);
-        principal.setSize(399, 399);
-        principal.setVisible(true);
-        principal.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        principal.setLayout(new BorderLayout());        
-        principal.setLocationRelativeTo(null);
+    public Notificacion() {
+        this.setUndecorated(true);
+        this.setSize(399, 399);
+        this.setVisible(true);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setLayout(new BorderLayout());        
+        this.setLocationRelativeTo(null);
         crearComponentes();
     }
     
     public void crearComponentes()
     {
-        principal.setSize(400,400);
+        this.setSize(400,400);
         
         JPanel sPanel = new JPanel();       
         sPanel.setLayout(null);
@@ -37,7 +34,7 @@ public class Notificacion extends JFrame
         contentPane.setPreferredSize(new Dimension(500, 400));
         contentPane.add(scrollPane);
         contentPane.setBounds(30,30,340,320);
-        principal.add(contentPane);
+        this.add(contentPane);
         
         envNot.setFont(new Font("Arial", Font.BOLD, 30));
         envNot.setBounds(30,10,300,40);
@@ -59,6 +56,7 @@ public class Notificacion extends JFrame
         anadir.setBounds(185,180,90,30);
         sPanel.add(anadir);
         
+        ImageIcon fo = new ImageIcon(getClass().getResource("/img/fondo.png"));
         foto.setIcon(new ImageIcon("../foto base.jpg"));
         foto.setBounds(180,140,100,100);
         sPanel.add(foto);
@@ -73,7 +71,7 @@ public class Notificacion extends JFrame
         botAgregar.setColor1(new Color(255, 196, 0));
         botAgregar.setColor2(new Color(202, 147, 0));
         botAgregar.setBounds(50,364,90,30);
-        principal.add(botAgregar);
+        this.add(botAgregar);
         
         cancelar = new Button();
         cancelar.setText("Cancelar");
@@ -81,14 +79,15 @@ public class Notificacion extends JFrame
         cancelar.setColor1(new Color(255, 196, 0));
         cancelar.setColor2(new Color(202, 147, 0));
         cancelar.setBounds(220,364,90,30);
-        principal.add(cancelar);
+        this.add(cancelar);
         
         desAsunto.setBounds(50,280,200,100);
         sPanel.add(desAsunto);
         
+        ImageIcon f = new ImageIcon(getClass().getResource("/img/fondo2.png"));
         JLabel fondo = new JLabel();
-        fondo.setIcon(new ImageIcon("../fondo2.PNG"));
+        fondo.setIcon(f);
         fondo.setBounds(0,0,400,400);
-        principal.add(fondo);
+        this.add(fondo);
     }
 }

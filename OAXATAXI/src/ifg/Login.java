@@ -13,7 +13,7 @@ public class Login extends JFrame
     private Color colorAdmin = new Color(251, 255, 197);
     
     public Login () {
-    		crearComponentes();
+    	crearComponentes();
         this.setUndecorated(true);
         this.setSize(500, 535);
         this.setVisible(true);
@@ -28,8 +28,8 @@ public class Login extends JFrame
 
         // Definicion de parametros de los componentes
         administrador = new JLabel("Administrador");
-        contrasena = new JLabel("ContraseÃ±a");
-        olvidarContrasena = new JLabel("OlvidÃ© mi contraseÃ±a");
+        contrasena = new JLabel("Contraseña");
+        olvidarContrasena = new JLabel("Olvidé mi contraseña");
         pregunta = new JButton("?");
         pregunta.setBackground(Color.blue);
         pregunta.setForeground(Color.white);
@@ -112,7 +112,7 @@ public class Login extends JFrame
         
         //termina panel de componentes
         
-        // AÃ±adir boton de pregunta y de cerrar
+        // Añadir boton de pregunta y de cerrar
         pC.add(pregunta);
         pC.add(cerrar);
         preguntaCerrar.add(sPCent, BorderLayout.CENTER);
