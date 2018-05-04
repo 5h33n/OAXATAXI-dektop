@@ -1,25 +1,42 @@
 package ifg;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.*;
 import java.io.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 public class Principal extends JFrame implements Runnable {
     
     private JButton cerrar,notif, alerta;
     private JLabel titulo = new JLabel("OAXATAXI");
     private JLabel admin = new JLabel();
-    private JLabel viajes = new JLabel("Viajes del dÃ­a");
+    private JLabel viajes = new JLabel("Viajes del día");
     private Button verMapa, notificar;
-    private JTable tabla1 = new JTable();
+    private DefaultTableModel dtm;
+    private JTable table = new JTable(dtm);
     private String hora, minutos, segundos, ampm;
     private Calendar calendario;
     private Thread h1;
     JLabel lbHora = new JLabel();
     private JLabel fondo;
+    //VARIABLES DE DB
+    private Connection conexion=null;
+    ResultSet resultado;
+    Statement sentencia;
+    
+    
     public Principal() throws IOException
     {
+    	
     		crearComponentes();
         this.setUndecorated(true);
         //this.setSize(500, 535);
@@ -30,6 +47,12 @@ public class Principal extends JFrame implements Runnable {
         
         h1 = new Thread(this);
         h1.start();
+        try {
+			mostrar();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     public void crearComponentes() {
@@ -77,7 +100,7 @@ public class Principal extends JFrame implements Runnable {
         this.add(titulo);
         
         viajes.setFont(new Font("Segoe UI Black", Font.BOLD, 23));
-        viajes.setBounds(95,180,180,50);
+        viajes.setBounds(95,180,480,50);
         this.add(viajes);
         
         verMapa = new Button();
@@ -101,12 +124,28 @@ public class Principal extends JFrame implements Runnable {
         this.add(notificar);
         
         JPanel sPanel = new JPanel();
+        String [][] matriz = {};
+        String [] vector = {"id","nombre"};
+        dtm = new DefaultTableModel(matriz,vector);
+        sPanel =new JPanel();
+	     sPanel.setLayout(new BorderLayout());
+	     dtm= new DefaultTableModel(matriz,vector) {
+	    	 public boolean isCellEditable(int row, int column) {
+	    		 return false;
+	    	 }
+	     };
+	     table = new JTable(dtm);
+		 table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+		 JScrollPane scrollPane = new JScrollPane(table); 
+        sPanel.add(scrollPane);
+        table.requestFocus();
+        
         /*
         for (int i = 0; i < 10; i++) {
             sPanel.add(new JButton("Hello-" + i));
         }
         */
-        JScrollPane scrollPane = new JScrollPane(sPanel);
+        //JScrollPane scrollPane = new JScrollPane(sPanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         scrollPane.setBounds(0, 0, 700, 200);
@@ -189,5 +228,49 @@ public class Principal extends JFrame implements Runnable {
             this.add(lbHora);
             this.add(fondo);
         }
+    }
+    //conexion bd
+    public void conexionDB() throws SQLException {
+    	try {
+			Class.forName("org.postgresql.Driver");
+			String url="jdbc:postgresql://localhost:5432/postgres";
+			conexion = DriverManager.getConnection(url,"postgres","Pacomegoma12");
+			if (conexion!=null) {
+				System.out.println("Conexion exitosa alv");
+			}else {
+				JOptionPane.showMessageDialog(null,"Conexion fallida alv");
+			}
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    public void siguiente() {
+    	try {
+    		String id_viaje = resultado.getString("id_viaje");
+    		String hinicio = resultado.getString("hora_inicio");
+    		String hfinal = resultado.getString("hora_final");
+    		String origen = resultado.getString("origen");
+    		String destino = resultado.getString("destino");
+    		String cobrado = resultado.getString("monto_pagado");
+    		
+    		String [] modelo={id_viaje,hinicio,hfinal,origen,destino,cobrado};
+    		dtm.addRow(modelo);
+    	}catch(Exception e) {
+    		//
+    	}
+    }
+    public void mostrar() throws SQLException {
+    	try {
+			conexionDB();
+			sentencia = conexion.createStatement();
+			resultado = sentencia.executeQuery("SELECT * FROM OAXATAXI.VIAJE");
+			siguiente();
+			table = new JTable(dtm);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+	    } finally {
+	        if (sentencia != null) { sentencia.close(); }
+	    }
     }
 }
