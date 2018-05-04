@@ -2,24 +2,25 @@ package ifg;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 public class Mapa extends JFrame {
     JButton cerrar = new JButton();
     public Mapa() {
         this.setUndecorated(true);
         this.setVisible(true);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLayout(new BorderLayout());        
         this.setLocation(100,100);
         crearComponentes();
     }
     
-    public void crearComponentes()
-    {
+    public void crearComponentes() {
         this.setSize(800,600);
         
         ImageIcon c = new ImageIcon(getClass().getResource("/img/cerrar.png"));
         cerrar.setIcon(c);
         cerrar.setBounds(745,0,55,45);
+        cerrar.addMouseListener(new Click());
         this.add(cerrar);
         
         JPanel sPanel = new JPanel();
@@ -65,4 +66,14 @@ public class Mapa extends JFrame {
         fondo.setBounds(0,0,800,600);
         this.add(fondo);
     }
+    private class Click extends MouseAdapter{
+		public void mouseClicked(MouseEvent e) {
+			if (e.getSource() == cerrar) {
+				ocultar();
+			}
+		}
+}
+public void ocultar() {
+		this.dispose();
+}
 }

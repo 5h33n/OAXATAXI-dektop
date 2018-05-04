@@ -10,7 +10,7 @@ public class Principal extends JFrame implements Runnable {
     private JButton cerrar,notif, alerta;
     private JLabel titulo = new JLabel("OAXATAXI");
     private JLabel admin = new JLabel();
-    private JLabel viajes = new JLabel("Viajes del día");
+    private JLabel viajes = new JLabel("Viajes del dÃ­a");
     private Button verMapa, notificar;
     private JTable tabla1 = new JTable();
     private String hora, minutos, segundos, ampm;
@@ -87,6 +87,7 @@ public class Principal extends JFrame implements Runnable {
         verMapa.setColor1(new Color(255, 196, 0));
         verMapa.setColor2(new Color(202, 147, 0));
         verMapa.setBounds(875,220,195,50);
+        verMapa.addMouseListener(new Click());
         this.add(verMapa);
             
         notificar = new Button();
@@ -96,6 +97,7 @@ public class Principal extends JFrame implements Runnable {
         notificar.setColor1(new Color(255, 196, 0));
         notificar.setColor2(new Color(202, 147, 0));
         notificar.setBounds(875,285,195,50);
+        notificar.addMouseListener(new Click());
         this.add(notificar);
         
         JPanel sPanel = new JPanel();
@@ -118,10 +120,11 @@ public class Principal extends JFrame implements Runnable {
         lbHora.setBounds(900,100,200,50);
         this.add(lbHora);
         
-        ImageIcon l = new ImageIcon(getClass().getResource("/img/logo.jpg"));
+        ImageIcon l = new ImageIcon(getClass().getResource("/img/logo.png"));
+        ImageIcon lo = new ImageIcon(l.getImage().getScaledInstance(180, 120, Image.SCALE_DEFAULT));
         JLabel logo = new JLabel();
-        logo.setIcon(l);
-        logo.setBounds(850,400,280,100);
+        logo.setIcon(lo);
+        logo.setBounds(870,400,280,200);
         this.add(logo);
         
         ImageIcon f = new ImageIcon(getClass().getResource("/img/fondo.png"));
@@ -152,6 +155,12 @@ public class Principal extends JFrame implements Runnable {
     	public void mouseClicked(MouseEvent e) {
     		if (e.getSource() == cerrar) {
     			cerrar();
+    		}
+    		if (e.getSource() == verMapa) {
+    			Mapa m = new Mapa();
+    		}
+    		if (e.getSource() == notificar) {
+    			Notificacion n = new Notificacion();
     		}
     	}
     }

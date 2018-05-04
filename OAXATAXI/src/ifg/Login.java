@@ -2,8 +2,8 @@ package ifg;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-public class Login extends JFrame
-{
+import java.io.IOException;
+public class Login extends JFrame {
     //Declaracion de componentes de la ventana
     private JLabel administrador, contrasena, olvidarContrasena;
     private JERoundTextField cajaAdministrador, cajaContrasena;
@@ -12,8 +12,31 @@ public class Login extends JFrame
     private Color colorFondo = new Color(242, 253, 79);
     private Color colorAdmin = new Color(251, 255, 197);
     
+    private class Click extends MouseAdapter{
+    		public void mouseClicked(MouseEvent e) {
+    			if (e.getSource() == cerrar) {
+    				cerrar();
+    			}
+    			if (e.getSource() == iniciar) {
+    				try {
+    					Principal p = new Principal();
+    					ocultar();
+    				} catch (IOException ex) {
+    					// TODO Auto-generated catch block
+    					ex.printStackTrace();
+    				}
+    				
+    			}
+    		}
+    }
+    public void cerrar() {
+    		System.exit(0);
+    }
+    public void ocultar() {
+    		this.dispose();
+    }
     public Login () {
-    	crearComponentes();
+    		crearComponentes();
         this.setUndecorated(true);
         this.setSize(500, 535);
         this.setVisible(true);
@@ -21,22 +44,22 @@ public class Login extends JFrame
         this.setLayout(new BorderLayout());        
         this.setLocationRelativeTo(null);
     }
-
-    public void crearComponentes()
-    {
+    public void crearComponentes() {
         this.setSize(500, 510);
 
         // Definicion de parametros de los componentes
         administrador = new JLabel("Administrador");
-        contrasena = new JLabel("Contraseña");
-        olvidarContrasena = new JLabel("Olvidé mi contraseña");
+        contrasena = new JLabel("ContraseÃ±a");
+        olvidarContrasena = new JLabel("Olvide mi contraseÃ±a");
         pregunta = new JButton("?");
         pregunta.setBackground(Color.blue);
         pregunta.setForeground(Color.white);
         cerrar = new JButton("X");
         cerrar.setBackground(Color.red);
         cerrar.setForeground(Color.white);
+        cerrar.addMouseListener(new Click());
         iniciar = new Button();
+        iniciar.addMouseListener(new Click());
         cajaAdministrador = new JERoundTextField();
         cajaContrasena = new JERoundTextField();
         // termina la definicion de parametros de los componentes
@@ -112,7 +135,7 @@ public class Login extends JFrame
         
         //termina panel de componentes
         
-        // Añadir boton de pregunta y de cerrar
+        // AÃ±adir boton de pregunta y de cerrar
         pC.add(pregunta);
         pC.add(cerrar);
         preguntaCerrar.add(sPCent, BorderLayout.CENTER);

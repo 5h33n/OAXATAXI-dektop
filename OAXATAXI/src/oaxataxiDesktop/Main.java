@@ -4,13 +4,16 @@ import ifg.*;
 
 public class Main {
 	public static void main(String...args){
-		//Login l = new Login();
-				try {
+		Login l = new Login();
+		/*		try {
 					Principal p = new Principal();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+		*/
+		//Desplegable d = new Desplegable();
+		//Mapa m = new Mapa();
+		//Notificacion n = new Notificacion();
 	}
 }

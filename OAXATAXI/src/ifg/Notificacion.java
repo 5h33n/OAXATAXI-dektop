@@ -2,6 +2,7 @@ package ifg;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 public class Notificacion extends JFrame {
     JLabel envNot = new JLabel("Enviar Notificación");
     JLabel adFoto = new JLabel("Adjuntar Foto");
@@ -12,14 +13,23 @@ public class Notificacion extends JFrame {
     Button botAgregar,cancelar;
     public Notificacion() {
         this.setUndecorated(true);
-        this.setSize(399, 399);
+        //this.setSize(399, 399);
         this.setVisible(true);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setLayout(new BorderLayout());        
-        this.setLocationRelativeTo(null);
+        this.setLocation(100,100);
         crearComponentes();
     }
-    
+    private class Click extends MouseAdapter{
+		public void mouseClicked(MouseEvent e) {
+			if (e.getSource() == cancelar) {
+				ocultar();
+			}
+		}
+}
+public void ocultar() {
+		this.dispose();
+}
     public void crearComponentes()
     {
         this.setSize(400,400);
@@ -79,6 +89,7 @@ public class Notificacion extends JFrame {
         cancelar.setColor1(new Color(255, 196, 0));
         cancelar.setColor2(new Color(202, 147, 0));
         cancelar.setBounds(220,364,90,30);
+        cancelar.addMouseListener(new Click());
         this.add(cancelar);
         
         desAsunto.setBounds(50,280,200,100);
