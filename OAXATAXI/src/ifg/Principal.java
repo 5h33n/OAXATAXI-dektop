@@ -16,11 +16,11 @@ import java.sql.Statement;
 
 public class Principal extends JFrame implements Runnable {
     
-    private JButton cerrar,notif, alerta,options;
+    private JButton cerrar,notif, alerta;
     private JLabel titulo = new JLabel("OAXATAXI");
     private JLabel admin = new JLabel();
-    private JLabel viajes = new JLabel("Viajes del dï¿½a");
-    private Button verMapa, notificar;
+    private JLabel viajes = new JLabel("Viajes del día");
+    private Button verMapa, notificar,options;
     private DefaultTableModel dtm;
     private JTable table = new JTable(dtm);
     private String hora, minutos, segundos, ampm;
@@ -56,7 +56,11 @@ public class Principal extends JFrame implements Runnable {
         this.setLayout(null);  
         
         JPanelSuperior barraTitulo = new JPanelSuperior();
-        
+        des = new Desplegable();
+        des.setLocation(0, 45);
+        des.setVisible(false);
+        des.addMouseListener(new Click());
+        this.add(des);
         this.add(barraTitulo);
         
         alerta = new JButton();
@@ -166,6 +170,14 @@ public class Principal extends JFrame implements Runnable {
         fondo.setIcon(f);
         fondo.setBounds(0,45,1200,550);
         this.add(fondo);
+        options = new ifg.Button();
+        options.setForeground(Color.black);
+        options.setColor1(new Color(255, 196, 0));
+        options.setColor2(new Color(202, 147, 0));
+        options.setBounds(0,45,100,70);
+        options.setBorder(null);
+        options.addMouseListener(new Click());
+        this.add(options);
     }
     
     public void calcular(){
@@ -269,15 +281,7 @@ public class Principal extends JFrame implements Runnable {
 	         sentencia.close();
 	         conexion.close();
 			//table = new JTable(dtm);
-	         des = new Desplegable();
-	         des.setLocation(0, 45);
-	         des.setVisible(false);
-	         des.addMouseListener(new Click());
-	         this.add(des);
-	         options = new JButton();
-	         options.setBounds(0,45,100,70);
-	         options.addMouseListener(new Click());
-	         this.add(options);
+	    
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 	    } finally {
