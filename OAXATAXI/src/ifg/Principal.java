@@ -16,7 +16,7 @@ import java.sql.Statement;
 
 public class Principal extends JFrame implements Runnable {
     
-    private JButton cerrar,notif, alerta;
+    private JButton cerrar,notif, alerta,options;
     private JLabel titulo = new JLabel("OAXATAXI");
     private JLabel admin = new JLabel();
     private JLabel viajes = new JLabel("Viajes del día");
@@ -26,8 +26,12 @@ public class Principal extends JFrame implements Runnable {
     private String hora, minutos, segundos, ampm;
     private Calendar calendario;
     private Thread h1;
+    Desplegable des;
     JLabel lbHora = new JLabel();
     private JLabel fondo;
+    private String [][] ce = null;
+    private String[] d = null;
+    
     //VARIABLES DE DB
     private Connection conexion=null;
     ResultSet resultado;
@@ -39,7 +43,6 @@ public class Principal extends JFrame implements Runnable {
     	
     		crearComponentes();
         this.setUndecorated(true);
-        //this.setSize(500, 535);
         this.setVisible(true);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());        
@@ -47,12 +50,6 @@ public class Principal extends JFrame implements Runnable {
         
         h1 = new Thread(this);
         h1.start();
-        try {
-			mostrar();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
     }
     
     public void crearComponentes() {
@@ -123,13 +120,11 @@ public class Principal extends JFrame implements Runnable {
         notificar.addMouseListener(new Click());
         this.add(notificar);
         
-        JPanel sPanel = new JPanel();
-        String [][] matriz = {};
-        String [] vector = {"id","nombre"};
-        dtm = new DefaultTableModel(matriz,vector);
-        sPanel =new JPanel();
-	     sPanel.setLayout(new BorderLayout());
-	     dtm= new DefaultTableModel(matriz,vector) {
+        String [] d = {"id_viaje","id_taxista","Conductor","id_taxi","Placas","Usuario","Estado","Hora inicio","Hora final","Origen","Destino","Monto"};
+        JPanel t = new JPanel();
+        t.setLayout(new BoxLayout(t,BoxLayout.Y_AXIS));
+        //t.add(new JButton("puta madre"));
+	    dtm= new DefaultTableModel(null,d) {
 	    	 public boolean isCellEditable(int row, int column) {
 	    		 return false;
 	    	 }
@@ -137,26 +132,27 @@ public class Principal extends JFrame implements Runnable {
 	     table = new JTable(dtm);
 		 table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		 JScrollPane scrollPane = new JScrollPane(table); 
-        sPanel.add(scrollPane);
+        t.add(scrollPane);
         table.requestFocus();
+        this.add(t);
+        try {
+			mostrar();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        t.setBounds(95,220,700,200);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         
-        /*
-        for (int i = 0; i < 10; i++) {
-            sPanel.add(new JButton("Hello-" + i));
-        }
-        */
-        //JScrollPane scrollPane = new JScrollPane(sPanel);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-        scrollPane.setBounds(0, 0, 700, 200);
-        JPanel contentPane = new JPanel(null);
-        contentPane.setPreferredSize(new Dimension(500, 400));
-        contentPane.add(scrollPane);
-        contentPane.setBounds(95,220,700,200);
-        this.add(contentPane);
+        
         
         lbHora.setFont(new Font("Arial", Font.BOLD, 25));
         lbHora.setBounds(900,100,200,50);
+        
+        
+        
+        
+        
         this.add(lbHora);
         
         ImageIcon l = new ImageIcon(getClass().getResource("/img/logo.png"));
@@ -171,10 +167,17 @@ public class Principal extends JFrame implements Runnable {
         fondo.setIcon(f);
         fondo.setBounds(0,45,1200,550);
         this.add(fondo);
+        des = new Desplegable();
+        des.setLocation(0, 45);
+        des.setVisible(false);
+        this.add(des);
+        options = new JButton();
+        options.setBounds(0,45,100,70);
+        options.addMouseListener(new Click());
+        this.add(options);
     }
     
-    public void calcular()
-    {
+    public void calcular(){
         Calendar calendario = new GregorianCalendar();
         Date fechaHoraActual = new Date();
         ampm = calendario.get(Calendar.AM_PM)==Calendar.AM?"AM":"PM";
@@ -200,6 +203,11 @@ public class Principal extends JFrame implements Runnable {
     		}
     		if (e.getSource() == notificar) {
     			Notificacion n = new Notificacion();
+    		}if (e.getSource() == options) {
+    			options.setVisible(false);
+    			des.setVisible(true);
+    		}if (des.flag) {
+    			JOptionPane.showMessageDialog(null, des.flag);
     		}
     	}
     }
@@ -221,19 +229,18 @@ public class Principal extends JFrame implements Runnable {
             {
 
             }
-            /*remove(horax);
-            horax.add(lbHora);
-            add(horax, BorderLayout.NORTH);*/
             this.remove(lbHora);
             this.add(lbHora);
             this.add(fondo);
         }
     }
+    
+    
     //conexion bd
     public void conexionDB() throws SQLException {
     	try {
 			Class.forName("org.postgresql.Driver");
-			String url="jdbc:postgresql://localhost:5432/postgres";
+			String url="jdbc:postgresql://localhost:5432/oaxataxi";
 			conexion = DriverManager.getConnection(url,"postgres","Pacomegoma12");
 			if (conexion!=null) {
 				System.out.println("Conexion exitosa alv");
@@ -245,28 +252,34 @@ public class Principal extends JFrame implements Runnable {
 			e.printStackTrace();
 		}
     }
-    public void siguiente() {
-    	try {
-    		String id_viaje = resultado.getString("id_viaje");
-    		String hinicio = resultado.getString("hora_inicio");
-    		String hfinal = resultado.getString("hora_final");
-    		String origen = resultado.getString("origen");
-    		String destino = resultado.getString("destino");
-    		String cobrado = resultado.getString("monto_pagado");
-    		
-    		String [] modelo={id_viaje,hinicio,hfinal,origen,destino,cobrado};
-    		dtm.addRow(modelo);
-    	}catch(Exception e) {
-    		//
-    	}
-    }
     public void mostrar() throws SQLException {
     	try {
 			conexionDB();
 			sentencia = conexion.createStatement();
-			resultado = sentencia.executeQuery("SELECT * FROM OAXATAXI.VIAJE");
-			siguiente();
-			table = new JTable(dtm);
+			resultado = sentencia.executeQuery("SELECT id_taxi,no_placas,taxista_viaje_taxi.id_viaje,nickname_u,hora_inicio,hora_final,origen,destino,viaje.estado,monto_pagado,taxista_viaje_taxi.id_taxista,nombre,apaterno FROM oaxataxi.taxista_viaje_taxi INNER JOIN oaxataxi.viaje ON taxista_viaje_taxi.id_viaje = viaje.id_viaje INNER JOIN oaxataxi.taxista ON taxista_viaje_taxi.id_taxista = taxista.id_taxista");
+			while ( resultado.next() ) {
+				String id_taxi = resultado.getString("id_taxi");
+				String no_placas = resultado.getString("no_placas");
+				String id_viaje = resultado.getString("id_viaje");
+	    		String nickname = resultado.getString("nickname_u");
+	    		String hora_inicio = resultado.getString("hora_inicio");
+	    		String hora_final = resultado.getString("hora_final");
+	    		String origen = resultado.getString("origen");
+	    		String destino = resultado.getString("destino");
+	    		String estado = resultado.getString("estado");
+	    		String monto_pagado = resultado.getString("monto_pagado");
+	    		String id_taxista = resultado.getString("id_taxista");
+	    		String nombre = resultado.getString("nombre");
+	    		String apaterno = resultado.getString("apaterno");
+	    		String [] modelo={id_viaje,id_taxista,nombre+" "+apaterno,id_taxi,no_placas,nickname,estado,hora_inicio,hora_final,origen,destino,monto_pagado};
+	    		dtm.addRow(modelo);
+	    		
+	         }
+			
+	         resultado.close();
+	         sentencia.close();
+	         conexion.close();
+			//table = new JTable(dtm);
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 	    } finally {
