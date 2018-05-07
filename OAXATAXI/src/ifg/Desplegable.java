@@ -7,6 +7,7 @@ public class Desplegable extends JPanel {
     public boolean flag=false;
     public Button getOcultar() {
 		return ocultar;
+		
 	}
 	public void setOcultar(Button ocultar) {
 		this.ocultar = ocultar;

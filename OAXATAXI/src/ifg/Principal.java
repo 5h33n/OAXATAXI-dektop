@@ -208,6 +208,7 @@ public class Principal extends JFrame implements Runnable {
     			des.setVisible(true);
     		}if (des.flag) {
     			JOptionPane.showMessageDialog(null, des.flag);
+    			
     		}
     	}
     }
