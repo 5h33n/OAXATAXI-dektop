@@ -19,7 +19,7 @@ public class Principal extends JFrame implements Runnable {
     private JButton cerrar,notif, alerta,options;
     private JLabel titulo = new JLabel("OAXATAXI");
     private JLabel admin = new JLabel();
-    private JLabel viajes = new JLabel("Viajes del día");
+    private JLabel viajes = new JLabel("Viajes del dï¿½a");
     private Button verMapa, notificar;
     private DefaultTableModel dtm;
     private JTable table = new JTable(dtm);
@@ -38,8 +38,7 @@ public class Principal extends JFrame implements Runnable {
     Statement sentencia;
     
     
-    public Principal() throws IOException
-    {
+    public Principal() throws IOException{
     	
     		crearComponentes();
         this.setUndecorated(true);
@@ -167,14 +166,6 @@ public class Principal extends JFrame implements Runnable {
         fondo.setIcon(f);
         fondo.setBounds(0,45,1200,550);
         this.add(fondo);
-        des = new Desplegable();
-        des.setLocation(0, 45);
-        des.setVisible(false);
-        this.add(des);
-        options = new JButton();
-        options.setBounds(0,45,100,70);
-        options.addMouseListener(new Click());
-        this.add(options);
     }
     
     public void calcular(){
@@ -204,11 +195,8 @@ public class Principal extends JFrame implements Runnable {
     		if (e.getSource() == notificar) {
     			Notificacion n = new Notificacion();
     		}if (e.getSource() == options) {
-    			options.setVisible(false);
+    			//options.setVisible(false);
     			des.setVisible(true);
-    		}if (des.flag) {
-    			JOptionPane.showMessageDialog(null, des.flag);
-    			
     		}
     	}
     }
@@ -272,7 +260,7 @@ public class Principal extends JFrame implements Runnable {
 	    		String id_taxista = resultado.getString("id_taxista");
 	    		String nombre = resultado.getString("nombre");
 	    		String apaterno = resultado.getString("apaterno");
-	    		String [] modelo={id_viaje,id_taxista,nombre+" "+apaterno,id_taxi,no_placas,nickname,estado,hora_inicio,hora_final,origen,destino,monto_pagado};
+	    		String [] modelo={id_viaje,id_taxista,nombre+" "+apaterno,id_taxi,no_placas,nickname,estado,hora_inicio,hora_final,origen,destino,"$"+monto_pagado};
 	    		dtm.addRow(modelo);
 	    		
 	         }
@@ -281,6 +269,15 @@ public class Principal extends JFrame implements Runnable {
 	         sentencia.close();
 	         conexion.close();
 			//table = new JTable(dtm);
+	         des = new Desplegable();
+	         des.setLocation(0, 45);
+	         des.setVisible(false);
+	         des.addMouseListener(new Click());
+	         this.add(des);
+	         options = new JButton();
+	         options.setBounds(0,45,100,70);
+	         options.addMouseListener(new Click());
+	         this.add(options);
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 	    } finally {

@@ -23,12 +23,14 @@ public class Desplegable extends JPanel {
     	public void mouseClicked(MouseEvent e) {
     		if (e.getSource() == ocultar) {
     			bye();
+    		}if (e.getSource() == agregar) {
+    			new VentanaAgregar();
     		}
     	}
     }
     public void bye() {
     	this.setVisible(false);
-    	flag = true;
+    	this.flag = true;
     }
     public void crearComponentes() {
         agregar = new Button();
@@ -37,6 +39,7 @@ public class Desplegable extends JPanel {
         agregar.setForeground(Color.black);
         agregar.setColor1(new Color(255, 196, 0));
         agregar.setColor2(new Color(202, 147, 0));
+        agregar.addMouseListener(new Click());
         this.add(agregar);
         
         eliminar = new Button();
