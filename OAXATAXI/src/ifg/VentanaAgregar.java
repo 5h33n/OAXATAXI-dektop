@@ -19,6 +19,12 @@ public class VentanaAgregar extends JFrame {
     JTextField[] fields;
     JTextField cajaid;
     JTextField cajaplacas;
+    JTextField cajaId;
+	JTextField cajaNombre;
+	JTextField cajaAm;
+	JTextField cajaAp;
+	JTextField cajaTel;
+	
     String insert;
     JPanel sPanel;
     JComboBox cbPersonas;
@@ -27,10 +33,11 @@ public class VentanaAgregar extends JFrame {
     ResultSet resultado;
     Statement sentencia;
     public VentanaAgregar() {
-        this.setUndecorated(true);
+        this.setUndecorated(false);
         this.setSize(399, 399);
         this.setVisible(true);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.setResizable(false);
         this.setLayout(new BorderLayout());        
         this.setLocationRelativeTo(null);
         crearComponentes();
@@ -56,7 +63,11 @@ public class VentanaAgregar extends JFrame {
     		    cajaid.setText("");
     		    cajaplacas.setText("");
     		}if (e.getSource() == botAgregar && cbPersonas.getSelectedItem() == "Taxista"){
-    			/*insert = "INSERT INTO oaxataxi.taxi(id_taxi, no_placas, estado, comentarios, puntuacion)VALUES ("+id_taxi+", '"+nPlacas+"', "+"'Agregado recientemente', '', NULL);";
+    			insert = "INSERT INTO oaxataxi.taxista( "
+    		        +"    id_taxista, nombre, apaterno, amaterno, licencia, telefono, c_tel, "
+    		        +"    foto, estado, comentarios, puntuacion)"
+    		   +" VALUES ("+ cajaId.getText() +", '"+ cajaNombre.getText() +"', '"+ cajaAp.getText() +"', '"+ cajaAm.getText() +"', 'htt://temporalmente.ausente', '"+ cajaTel.getText() +"', '+52', "
+    		      +"      'https://ausente', 'Recientemente agregado', '', NULL);";
     		    try {
     				conexionDB();
     			} catch (SQLException ex) {
@@ -68,7 +79,12 @@ public class VentanaAgregar extends JFrame {
     			} catch (SQLException ex) {
     				// TODO Auto-generated catch block
     				ex.printStackTrace();
-    			}*/
+    			}
+    		    cajaId.setText("");
+    		    cajaNombre.setText("");
+    		    cajaAp.setText("");
+    		    cajaAm.setText("");
+    		    cajaTel.setText("");
     		}
     	}
     }
@@ -101,15 +117,15 @@ public class VentanaAgregar extends JFrame {
         this.add(cancelar);
               
         sPanel = new JPanel();       
-        sPanel.setLayout(new GridLayout(0,4));
+        //sPanel.setLayout(new GridLayout(0,4));
         JScrollPane scrollPane = new JScrollPane(sPanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setBounds(50, 0, 400,300);
+        scrollPane.setBounds(0, 0, 400,300);
         JPanel contentPane = new JPanel(null);
-        contentPane.setPreferredSize(new Dimension(500, 400));
+        contentPane.setPreferredSize(new Dimension(400, 200));
         contentPane.add(scrollPane);
-        contentPane.setBounds(60,90,700,300);
+        contentPane.setBounds(100,90,400,300);
         this.add(contentPane);
         
         agregar.setFont(new Font("Arial", Font.BOLD, 13));
@@ -152,39 +168,61 @@ public class VentanaAgregar extends JFrame {
     public void agregarTaxista() {
     sPanel.removeAll();
     	sPanel.repaint();
+    	
+    	
+    	JLabel id = new JLabel("id_taxista");
     	JLabel nombre = new JLabel("Nombre");
-    JLabel nacimiento = new JLabel("Fecha de Nacimiento");
-    JTextField cajaNombre = new JTextField(20);
-    	nombre.setFont(new Font("Arial", Font.BOLD, 13));
-        nombre.setBounds(25,60,120,30);
+    	JLabel ap = new JLabel("Apellido paterno");
+    	JLabel am = new JLabel("Apellido materno");
+    	JLabel tel = new JLabel("Telefono");
+    	
+    	
+    	
+    	 cajaId = new JTextField(20);
+    	 cajaNombre = new JTextField(20);
+    	 cajaAm = new JTextField(20);
+    	 cajaAp = new JTextField(20);
+    	 cajaTel = new JTextField(20);
+    	
+    	id.setFont(new Font("Arial", Font.BOLD, 13));
+        id.setBounds(100,30,120,25);
+        sPanel.add(id);
+        cajaId.setBounds(220,30,100,25);
+        sPanel.add(cajaId);
+        
+        
+        nombre.setFont(new Font("Arial", Font.BOLD, 13));
+        nombre.setBounds(100,80,150,25);
         sPanel.add(nombre);
-        
-        nacimiento.setFont(new Font("Arial", Font.BOLD, 13));
-        nacimiento.setBounds(25,115,150,30);
-        sPanel.add(nacimiento);
-        
-        foto.setIcon(new ImageIcon("../img/rojo.png"));
-        foto.setBounds(35,170,100,120);
-        sPanel.add(foto);
-        
-        adFoto.setText("Agregar foto...");
-        adFoto.setForeground(Color.black);
-        adFoto.setColor1(new Color(255, 196, 0));
-        adFoto.setColor2(new Color(202, 147, 0));
-        adFoto.setBounds(200,230,140,30);
-        sPanel.add(adFoto);
-        cajaNombre.setBounds(190,60,100,30);
+        cajaNombre.setBounds(220,80,100,25);
         sPanel.add(cajaNombre);
-        JTextField cajaNac = new JTextField();
-        cajaNac.setBounds(190,115,100,30);
-        sPanel.add(cajaNac);
+        
+        ap.setFont(new Font("Arial", Font.BOLD, 13));
+        ap.setBounds(100,120,150,25);
+        sPanel.add(ap);
+        cajaAp.setBounds(220,120,100,25);
+        sPanel.add(cajaAp);
+        
+        am.setFont(new Font("Arial", Font.BOLD, 13));
+        am.setBounds(100,170,150,30);
+        sPanel.add(am);
+        cajaAm.setBounds(220,170,100,25);
+        sPanel.add(cajaAm);
+        
+        tel.setFont(new Font("Arial", Font.BOLD, 13));
+        tel.setBounds(100,220,150,30);
+        sPanel.add(tel);
+        cajaTel.setBounds(220,220,100,25);
+        sPanel.add(cajaTel);
+        
+
     }
     public void agregarTaxi() {
-    	String[] b = {"id_taxi","No. de placas",};
     	sPanel.removeAll();
     	sPanel.repaint();
+    	
     	JLabel id_taxi = new JLabel("Id del taxi");
-    JLabel nPlacas = new JLabel("NÃºmero de placas");
+    JLabel nPlacas = new JLabel("Número de placas");
     cajaid = new JTextField();
     cajaplacas = new JTextField();
     
@@ -205,7 +243,7 @@ public class VentanaAgregar extends JFrame {
 			String url="jdbc:postgresql://localhost:5432/oaxataxi";
 			conexion = DriverManager.getConnection(url,"postgres","Pacomegoma12");
 			if (conexion!=null) {
-				System.out.println("Conexion exitosa alv");
+				System.out.println("Conexion exitosa");
 			}else {
 				JOptionPane.showMessageDialog(null,"Conexion fallida alv");
 			}
@@ -218,7 +256,7 @@ public class VentanaAgregar extends JFrame {
     	try {
 			conexionDB();
 			sentencia = conexion.createStatement();
-			System.out.println(s);
+			JOptionPane.showMessageDialog(null, "Elemento correctamente agregado");
 			sentencia.executeQuery(s);
 	         resultado.close();
 	         sentencia.close();
@@ -227,6 +265,7 @@ public class VentanaAgregar extends JFrame {
 			System.out.println(e.getMessage());
 	    } finally {
 	        if (sentencia != null) { sentencia.close(); }
+	        
 	    }
     }
 }
