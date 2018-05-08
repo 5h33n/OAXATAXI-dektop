@@ -184,12 +184,12 @@ public class VentanaAgregar extends JFrame {
     	sPanel.removeAll();
     	sPanel.repaint();
     	JLabel id_taxi = new JLabel("Id del taxi");
-        JLabel nPlacas = new JLabel("Número de placas");
+    JLabel nPlacas = new JLabel("Número de placas");
     cajaid = new JTextField();
     cajaplacas = new JTextField();
     
 	id_taxi.setFont(new Font("Arial", Font.BOLD, 13));
-    nPlacas.setBounds(25,60,120,30);
+    id_taxi.setBounds(25,60,120,30);
     sPanel.add(id_taxi);
     nPlacas.setFont(new Font("Arial", Font.BOLD, 13));
     nPlacas.setBounds(25,115,150,30);

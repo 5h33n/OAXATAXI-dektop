@@ -19,7 +19,7 @@ public class Principal extends JFrame implements Runnable {
     private JButton cerrar,notif, alerta;
     private JLabel titulo = new JLabel("OAXATAXI");
     private JLabel admin = new JLabel();
-    private JLabel viajes = new JLabel("Viajes del día");
+    private JLabel viajes = new JLabel("Viajes del dï¿½a");
     private Button verMapa, notificar,options;
     private DefaultTableModel dtm;
     private JTable table = new JTable(dtm);
@@ -244,7 +244,7 @@ public class Principal extends JFrame implements Runnable {
 			String url="jdbc:postgresql://localhost:5432/oaxataxi";
 			conexion = DriverManager.getConnection(url,"postgres","Pacomegoma12");
 			if (conexion!=null) {
-				System.out.println("Conexion exitosa alv");
+				System.out.println("Conexion exitosa");
 			}else {
 				JOptionPane.showMessageDialog(null,"Conexion fallida alv");
 			}
