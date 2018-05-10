@@ -25,6 +25,8 @@ public class Desplegable extends JPanel {
     			bye();
     		}if (e.getSource() == agregar) {
     			new VentanaAgregar();
+    		}if (e.getSource() == ver) {
+    			new Database();
     		}
     	}
     }
@@ -47,7 +49,7 @@ public class Desplegable extends JPanel {
         eliminar.setColor1(new Color(255, 196, 0));
         eliminar.setColor2(new Color(202, 147, 0));
         eliminar.setForeground(Color.black);
-        eliminar.setText("Eliminar");
+        eliminar.setText("Buscar");
         this.add(eliminar);
         
         ver = new Button();
@@ -56,6 +58,7 @@ public class Desplegable extends JPanel {
         ver.setColor2(new Color(202, 147, 0));
         ver.setForeground(Color.black);
         ver.setText("Ver");
+        ver.addMouseListener(new Click());
         this.add(ver);
         
         ocultar = new Button();

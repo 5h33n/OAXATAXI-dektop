@@ -52,7 +52,7 @@ public class Principal extends JFrame implements Runnable {
     }
     
     public void crearComponentes() {
-        this.setSize(1200, 600);
+        this.setSize(1200, 580);
         this.setLayout(null);  
         
         JPanelSuperior barraTitulo = new JPanelSuperior();
@@ -159,16 +159,16 @@ public class Principal extends JFrame implements Runnable {
         this.add(lbHora);
         
         ImageIcon l = new ImageIcon(getClass().getResource("/img/logo.png"));
-        ImageIcon lo = new ImageIcon(l.getImage().getScaledInstance(180, 120, Image.SCALE_DEFAULT));
+        ImageIcon lo = new ImageIcon(l.getImage().getScaledInstance(140, 120, Image.SCALE_DEFAULT));
         JLabel logo = new JLabel();
         logo.setIcon(lo);
-        logo.setBounds(870,400,280,200);
+        logo.setBounds(900,360,140,120);
         this.add(logo);
         
         ImageIcon f = new ImageIcon(getClass().getResource("/img/fondo.png"));
         fondo = new JLabel();
         fondo.setIcon(f);
-        fondo.setBounds(0,45,1200,550);
+        fondo.setBounds(0,45,1200,580);
         this.add(fondo);
         options = new ifg.Button();
         options.setForeground(Color.black);

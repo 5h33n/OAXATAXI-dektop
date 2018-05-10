@@ -101,8 +101,8 @@ public class VentanaAgregar extends JFrame {
         botAgregar = new Button();
         botAgregar.setText("Agregar");
         botAgregar.setForeground(Color.black);
-        botAgregar.setColor1(new Color(255, 196, 0));
-        botAgregar.setColor2(new Color(202, 147, 0));
+        botAgregar.setColor1(new Color(135,142,251));
+        botAgregar.setColor2(new Color(112,120,224));
         botAgregar.setBounds(140,404,120,30);
         botAgregar.addMouseListener(new Click());
         this.add(botAgregar);
@@ -110,8 +110,8 @@ public class VentanaAgregar extends JFrame {
         cancelar = new Button();
         cancelar.setText("Cancelar");
         cancelar.setForeground(Color.black);
-        cancelar.setColor1(new Color(255, 196, 0));
-        cancelar.setColor2(new Color(202, 147, 0));
+        cancelar.setColor1(new Color(135,142,251));
+        cancelar.setColor2(new Color(112,120,224));
         cancelar.setBounds(320,404,120,30);
         cancelar.addMouseListener(new Click());
         this.add(cancelar);
@@ -222,19 +222,19 @@ public class VentanaAgregar extends JFrame {
     	sPanel.repaint();
     	
     	JLabel id_taxi = new JLabel("Id del taxi");
-    JLabel nPlacas = new JLabel("Número de placas");
+    JLabel nPlacas = new JLabel("Nï¿½mero de placas");
     cajaid = new JTextField();
     cajaplacas = new JTextField();
     
 	id_taxi.setFont(new Font("Arial", Font.BOLD, 13));
-    id_taxi.setBounds(25,60,120,30);
+    id_taxi.setBounds(100,30,120,30);
     sPanel.add(id_taxi);
     nPlacas.setFont(new Font("Arial", Font.BOLD, 13));
-    nPlacas.setBounds(25,115,150,30);
+    nPlacas.setBounds(100,90,150,30);
     sPanel.add(nPlacas);
-    cajaid.setBounds(190,60,100,30);
+    cajaid.setBounds(220,30,100,30);
     sPanel.add(cajaid);
-    cajaplacas.setBounds(190,115,100,30);
+    cajaplacas.setBounds(220,90,100,30);
     sPanel.add(cajaplacas);
     }
     public void conexionDB() throws SQLException {
