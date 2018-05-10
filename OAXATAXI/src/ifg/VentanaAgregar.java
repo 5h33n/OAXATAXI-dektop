@@ -39,7 +39,8 @@ public class VentanaAgregar extends JFrame {
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setResizable(false);
         this.setLayout(new BorderLayout());        
-        this.setLocationRelativeTo(null);
+        //this.setLocationRelativeTo(null);
+        this.setBounds(332,120,300,300);
         crearComponentes();
     }
     private class Click extends MouseAdapter{
@@ -164,6 +165,7 @@ public class VentanaAgregar extends JFrame {
         fondo.setIcon(f);
         fondo.setBounds(0,0,700,500);
         this.add(fondo);
+        
     }
     public void agregarTaxista() {
     sPanel.removeAll();

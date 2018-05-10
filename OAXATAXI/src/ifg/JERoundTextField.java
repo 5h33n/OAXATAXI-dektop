@@ -20,7 +20,8 @@ public class JERoundTextField extends JTextField{
 
     public JERoundTextField() {
         setOpaque(false);
-        setBorder(new EmptyBorder(0,5,0,2));
+        EmptyBorder b = new EmptyBorder(0,5,0,2);
+        setBorder(b);
         setPreferredSize(new Dimension(100,20));
     }
 

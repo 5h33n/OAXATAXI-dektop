@@ -118,7 +118,7 @@ public class PanelTabla extends JPanel{
 	    		 //editar.setVisible(true);
 	    	 }
 	    	 });
-		 table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+		 table.setPreferredScrollableViewportSize(new Dimension(800, 70));
 		 JScrollPane scrollPane = new JScrollPane(table); 
          panelInferior.add(scrollPane);
          table.requestFocus();

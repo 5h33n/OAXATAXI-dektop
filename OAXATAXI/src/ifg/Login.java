@@ -9,8 +9,8 @@ public class Login extends JFrame {
     private JERoundTextField cajaAdministrador, cajaContrasena;
     private JButton pregunta, cerrar;
     private Button iniciar;
-    private Color colorFondo = new Color(242, 253, 79);
-    private Color colorAdmin = new Color(251, 255, 197);
+    private Color colorAdmin = new Color(253, 219, 29);
+    private Color colorFondo = new Color(0,0,0);
     
     private class Click extends MouseAdapter{
     		public void mouseClicked(MouseEvent e) {
@@ -93,18 +93,20 @@ public class Login extends JFrame {
 
         //panel donde estaran los componentes
         JPanel supCP = new JPanel();
-        supCP.setBackground(colorFondo);
+       supCP.setBackground(colorFondo);
         supCP.setLayout(new BorderLayout());
         
         JPanelRound centralPrincipal = new JPanelRound();
         supCP.add(centralPrincipal, BorderLayout.CENTER);
         
         centralPrincipal.setColorPrimario(colorAdmin);
-        centralPrincipal.setColorContorno(Color.blue);
+        centralPrincipal.setColorSecundario(colorAdmin);
+        centralPrincipal.setColorContorno(Color.white);
         centralPrincipal.setLayout(null);
         
         centralPrincipal.add(administrador); 
         administrador.setFont(new Font("Verdana",0, 30));
+        administrador.setForeground(Color.black);
         administrador.setBounds(95,50,300,40);
         
         centralPrincipal.add(cajaAdministrador);
@@ -112,6 +114,7 @@ public class Login extends JFrame {
         
         centralPrincipal.add(contrasena);
         contrasena.setFont(new Font("Verdana",0, 30));
+        contrasena.setForeground(Color.black);
         contrasena.setBounds(115,170,300,40);
         
         centralPrincipal.add(cajaContrasena);
@@ -129,9 +132,9 @@ public class Login extends JFrame {
         centralPrincipal.add(in);
         centralPrincipal.add(iniciar);
         iniciar.setBounds(150,350,100,40);
-        iniciar.setColor1(new Color(157,124,91));
-        iniciar.setColor2(new Color(157,124,91));
-        iniciar.setColor3(new Color(157,124,91));
+        iniciar.setColor1(new Color(255,140,255));
+        iniciar.setColor2(new Color(255,140,255));
+        iniciar.setColor3(new Color(0,0,0));
         
         //termina panel de componentes
         
