@@ -48,7 +48,7 @@ public class VentanaAgregar extends JFrame {
     		if (e.getSource() == cancelar) {
     			bye();
     		}if (e.getSource() == botAgregar && cbPersonas.getSelectedItem() == "Taxi"){
-    			insert = "INSERT INTO oaxataxi.taxi(id_taxi, no_placas, estado, comentarios, puntuacion)VALUES ("+cajaid.getText()+", '"+cajaplacas.getText()+"', "+"'Agregado recientemente', '', NULL);";
+    			insert = "INSERT INTO oaxataxi.taxi(id_taxi, no_placas, estado, comentarios, puntuacion)VALUES ("+cajaid.getText()+", '"+cajaplacas.getText().toLowerCase()+"', "+"'Agregado recientemente', '', NULL);";
     		    //System.out.println(insert);
     			try {
     				conexionDB();
@@ -68,7 +68,7 @@ public class VentanaAgregar extends JFrame {
     			insert = "INSERT INTO oaxataxi.taxista( "
     		        +"    id_taxista, nombre, apaterno, amaterno, licencia, telefono, c_tel, "
     		        +"    foto, estado, comentarios, puntuacion)"
-    		   +" VALUES ("+ cajaId.getText() +", '"+ cajaNombre.getText() +"', '"+ cajaAp.getText() +"', '"+ cajaAm.getText() +"', 'htt://temporalmente.ausente', '"+ cajaTel.getText() +"', '+52', "
+    		   +" VALUES ("+ cajaId.getText() +", '"+ cajaNombre.getText().toLowerCase() +"', '"+ cajaAp.getText().toLowerCase() +"', '"+ cajaAm.getText().toLowerCase() +"', 'htt://temporalmente.ausente', '"+ cajaTel.getText() +"', '+52', "
     		      +"      'https://ausente', 'Recientemente agregado', '', NULL);";
     		    try {
     				conexionDB();
@@ -246,7 +246,7 @@ public class VentanaAgregar extends JFrame {
 			String url="jdbc:postgresql://localhost:5432/oaxataxi";
 			conexion = DriverManager.getConnection(url,"postgres","Pacomegoma12");
 			if (conexion!=null) {
-				System.out.println("Conexion exitosa");
+				//System.out.println("Conexion exitosa");
 			}else {
 				JOptionPane.showMessageDialog(null,"Conexion fallida alv");
 			}
