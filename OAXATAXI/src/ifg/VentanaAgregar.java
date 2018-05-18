@@ -49,7 +49,8 @@ public class VentanaAgregar extends JFrame {
     			bye();
     		}if (e.getSource() == botAgregar && cbPersonas.getSelectedItem() == "Taxi"){
     			insert = "INSERT INTO oaxataxi.taxi(id_taxi, no_placas, estado, comentarios, puntuacion)VALUES ("+cajaid.getText()+", '"+cajaplacas.getText()+"', "+"'Agregado recientemente', '', NULL);";
-    		    try {
+    		    //System.out.println(insert);
+    			try {
     				conexionDB();
     			} catch (SQLException ex) {
     				// TODO Auto-generated catch block
@@ -257,6 +258,7 @@ public class VentanaAgregar extends JFrame {
     public void insertar (String s) throws SQLException {
     	try {
 			conexionDB();
+			//sentencia.ex
 			sentencia = conexion.createStatement();
 			JOptionPane.showMessageDialog(null, "Elemento correctamente agregado");
 			sentencia.executeQuery(s);

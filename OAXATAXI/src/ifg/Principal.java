@@ -16,11 +16,12 @@ import java.sql.Statement;
 
 public class Principal extends JFrame implements Runnable {
     
-    private JButton cerrar,notif, alerta;
+    private JButton cerrar,notif, alerta,minimizar;
     private JLabel titulo = new JLabel("OAXATAXI");
     private JLabel admin = new JLabel();
     private JLabel viajes = new JLabel("Viajes del d�a");
     private Button verMapa, notificar,options;
+    private JButton ver,agregar;
     private DefaultTableModel dtm;
     private JTable table = new JTable(dtm);
     private String hora, minutos, segundos, ampm;
@@ -55,43 +56,57 @@ public class Principal extends JFrame implements Runnable {
         this.setSize(1200, 580);
         this.setLayout(null);  
         
-        JPanelSuperior barraTitulo = new JPanelSuperior();
-        des = new Desplegable();
+        try {
+			des = new Desplegable();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
         des.setLocation(0, 45);
         des.setVisible(false);
         des.addMouseListener(new Click());
         this.add(des);
-        this.add(barraTitulo);
+        
+        ClockAnalogBuf reloj = new ClockAnalogBuf();
+        reloj.setBounds(890,50,150,150);
+        this.add(reloj);
         
         alerta = new JButton();
         notif = new JButton();
         cerrar = new JButton();
         cerrar.addMouseListener(new Click());
+        minimizar = new JButton();
+        minimizar.addMouseListener(new Click());
         JLabel barra = new JLabel();
         
         ImageIcon b = new ImageIcon(getClass().getResource("/img/barra.jpg"));
         barra.setIcon(b);
-        barra.setBounds(0,0,823,45);
+        barra.setBounds(0,0,772,45);
         this.add(barra);
         
         ImageIcon al = new ImageIcon(getClass().getResource("/img/alerta.png"));
         alerta.setIcon(al);
-        alerta.setBounds(823,0,65,45);
+        alerta.setBounds(772,0,65,45);
         this.add(alerta);
         
         ImageIcon n = new ImageIcon(getClass().getResource("/img/notificacion.png"));
         notif.setIcon(n);
-        notif.setBounds(888,0,65,45);
+        notif.setBounds(837,0,65,45);
         this.add(notif);
         
         ImageIcon a = new ImageIcon(getClass().getResource("/img/admin.png"));
         admin.setIcon(a);
-        admin.setBounds(953,0,192,45);
+        admin.setBounds(902,0,196,45);
         this.add(admin);
         
         ImageIcon c= new ImageIcon(getClass().getResource("/img/cerrar.png"));
+        minimizar.setIcon(c);
+        minimizar.setBounds(1090,0,60,45);
+        this.add(minimizar);
+        
+        ImageIcon ce= new ImageIcon(getClass().getResource("/img/cerrar.png"));
         cerrar.setIcon(c);
-        cerrar.setBounds(1145,0,55,45);
+        cerrar.setBounds(1145,0,57,45);
         this.add(cerrar);  
         
         titulo.setFont(new Font("Arial", Font.BOLD, 40));
@@ -109,7 +124,7 @@ public class Principal extends JFrame implements Runnable {
         verMapa.setText("Ver mapa");
         verMapa.setColor1(new Color(255, 196, 0));
         verMapa.setColor2(new Color(202, 147, 0));
-        verMapa.setBounds(875,220,195,50);
+        verMapa.setBounds(875,260,195,40);
         verMapa.addMouseListener(new Click());
         this.add(verMapa);
             
@@ -119,7 +134,7 @@ public class Principal extends JFrame implements Runnable {
         notificar.setForeground(Color.black);
         notificar.setColor1(new Color(255, 196, 0));
         notificar.setColor2(new Color(202, 147, 0));
-        notificar.setBounds(875,285,195,50);
+        notificar.setBounds(875,315,195,40);
         notificar.addMouseListener(new Click());
         this.add(notificar);
         
@@ -150,7 +165,7 @@ public class Principal extends JFrame implements Runnable {
         
         
         lbHora.setFont(new Font("Arial", Font.BOLD, 25));
-        lbHora.setBounds(900,100,200,50);
+        lbHora.setBounds(900,100,200,250);
         
         
         
@@ -162,7 +177,7 @@ public class Principal extends JFrame implements Runnable {
         ImageIcon lo = new ImageIcon(l.getImage().getScaledInstance(140, 120, Image.SCALE_DEFAULT));
         JLabel logo = new JLabel();
         logo.setIcon(lo);
-        logo.setBounds(900,360,140,120);
+        logo.setBounds(900,390,140,120);
         this.add(logo);
         
         ImageIcon f = new ImageIcon(getClass().getResource("/img/fondo.png"));
@@ -178,6 +193,23 @@ public class Principal extends JFrame implements Runnable {
         options.setBorder(null);
         options.addMouseListener(new Click());
         this.add(options);
+        ver = new JButton();
+        ver.setForeground(Color.black);
+        //ver.setColor1(new Color(255, 196, 0));
+        //ver.setColor2(new Color(202, 147, 0));
+        ver.setBounds(500,450,150,35);
+        ver.setText("Todos los registros");
+        ver.addMouseListener(new Click());
+        this.add(ver);
+        agregar = new JButton();
+        agregar.setForeground(Color.black);
+        //agregar.setColor1(new Color(255, 196, 0));
+        //agregar.setColor2(new Color(202, 147, 0));
+        agregar.setText("Agregar Elementos");
+        agregar.setBounds(280,450,150,35);
+        //agregar.setBorder(null);
+        agregar.addMouseListener(new Click());
+        this.add(agregar);
     }
     
     public void calcular(){
@@ -201,6 +233,9 @@ public class Principal extends JFrame implements Runnable {
     		if (e.getSource() == cerrar) {
     			cerrar();
     		}
+    		if (e.getSource() == minimizar) {
+    			minimizar();
+    		}
     		if (e.getSource() == verMapa) {
     			Mapa m = new Mapa();
     		}
@@ -209,11 +244,23 @@ public class Principal extends JFrame implements Runnable {
     		}if (e.getSource() == options) {
     			//options.setVisible(false);
     			des.setVisible(true);
+    		}if (e.getSource() == ver) {
+    			//options.setVisible(false);
+    			//System.out.println("simon");
+    			new Database();
+    		}if (e.getSource() == agregar) {
+    			//options.setVisible(false);
+    			new VentanaAgregar();
+    			
     		}
+    		
     	}
     }
     public void cerrar() {
-    	System.exit(0);
+    		System.exit(0);
+    }
+    public void minimizar() {
+		this.setExtendedState(ICONIFIED);
     }
     public void run()
     {
