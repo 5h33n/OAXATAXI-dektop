@@ -9,8 +9,8 @@ public class Login extends JFrame {
     private JERoundTextField cajaAdministrador, cajaContrasena;
     private JButton pregunta, cerrar;
     private Button iniciar;
-    private Color colorAdmin = new Color(253, 219, 29);
-    private Color colorFondo = new Color(0,0,0);
+    private Color colorAdmin = new Color(250, 244, 194);
+    private Color colorFondo = new Color(255,200,36);
     
     private class Click extends MouseAdapter{
     		public void mouseClicked(MouseEvent e) {
@@ -38,14 +38,14 @@ public class Login extends JFrame {
     public Login () {
     		crearComponentes();
         this.setUndecorated(true);
-        this.setSize(500, 535);
+        this.setSize(450, 490);
         this.setVisible(true);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());        
         this.setLocationRelativeTo(null);
     }
     public void crearComponentes() {
-        this.setSize(500, 510);
+        this.setSize(400, 510);
 
         // Definicion de parametros de los componentes
         administrador = new JLabel("Administrador");
@@ -101,28 +101,28 @@ public class Login extends JFrame {
         
         centralPrincipal.setColorPrimario(colorAdmin);
         centralPrincipal.setColorSecundario(colorAdmin);
-        centralPrincipal.setColorContorno(Color.white);
+        centralPrincipal.setColorContorno(new Color(0, 0, 0));
         centralPrincipal.setLayout(null);
         
         centralPrincipal.add(administrador); 
-        administrador.setFont(new Font("Verdana",0, 30));
+        administrador.setFont(new Font("Verdana",0, 25));
         administrador.setForeground(Color.black);
-        administrador.setBounds(95,50,300,40);
+        administrador.setBounds(95,50,200,30);
         
         centralPrincipal.add(cajaAdministrador);
-        cajaAdministrador.setBounds(50,100,300,40);
+        cajaAdministrador.setBounds(50,100,245,30);
         
         centralPrincipal.add(contrasena);
-        contrasena.setFont(new Font("Verdana",0, 30));
+        contrasena.setFont(new Font("Verdana",0, 25));
         contrasena.setForeground(Color.black);
-        contrasena.setBounds(115,170,300,40);
+        contrasena.setBounds(95,170,200,30);
         
         centralPrincipal.add(cajaContrasena);
-        cajaContrasena.setBounds(50,220,300,40);
+        cajaContrasena.setBounds(50,220,245,30);
         
         centralPrincipal.add(olvidarContrasena);
-        olvidarContrasena.setFont(new Font("Verdana",0, 20));
-        olvidarContrasena.setBounds(100,260,300,40);
+        olvidarContrasena.setFont(new Font("Verdana",0, 15));
+        olvidarContrasena.setBounds(100,250,300,30);
         olvidarContrasena.setForeground(Color.blue);
         centralPrincipal.add(iniciar);
         
@@ -132,8 +132,8 @@ public class Login extends JFrame {
         centralPrincipal.add(in);
         centralPrincipal.add(iniciar);
         iniciar.setBounds(150,350,100,40);
-        iniciar.setColor1(new Color(255,140,255));
-        iniciar.setColor2(new Color(255,140,255));
+        iniciar.setColor1(new Color(250, 244, 194));
+        iniciar.setColor2(new Color(250, 244, 194));
         iniciar.setColor3(new Color(0,0,0));
         
         //termina panel de componentes
@@ -150,6 +150,7 @@ public class Login extends JFrame {
         this.add(prinIzq, BorderLayout.EAST);
         this.add(prinInf, BorderLayout.SOUTH);
         this.add(supCP, BorderLayout.CENTER);
+        ((JComponent) this.getContentPane()).setBorder(BorderFactory.createLineBorder(Color.black,2));
     }
 }
 

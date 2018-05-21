@@ -87,7 +87,7 @@ public class Principal extends JFrame implements Runnable {
         ClockAnalogBuf reloj = new ClockAnalogBuf();
         reloj.setBackground(new Color(250, 244, 194));
         reloj.setBounds(890,50,150,150);
-        this.add(reloj);
+        //this.add(reloj);
         
         alerta = new JButton();
         notif = new JButton();

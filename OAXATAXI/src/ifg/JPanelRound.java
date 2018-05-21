@@ -10,9 +10,9 @@ import javax.swing.JPanel;
 
 public class JPanelRound extends JPanel{
 
-    private Color colorPrimario = new Color(255,255,255);
-    private Color colorSecundario = new Color(255,255,255);
-    private Color colorContorno = new Color(255,255,255);
+    private Color colorPrimario = new Color(0,0,0);
+    private Color colorSecundario = new Color(0,0,0);
+    private Color colorContorno = new Color(0,0,0);
     private int arcw=20;
     private int arch=20;
    
