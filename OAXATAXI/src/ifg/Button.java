@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.RenderingHints;
+import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import javax.swing.ButtonModel;
 import javax.swing.JButton;
@@ -16,9 +17,10 @@ public class Button extends JButton{
     private Color color1 = new Color(0x666f7f);
     private Color color2 = new Color(0x262d3d);
     private Color color3 = new Color(0x262d3d);
-
-    public Button() {
+    private boolean forma;
+    public Button(boolean forma) {
         super();
+        this.forma = forma;
         setOpaque(false);
         setContentAreaFilled(false);
         setForeground(Color.WHITE);
@@ -51,9 +53,19 @@ public class Button extends JButton{
             c1=color2.brighter();
             c3=color3.brighter();
         }
-        RoundRectangle2D.Float r2d = new RoundRectangle2D.Float(
-                0,0,getWidth(),getHeight()-1,20,20);
-        g2.clip(r2d);
+        int numero=0;
+        if (forma) {
+        		Rectangle2D.Float rr2d = new Rectangle2D.Float(
+            		0,0,getWidth(),getHeight());
+        		g2.clip(rr2d);
+        		numero =4;
+        }else {
+	        	RoundRectangle2D.Float r2d = new RoundRectangle2D.Float(
+	                0,0,getWidth(),getHeight()-1,20,20);
+	        g2.clip(r2d);
+	        numero =18;
+        }
+        
         g2.setPaint(new GradientPaint(0.0f, 0.0f, c1,
                 0.0f, getHeight(), c2));
         g2.fillRect(0,0,getWidth(),getHeight());
@@ -61,7 +73,7 @@ public class Button extends JButton{
         g2.setStroke(new BasicStroke(4f));
         g2.setPaint(new GradientPaint(0.0f, 0.0f, c3,
                 0.0f, getHeight(), c3));
-        g2.drawRoundRect(0, 0, getWidth()-2 , getHeight() -2, 18, 18);
+        g2.drawRoundRect(0, 0, getWidth() -2 , getHeight() -2 , numero, 18);
 
         g2.setPaint(oldPaint);
         super.paintComponent(g);

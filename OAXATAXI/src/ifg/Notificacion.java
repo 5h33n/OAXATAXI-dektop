@@ -59,7 +59,7 @@ public void ocultar() {
         adFoto.setBounds(50, 140, 150, 40);
         sPanel.add(adFoto);
         
-        Button anadir = new Button();
+        Button anadir = new Button(false);
         anadir.setText("Añadir");
         anadir.setFont(new Font("Arial", Font.BOLD, 12));
         anadir.setColor1(Color.white.brighter());
@@ -75,7 +75,7 @@ public void ocultar() {
         asunto.setBounds(50, 240, 150,40);
         sPanel.add(asunto);
         
-        botAgregar = new Button();
+        botAgregar = new Button(false);
         botAgregar.setText("Agregar");
         botAgregar.setForeground(Color.black);
         botAgregar.setColor1(new Color(255, 196, 0));
@@ -83,7 +83,7 @@ public void ocultar() {
         botAgregar.setBounds(50,364,90,30);
         this.add(botAgregar);
         
-        cancelar = new Button();
+        cancelar = new Button(false);
         cancelar.setText("Cancelar");
         cancelar.setForeground(Color.black);
         cancelar.setColor1(new Color(255, 196, 0));

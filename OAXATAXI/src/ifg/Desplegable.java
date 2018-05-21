@@ -251,7 +251,7 @@ public class Desplegable extends JPanel {
     		busqueda.setBounds(30,60,170,30);
     		this.add(busqueda);
     		setJTexFieldChanged(busqueda);
-        ocultar = new Button();
+        ocultar = new Button(false);
         ocultar.setBounds(65,410,120,40);
         ocultar.setColor1(new Color(255, 196, 0));
         ocultar.setColor2(new Color(202, 147, 0));

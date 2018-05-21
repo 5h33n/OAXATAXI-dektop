@@ -49,8 +49,8 @@ public class Login extends JFrame {
 
         // Definicion de parametros de los componentes
         administrador = new JLabel("Administrador");
-        contrasena = new JLabel("Contraseña");
-        olvidarContrasena = new JLabel("Olvide mi contraseña");
+        contrasena = new JLabel("Contraseï¿½a");
+        olvidarContrasena = new JLabel("Olvide mi contraseï¿½a");
         pregunta = new JButton("?");
         pregunta.setBackground(Color.blue);
         pregunta.setForeground(Color.white);
@@ -58,7 +58,7 @@ public class Login extends JFrame {
         cerrar.setBackground(Color.red);
         cerrar.setForeground(Color.white);
         cerrar.addMouseListener(new Click());
-        iniciar = new Button();
+        iniciar = new Button(false);
         iniciar.addMouseListener(new Click());
         cajaAdministrador = new JERoundTextField();
         cajaContrasena = new JERoundTextField();

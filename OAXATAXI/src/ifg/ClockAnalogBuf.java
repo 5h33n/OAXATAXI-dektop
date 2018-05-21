@@ -15,12 +15,15 @@ public class ClockAnalogBuf extends JPanel {
     public ClockAnalogBuf() {
     
         Container content = new Container();
-        this.setLayout(new BorderLayout());
+        this.setLayout(null);
         clockFace = new Clock();
-        this.add(clockFace, BorderLayout.CENTER);
- 
+        clockFace.setBackground(new Color(250, 244, 194));
+        clockFace.setBounds(0,0,150,150);
+        this.setBackground(new Color(250, 244, 194));
+        this.add(clockFace);
         //this.setTitle("Analog Clock");
         //this.pack();
+        
     
         clockFace.start();
     }
@@ -50,9 +53,9 @@ class Clock extends JPanel {
     public Clock() {
     	
         this.setPreferredSize(new Dimension(300,300));
-        this.setBackground(Color.white);
+        this.setLayout(null);
+        this.setBackground(new Color(250, 244, 194));
         this.setForeground(Color.black);
- 
         t = new javax.swing.Timer(1000,
               new ActionListener() {
                   public void actionPerformed(ActionEvent e) {
@@ -96,6 +99,9 @@ class Clock extends JPanel {
             Graphics2D gc = clockImage.createGraphics();
             gc.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                                 RenderingHints.VALUE_ANTIALIAS_ON);
+            gc.setBackground(new Color(250, 244, 194));
+            gc.setColor(new Color(250, 244, 194));
+            
             drawClockFace(gc);
         }
  
@@ -133,10 +139,11 @@ class Clock extends JPanel {
     }
     private void drawClockFace(Graphics g) {
  
-        g.setColor(Color.yellow);
+        g.setColor(new Color(250, 244, 194));
         g.fillOval(spacing, spacing, size, size);
         g.setColor(Color.black);
         g.drawOval(spacing, spacing, size, size);
+        
  
  
         for (int sec = 0; sec<60; sec++) {

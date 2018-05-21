@@ -6,6 +6,9 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.table.DefaultTableModel;
+
+import com.toedter.calendar.JDateChooser;
+
 import java.util.*;
 import java.io.*;
 import java.sql.Connection;
@@ -14,10 +17,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+
 public class Principal extends JFrame implements Runnable {
     
-    private JButton cerrar,notif, alerta,minimizar;
-    private JLabel titulo = new JLabel("OAXATAXI");
+    private JButton cerrar,notif, alerta,minimizar,cont;
+    private JLabel titulo = new JLabel();
     private JLabel admin = new JLabel();
     private JLabel viajes = new JLabel("Viajes del d�a");
     private Button verMapa, notificar,options;
@@ -26,8 +30,10 @@ public class Principal extends JFrame implements Runnable {
     private JTable table = new JTable(dtm);
     private String hora, minutos, segundos, ampm;
     private Calendar calendario;
+    private JDateChooser dateChooser;
     private Thread h1;
     Desplegable des;
+    JScrollPane scrollPane;
     JLabel lbHora = new JLabel();
     private JLabel fondo;
     private String [][] ce = null;
@@ -44,6 +50,7 @@ public class Principal extends JFrame implements Runnable {
     		crearComponentes();
         this.setUndecorated(true);
         this.setVisible(true);
+        this.addMouseListener(new Click());
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());        
         this.setLocationRelativeTo(null);
@@ -62,12 +69,23 @@ public class Principal extends JFrame implements Runnable {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-        des.setLocation(0, 45);
+        des.setLocation(0, 30);
         des.setVisible(false);
+        des.addFocusListener(new FocusListener() {
+        	   
+        	   public void focusLost(FocusEvent e) {
+        	      des.setVisible(false);
+        	   }
+        	   public void focusGained(FocusEvent e) {
+        		  des.setVisible(true);
+				
+        	   }
+        	});
         des.addMouseListener(new Click());
         this.add(des);
         
         ClockAnalogBuf reloj = new ClockAnalogBuf();
+        reloj.setBackground(new Color(250, 244, 194));
         reloj.setBounds(890,50,150,150);
         this.add(reloj);
         
@@ -75,50 +93,64 @@ public class Principal extends JFrame implements Runnable {
         notif = new JButton();
         cerrar = new JButton();
         cerrar.addMouseListener(new Click());
+        cerrar.setBorder(BorderFactory.createLineBorder(Color.black,1));
         minimizar = new JButton();
+        minimizar.setBorder(BorderFactory.createLineBorder(Color.black,1));
+        alerta.setBorder(BorderFactory.createLineBorder(Color.black,1));
+        notif.setBorder(BorderFactory.createLineBorder(Color.black,1));
         minimizar.addMouseListener(new Click());
         JLabel barra = new JLabel();
         
         ImageIcon b = new ImageIcon(getClass().getResource("/img/barra.jpg"));
         barra.setIcon(b);
-        barra.setBounds(0,0,772,45);
+        barra.setBounds(0,0,911,30);
         this.add(barra);
         
         ImageIcon al = new ImageIcon(getClass().getResource("/img/alerta.png"));
         alerta.setIcon(al);
-        alerta.setBounds(772,0,65,45);
+        alerta.setBounds(911,0,43,30);
         this.add(alerta);
         
         ImageIcon n = new ImageIcon(getClass().getResource("/img/notificacion.png"));
         notif.setIcon(n);
-        notif.setBounds(837,0,65,45);
+        notif.setBounds(954,0,46,30);
         this.add(notif);
         
         ImageIcon a = new ImageIcon(getClass().getResource("/img/admin.png"));
         admin.setIcon(a);
-        admin.setBounds(902,0,196,45);
+        admin.setBounds(1000,0,128,30);
         this.add(admin);
         
-        ImageIcon c= new ImageIcon(getClass().getResource("/img/cerrar.png"));
+        ImageIcon c= new ImageIcon(getClass().getResource("/img/minimizar.png"));
         minimizar.setIcon(c);
-        minimizar.setBounds(1090,0,60,45);
+        minimizar.setBounds(1128,0,36,30);
         this.add(minimizar);
         
         ImageIcon ce= new ImageIcon(getClass().getResource("/img/cerrar.png"));
-        cerrar.setIcon(c);
-        cerrar.setBounds(1145,0,57,45);
+        cerrar.setIcon(ce);
+        cerrar.setBounds(1164,0,36,30);
         this.add(cerrar);  
         
-        titulo.setFont(new Font("Arial", Font.BOLD, 40));
-        titulo.setBounds(490,60,200,50);
+        //titulo.setFont(new Font("Arial", Font.BOLD, 40));
+        ImageIcon ti = new ImageIcon(getClass().getResource("/img/titulo.png"));
+        titulo.setIcon(ti);
+        titulo.setBounds(350,60,500,150);
         titulo.setSize(400, 50);
         this.add(titulo);
         
+        dateChooser = new JDateChooser("yyyy/MM/dd", "####/##/##", '_');
+        dateChooser.setBounds(570,194,130,25);
+        this.add(dateChooser);
+        cont = new JButton();
+        cont.setBounds(700,194,100,25);
+        cont.setText("Ver");
+        cont.addMouseListener(new Click());
+        this.add(cont);
         viajes.setFont(new Font("Segoe UI Black", Font.BOLD, 23));
-        viajes.setBounds(95,180,480,50);
+        viajes.setBounds(95,180,400,50);
         this.add(viajes);
         
-        verMapa = new Button();
+        verMapa = new Button(true);
         verMapa.setFont(new Font("Arial", Font.BOLD, 25));
         verMapa.setForeground(Color.black);
         verMapa.setText("Ver mapa");
@@ -128,7 +160,7 @@ public class Principal extends JFrame implements Runnable {
         verMapa.addMouseListener(new Click());
         this.add(verMapa);
             
-        notificar = new Button();
+        notificar = new Button(true);
         notificar.setText("Notificar");
         notificar.setFont(new Font("Arial", Font.BOLD, 25));
         notificar.setForeground(Color.black);
@@ -149,12 +181,17 @@ public class Principal extends JFrame implements Runnable {
 	     };
 	     table = new JTable(dtm);
 		 table.setPreferredScrollableViewportSize(new Dimension(500, 70));
-		 JScrollPane scrollPane = new JScrollPane(table); 
+		 scrollPane = new JScrollPane(table); 
+		 scrollPane.addMouseListener(new Click());
         t.add(scrollPane);
+        t.addMouseListener(new Click());
         table.requestFocus();
+        table.addMouseListener(new Click());
         this.add(t);
         try {
-			mostrar();
+        	Calendar cal= Calendar.getInstance();
+        	
+			mostrar(cal.get(Calendar.DAY_OF_MONTH),cal.get(Calendar.MONTH),cal.get(Calendar.YEAR));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -185,12 +222,15 @@ public class Principal extends JFrame implements Runnable {
         fondo.setIcon(f);
         fondo.setBounds(0,45,1200,580);
         this.add(fondo);
-        options = new ifg.Button();
+        options = new ifg.Button(true);
         options.setForeground(Color.black);
         options.setColor1(new Color(255, 196, 0));
         options.setColor2(new Color(202, 147, 0));
-        options.setBounds(0,45,100,70);
+        ImageIcon tie = new ImageIcon(getClass().getResource("/img/lupa.png"));
+        options.setIcon(tie);
+        options.setBounds(0,30,70,55);
         options.setBorder(null);
+        
         options.addMouseListener(new Click());
         this.add(options);
         ver = new JButton();
@@ -233,25 +273,51 @@ public class Principal extends JFrame implements Runnable {
     		if (e.getSource() == cerrar) {
     			cerrar();
     		}
-    		if (e.getSource() == minimizar) {
+    		else if (e.getSource() == minimizar) {
     			minimizar();
+    			des.setVisible(false);
     		}
-    		if (e.getSource() == verMapa) {
+    		else if (e.getSource() == verMapa) {
     			Mapa m = new Mapa();
+    			des.setVisible(false);
     		}
-    		if (e.getSource() == notificar) {
+    		else if (e.getSource() == notificar) {
     			Notificacion n = new Notificacion();
-    		}if (e.getSource() == options) {
+    			des.setVisible(false);
+    		}else if (e.getSource() == options) {
     			//options.setVisible(false);
     			des.setVisible(true);
-    		}if (e.getSource() == ver) {
+    		}else if (e.getSource() == ver) {
     			//options.setVisible(false);
     			//System.out.println("simon");
     			new Database();
-    		}if (e.getSource() == agregar) {
+    			des.setVisible(false);
+    		}else if (e.getSource() == agregar) {
     			//options.setVisible(false);
     			new VentanaAgregar();
+    			des.setVisible(false);
     			
+    		}
+    		else if (e.getSource() == table || e.getSource() == scrollPane) {
+    			//options.setVisible(false);
+    			des.setVisible(false);
+    			
+    		}else if(e.getSource() == cont) {
+    			des.setVisible(false);
+    			try {
+						if(dateChooser.getDate()==null) {
+							JOptionPane.showMessageDialog(null, "La fecha seleccionada es incorrecta");
+							dateChooser.setDate(null);
+						}else {
+							mostrar(dateChooser.getDate().getDate(),dateChooser.getDate().getMonth(),dateChooser.getDate().getYear());
+						}	
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+    			//System.out.println(dateChooser.getDate().getDate()+"/"+dateChooser.getDate().getMonth()+"/"+dateChooser.getDate().getYear());
+    		}else {
+    			des.setVisible(false);
     		}
     		
     	}
@@ -291,7 +357,7 @@ public class Principal extends JFrame implements Runnable {
 			String url="jdbc:postgresql://localhost:5432/oaxataxi";
 			conexion = DriverManager.getConnection(url,"postgres","Pacomegoma12");
 			if (conexion!=null) {
-				System.out.println("Conexion exitosa");
+				//System.out.println("Conexion exitosa");
 			}else {
 				JOptionPane.showMessageDialog(null,"Conexion fallida alv");
 			}
@@ -300,11 +366,18 @@ public class Principal extends JFrame implements Runnable {
 			e.printStackTrace();
 		}
     }
-    public void mostrar() throws SQLException {
+    public void mostrar(int d, int m, int y) throws SQLException {
     	try {
+    			
+    			dtm.setRowCount(0);
+    			if(y<2000) {
+    				y=y-100;
+    				y=y+2000;
+    			}
 			conexionDB();
 			sentencia = conexion.createStatement();
-			resultado = sentencia.executeQuery("SELECT id_taxi,no_placas,taxista_viaje_taxi.id_viaje,nickname_u,hora_inicio,hora_final,origen,destino,viaje.estado,monto_pagado,taxista_viaje_taxi.id_taxista,nombre,apaterno FROM oaxataxi.taxista_viaje_taxi INNER JOIN oaxataxi.viaje ON taxista_viaje_taxi.id_viaje = viaje.id_viaje INNER JOIN oaxataxi.taxista ON taxista_viaje_taxi.id_taxista = taxista.id_taxista");
+			String s = "SELECT id_taxi,no_placas,taxista_viaje_taxi.id_viaje,nickname_u,hora_inicio,hora_final,origen,destino,viaje.estado,monto_pagado,taxista_viaje_taxi.id_taxista,nombre,apaterno FROM oaxataxi.taxista_viaje_taxi INNER JOIN oaxataxi.viaje ON taxista_viaje_taxi.id_viaje = viaje.id_viaje INNER JOIN oaxataxi.taxista ON taxista_viaje_taxi.id_taxista = taxista.id_taxista where viaje.fecha ='"+y+"-"+(m+1)+"-"+d+"'";
+			resultado = sentencia.executeQuery(s);
 			while ( resultado.next() ) {
 				String id_taxi = resultado.getString("id_taxi");
 				String no_placas = resultado.getString("no_placas");

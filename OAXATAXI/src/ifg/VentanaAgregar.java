@@ -13,9 +13,10 @@ public class VentanaAgregar extends JFrame {
     JLabel titulo = new JLabel("Agregar");
     JLabel agregar = new JLabel("Agregar nuevo");
     JLabel foto = new JLabel();
-    Button botAgregar = new Button();
-    Button cancelar = new Button();
-    Button adFoto = new Button();
+    Button botAgregar = new Button(true);
+    Button cancelar = new Button(true);
+    Button adFoto = new Button(true);
+    ResultSet r;
     JTextField[] fields;
     JTextField cajaid;
     JTextField cajaplacas;
@@ -47,46 +48,65 @@ public class VentanaAgregar extends JFrame {
     	public void mouseClicked(MouseEvent e) {
     		if (e.getSource() == cancelar) {
     			bye();
+    			
     		}if (e.getSource() == botAgregar && cbPersonas.getSelectedItem() == "Taxi"){
-    			insert = "INSERT INTO oaxataxi.taxi(id_taxi, no_placas, estado, comentarios, puntuacion)VALUES ("+cajaid.getText()+", '"+cajaplacas.getText().toLowerCase()+"', "+"'Agregado recientemente', '', NULL);";
-    		    //System.out.println(insert);
-    			try {
+    			if (cajaid.getText().length() == 0 || cajaplacas .getText().length() == 0) {
+    				JOptionPane.showMessageDialog(null, "Campos vacios");
+            } else {
+            	try {
     				conexionDB();
+    				sentencia = conexion.createStatement();
+        			r = sentencia.executeQuery("select * from oaxataxi.taxi where id_taxi="+cajaid.getText()+";");
+        			if(r.next()) {
+        				JOptionPane.showMessageDialog(null,"ERROR no se añadió el elemento, duplicidad en datos primarios");
+        			}else {
+        				insert = "INSERT INTO oaxataxi.taxi(id_taxi, no_placas, estado, comentarios, puntuacion)VALUES ("+cajaid.getText()+", '"+cajaplacas.getText().toLowerCase()+"', "+"'Agregado recientemente', '', NULL);";
+    	    		    //System.out.println(insert);
+    	
+    	    		    try {
+    	    				insertar(insert);
+    	    			} catch (SQLException ex) {
+    	    				// TODO Auto-generated catch block
+    	    				ex.printStackTrace();
+    	    			}
+        			}
     			} catch (SQLException ex) {
     				// TODO Auto-generated catch block
     				ex.printStackTrace();
     			}
-    		    try {
-    				insertar(insert);
-    			} catch (SQLException ex) {
-    				// TODO Auto-generated catch block
-    				ex.printStackTrace();
-    			}
-    		    cajaid.setText("");
-    		    cajaplacas.setText("");
+            		//if(cajaid)
+	    			
+	    		    cajaid.setText("");
+	    		    cajaplacas.setText("");
+            }
     		}if (e.getSource() == botAgregar && cbPersonas.getSelectedItem() == "Taxista"){
-    			insert = "INSERT INTO oaxataxi.taxista( "
-    		        +"    id_taxista, nombre, apaterno, amaterno, licencia, telefono, c_tel, "
-    		        +"    foto, estado, comentarios, puntuacion)"
-    		   +" VALUES ("+ cajaId.getText() +", '"+ cajaNombre.getText().toLowerCase() +"', '"+ cajaAp.getText().toLowerCase() +"', '"+ cajaAm.getText().toLowerCase() +"', 'htt://temporalmente.ausente', '"+ cajaTel.getText() +"', '+52', "
-    		      +"      'https://ausente', 'Recientemente agregado', '', NULL);";
-    		    try {
-    				conexionDB();
-    			} catch (SQLException ex) {
-    				// TODO Auto-generated catch block
-    				ex.printStackTrace();
-    			}
-    		    try {
-    				insertar(insert);
-    			} catch (SQLException ex) {
-    				// TODO Auto-generated catch block
-    				ex.printStackTrace();
-    			}
-    		    cajaId.setText("");
-    		    cajaNombre.setText("");
-    		    cajaAp.setText("");
-    		    cajaAm.setText("");
-    		    cajaTel.setText("");
+    			if (cajaId.getText().length() == 0 || cajaNombre.getText().length() == 0 || cajaAp.getText().length() == 0 || cajaAm.getText().length() == 0 || cajaTel.getText().length() == 0) {
+                    JOptionPane.showMessageDialog(null, "Campos vacios");
+            } else {
+            	
+	    			insert = "INSERT INTO oaxataxi.taxista( "
+	    		        +"    id_taxista, nombre, apaterno, amaterno, licencia, telefono, c_tel, "
+	    		        +"    foto, estado, comentarios, puntuacion)"
+	    		   +" VALUES ("+ cajaId.getText() +", '"+ cajaNombre.getText().toLowerCase() +"', '"+ cajaAp.getText().toLowerCase() +"', '"+ cajaAm.getText().toLowerCase() +"', 'htt://temporalmente.ausente', '"+ cajaTel.getText() +"', '+52', "
+	    		      +"      'https://ausente', 'Recientemente agregado', '', NULL);";
+	    		    try {
+	    				conexionDB();
+	    			} catch (SQLException ex) {
+	    				// TODO Auto-generated catch block
+	    				ex.printStackTrace();
+	    			}
+	    		    try {
+	    				insertar(insert);
+	    			} catch (SQLException ex) {
+	    				// TODO Auto-generated catch block
+	    				ex.printStackTrace();
+	    			}
+	    		    cajaId.setText("");
+	    		    cajaNombre.setText("");
+	    		    cajaAp.setText("");
+	    		    cajaAm.setText("");
+	    		    cajaTel.setText("");
+            }
     		}
     	}
     }
@@ -100,7 +120,7 @@ public class VentanaAgregar extends JFrame {
         titulo.setBounds(270,10,100,40);
         this.add(titulo);
         
-        botAgregar = new Button();
+        botAgregar = new Button(true);
         botAgregar.setText("Agregar");
         botAgregar.setForeground(Color.black);
         botAgregar.setColor1(new Color(135,142,251));
@@ -109,7 +129,7 @@ public class VentanaAgregar extends JFrame {
         botAgregar.addMouseListener(new Click());
         this.add(botAgregar);
         
-        cancelar = new Button();
+        cancelar = new Button(true);
         cancelar.setText("Cancelar");
         cancelar.setForeground(Color.black);
         cancelar.setColor1(new Color(135,142,251));
@@ -217,7 +237,72 @@ public class VentanaAgregar extends JFrame {
         sPanel.add(tel);
         cajaTel.setBounds(220,220,100,25);
         sPanel.add(cajaTel);
-        
+        cajaId.addKeyListener(
+                new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if ((c < '0' || c > '9')) {
+
+                    e.consume();
+
+                }
+            }
+        }
+        );
+        cajaNombre.addKeyListener(
+                new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (((c < 'a' || c > 'z')) && (c != 32) && (c < 'A' || c > 'Z')) {
+
+                    e.consume();
+
+                }
+            }
+        }
+        );
+        cajaAp.addKeyListener(
+                new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (((c < 'a' || c > 'z')) && (c < 'A' || c > 'Z')) {
+
+                    e.consume();
+
+                }
+            }
+        }
+        );
+        cajaAm.addKeyListener(
+                new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (((c < 'a' || c > 'z')) && (c < 'A' || c > 'Z')) {
+
+                    e.consume();
+
+                }
+            }
+        }
+        );
+        cajaTel.addKeyListener(
+                new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (((c < '0' || c > '9'))) {
+
+                    e.consume();
+
+                }
+            }
+        }
+        );
+
 
     }
     public void agregarTaxi() {
@@ -228,7 +313,36 @@ public class VentanaAgregar extends JFrame {
     JLabel nPlacas = new JLabel("N�mero de placas");
     cajaid = new JTextField();
     cajaplacas = new JTextField();
+  //Validacion de cajas
+    cajaplacas.addKeyListener(
+            new KeyAdapter() {
+        @Override
+        public void keyTyped(KeyEvent e) {
+            char c = e.getKeyChar();
+            if (((c < 'a' || c > 'z')) && (c != '\b') && ('-' != c) && (c < '0' || c > '9')) {
+
+                e.consume();
+
+            }
+        }
+    }
+    );
+
     
+    cajaid.addKeyListener(
+            new KeyAdapter() {
+        @Override
+        public void keyTyped(KeyEvent e) {
+           
+            char c = e.getKeyChar();
+            if ((c != '\b') && (c < '0' || c > '9')) {
+
+                e.consume();
+
+            }
+        }
+    }
+    );
 	id_taxi.setFont(new Font("Arial", Font.BOLD, 13));
     id_taxi.setBounds(100,30,120,30);
     sPanel.add(id_taxi);
@@ -260,13 +374,14 @@ public class VentanaAgregar extends JFrame {
 			conexionDB();
 			//sentencia.ex
 			sentencia = conexion.createStatement();
-			JOptionPane.showMessageDialog(null, "Elemento correctamente agregado");
+			
 			sentencia.executeQuery(s);
 	         resultado.close();
 	         sentencia.close();
 	         conexion.close();
+	         JOptionPane.showMessageDialog(null, "Elemento correctamente agregado");
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			JOptionPane.showMessageDialog(null,"ERROR no se añadió el elemento, duplicidad en datos primarios");
 	    } finally {
 	        if (sentencia != null) { sentencia.close(); }
 	        
