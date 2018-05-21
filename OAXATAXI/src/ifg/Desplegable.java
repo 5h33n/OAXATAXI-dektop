@@ -299,7 +299,7 @@ public class Desplegable extends JPanel {
     	try {
 			Class.forName("org.postgresql.Driver");
 			String url="jdbc:postgresql://localhost:5432/oaxataxi";
-			conexion = DriverManager.getConnection(url,"postgres","Pacomegoma12");
+			conexion = DriverManager.getConnection(url,"postgres","8357");
 			if (conexion!=null) {
 				//System.out.println("Conexion exitosa");
 			}else {

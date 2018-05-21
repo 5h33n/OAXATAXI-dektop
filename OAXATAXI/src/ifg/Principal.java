@@ -23,7 +23,7 @@ public class Principal extends JFrame implements Runnable {
     private JButton cerrar,notif, alerta,minimizar,cont;
     private JLabel titulo = new JLabel();
     private JLabel admin = new JLabel();
-    private JLabel viajes = new JLabel("Viajes del dï¿½a");
+    private JLabel viajes = new JLabel("Viajes del día");
     private Button verMapa, notificar,options;
     private JButton ver,agregar;
     private DefaultTableModel dtm;
@@ -355,7 +355,7 @@ public class Principal extends JFrame implements Runnable {
     	try {
 			Class.forName("org.postgresql.Driver");
 			String url="jdbc:postgresql://localhost:5432/oaxataxi";
-			conexion = DriverManager.getConnection(url,"postgres","Pacomegoma12");
+			conexion = DriverManager.getConnection(url,"postgres","8357");
 			if (conexion!=null) {
 				//System.out.println("Conexion exitosa");
 			}else {

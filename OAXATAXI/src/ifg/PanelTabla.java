@@ -28,10 +28,18 @@ public class PanelTabla extends JPanel{
 	private DefaultTableModel dtm;
 	private JTable table=new JTable(dtm);
 	JTextField[] fields;
+	public JTextField[] getFields() {
+		return fields;
+	}
+	public void setFields(JTextField[] fields) {
+		this.fields = fields;
+	}
+
 	private static Object[][] a;
 	private static String[] b;
 	private int id;
 	private int efe;
+	
 	
 	public DefaultTableModel getDtm() {
 		return dtm;

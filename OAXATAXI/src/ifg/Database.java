@@ -4,6 +4,8 @@ import java.awt.CardLayout;
 import java.awt.Font;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -11,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -40,15 +43,20 @@ public class Database extends JFrame {
     Statement sentencia;
     JComboBox cbPersonas;
     PanelTabla pt,ptt,pu,pv;
-    
+    private JButton del = new JButton("Eliminar");
+    private JButton act = new JButton("Actulizar");
     private JLabel titulo = new JLabel("Base de datos");
     
 	public Database() {
+		del.addMouseListener(new Click());
+		act.addMouseListener(new Click());
 		v.setLayout(new BoxLayout(v,BoxLayout.Y_AXIS));
 		content.setLayout(new CardLayout());
 		String [] unidades = {"","Taxis","Taxistas","Usuarios","Viajes"};
         cbPersonas = new JComboBox(unidades);
         v.add(cbPersonas);
+        v.add(del);
+        v.add(act);
         cbPersonas.addItemListener( new ItemListener(){
 
             @Override
@@ -102,7 +110,7 @@ public class Database extends JFrame {
     	try {
 			Class.forName("org.postgresql.Driver");
 			String url="jdbc:postgresql://localhost:5432/oaxataxi";
-			conexion = DriverManager.getConnection(url,"postgres","Pacomegoma12");
+			conexion = DriverManager.getConnection(url,"postgres","8357");
 			if (conexion!=null) {
 				//System.out.println("Conexion exitosa");
 			}else {
@@ -113,6 +121,37 @@ public class Database extends JFrame {
 			e.printStackTrace();
 		}
     }
+	 private class Click extends MouseAdapter{
+	    	public void mouseClicked(MouseEvent e) {
+	    		if(e.getSource() == del){
+	    			borrarFila();
+		    	}if(e.getSource() == act){
+	    			act.setText("Guardar");
+		    	}
+	    		
+	    	}
+	    }
+	 public void borrarFila(){
+		 int id;
+		 id = Integer.parseInt(pv.getFields()[0].getText());
+		 try {
+			conexionDB();
+			sentencia = conexion.createStatement();
+			String s = "delete from oaxataxi.taxista_viaje_taxi where id_viaje="+id+";";
+			System.out.println(s);
+		
+			sentencia.executeUpdate(s);
+			s = "delete from oaxataxi.viaje where id_viaje="+id+";";
+			System.out.println(s);
+		
+			sentencia.executeUpdate(s);
+			//sentencia.execute(s);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 dtm4.removeRow(pv.filaseleccionada());
+ 	}
     public void mostrar(int n) throws SQLException {
     	try {
 			conexionDB();
