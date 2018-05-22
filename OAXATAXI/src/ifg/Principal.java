@@ -22,7 +22,7 @@ public class Principal extends JFrame implements Runnable {
     
     private JButton cerrar,notif, alerta,minimizar,cont;
     private JLabel titulo = new JLabel();
-    private JLabel admin = new JLabel();
+    private JButton admin = new JButton();
     private JLabel viajes = new JLabel("Viajes del día");
     private Button verMapa, notificar,options;
     private JButton ver,agregar;
@@ -33,6 +33,8 @@ public class Principal extends JFrame implements Runnable {
     private JDateChooser dateChooser;
     private Thread h1;
     Desplegable des;
+    AyudaAdmin ayuda;
+    Principal p;
     JScrollPane scrollPane;
     JLabel lbHora = new JLabel();
     private JLabel fondo;
@@ -84,6 +86,23 @@ public class Principal extends JFrame implements Runnable {
         des.addMouseListener(new Click());
         this.add(des);
         
+        
+        ayuda = new AyudaAdmin();
+        ayuda.setLocation(1000, 30);
+        ayuda.setVisible(false);
+        ayuda.addFocusListener(new FocusListener() {
+        	   
+        	   public void focusLost(FocusEvent e) {
+        	      ayuda.setVisible(false);
+        	   }
+        	   public void focusGained(FocusEvent e) {
+        		  ayuda.setVisible(true);
+				
+        	   }
+        	});
+        ayuda.addMouseListener(new Click());
+        this.add(ayuda);
+        
         ClockAnalogBuf reloj = new ClockAnalogBuf();
         reloj.setBackground(new Color(250, 244, 194));
         reloj.setBounds(890,50,150,150);
@@ -116,10 +135,27 @@ public class Principal extends JFrame implements Runnable {
         notif.setBounds(954,0,46,30);
         this.add(notif);
         
-        ImageIcon a = new ImageIcon(getClass().getResource("/img/admin.png"));
-        admin.setIcon(a);
-        admin.setBounds(1000,0,128,30);
-        this.add(admin);
+       
+        
+//        options = new ifg.Button(true);
+//        options.setForeground(Color.black);
+//        options.setColor1(new Color(255, 196, 0));
+//        options.setColor2(new Color(202, 147, 0));
+//        ImageIcon tie = new ImageIcon(getClass().getResource("/img/lupa.png"));
+//        options.setIcon(tie);
+//        options.setBounds(0,30,70,55);
+//        options.setBorder(null);
+//        
+//        options.addMouseListener(new Click());
+//        this.add(options);
+//        ver = new JButton();
+//        ver.setForeground(Color.black);
+//        //ver.setColor1(new Color(255, 196, 0));
+//        //ver.setColor2(new Color(202, 147, 0));
+//        ver.setBounds(500,450,150,35);
+//        ver.setText("Todos los registros");
+//        ver.addMouseListener(new Click());
+//        this.add(ver);
         
         ImageIcon c= new ImageIcon(getClass().getResource("/img/minimizar.png"));
         minimizar.setIcon(c);
@@ -129,13 +165,13 @@ public class Principal extends JFrame implements Runnable {
         ImageIcon ce= new ImageIcon(getClass().getResource("/img/cerrar.png"));
         cerrar.setIcon(ce);
         cerrar.setBounds(1164,0,36,30);
-        this.add(cerrar);  
+        this.add(cerrar); 
         
         //titulo.setFont(new Font("Arial", Font.BOLD, 40));
-        ImageIcon ti = new ImageIcon(getClass().getResource("/img/titulo.png"));
+        ImageIcon ti = new ImageIcon(getClass().getResource("/img/oaxa.png"));
         titulo.setIcon(ti);
-        titulo.setBounds(350,60,500,150);
-        titulo.setSize(400, 50);
+        titulo.setBounds(300,60,500,150);
+        titulo.setSize(600, 100);
         this.add(titulo);
         
         dateChooser = new JDateChooser("yyyy/MM/dd", "####/##/##", '_');
@@ -222,6 +258,17 @@ public class Principal extends JFrame implements Runnable {
         fondo.setIcon(f);
         fondo.setBounds(0,45,1200,580);
         this.add(fondo);
+        
+        admin = new ifg.Button(true);
+        admin.setForeground(Color.black);
+        ImageIcon a = new ImageIcon(getClass().getResource("/img/admin.png"));
+        admin.setIcon(a);
+        admin.setBounds(1000,0,128,30);
+        this.add(admin);
+        admin.addMouseListener(new Click());
+        this.add(admin);
+        
+        
         options = new ifg.Button(true);
         options.setForeground(Color.black);
         options.setColor1(new Color(255, 196, 0));
@@ -230,9 +277,10 @@ public class Principal extends JFrame implements Runnable {
         options.setIcon(tie);
         options.setBounds(0,30,70,55);
         options.setBorder(null);
-        
         options.addMouseListener(new Click());
         this.add(options);
+        
+        
         ver = new JButton();
         ver.setForeground(Color.black);
         //ver.setColor1(new Color(255, 196, 0));
@@ -276,34 +324,54 @@ public class Principal extends JFrame implements Runnable {
     		else if (e.getSource() == minimizar) {
     			minimizar();
     			des.setVisible(false);
+    			ayuda.setVisible(false);
+    			
+    		}
+    		else if(e.getSource() == admin) {
+    			//System.out.println("hola");
+    			ayuda.setVisible(true);
     		}
     		else if (e.getSource() == verMapa) {
     			Mapa m = new Mapa();
     			des.setVisible(false);
+    			ayuda.setVisible(false);
+    			
     		}
     		else if (e.getSource() == notificar) {
     			Notificacion n = new Notificacion();
     			des.setVisible(false);
+    			ayuda.setVisible(false);
+    			
     		}else if (e.getSource() == options) {
     			//options.setVisible(false);
     			des.setVisible(true);
+    			ayuda.setVisible(false);
+    			
     		}else if (e.getSource() == ver) {
     			//options.setVisible(false);
     			//System.out.println("simon");
     			new Database();
     			des.setVisible(false);
+    			ayuda.setVisible(false);
+    			
     		}else if (e.getSource() == agregar) {
     			//options.setVisible(false);
     			new VentanaAgregar();
     			des.setVisible(false);
+    			ayuda.setVisible(false);
+    			
     			
     		}
     		else if (e.getSource() == table || e.getSource() == scrollPane) {
     			//options.setVisible(false);
     			des.setVisible(false);
+    			ayuda.setVisible(false);
+    			
     			
     		}else if(e.getSource() == cont) {
     			des.setVisible(false);
+    			ayuda.setVisible(false);
+    			
     			try {
 						if(dateChooser.getDate()==null) {
 							JOptionPane.showMessageDialog(null, "La fecha seleccionada es incorrecta");
@@ -318,6 +386,8 @@ public class Principal extends JFrame implements Runnable {
     			//System.out.println(dateChooser.getDate().getDate()+"/"+dateChooser.getDate().getMonth()+"/"+dateChooser.getDate().getYear());
     		}else {
     			des.setVisible(false);
+    			
+    			
     		}
     		
     	}
@@ -325,6 +395,7 @@ public class Principal extends JFrame implements Runnable {
     public void cerrar() {
     		System.exit(0);
     }
+    
     public void minimizar() {
 		this.setExtendedState(ICONIFIED);
     }
