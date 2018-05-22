@@ -170,7 +170,7 @@ public class Principal extends JFrame implements Runnable {
         //titulo.setFont(new Font("Arial", Font.BOLD, 40));
         ImageIcon ti = new ImageIcon(getClass().getResource("/img/oaxa.png"));
         titulo.setIcon(ti);
-        titulo.setBounds(300,60,500,150);
+        titulo.setBounds(250,60,500,150);
         titulo.setSize(600, 100);
         this.add(titulo);
         
