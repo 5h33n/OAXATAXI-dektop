@@ -348,8 +348,8 @@ public class Principal extends JFrame implements Runnable {
     			ayuda.setVisible(false);
     			
     		}else if (e.getSource() == ver) {
-    			//options.setVisible(false);
-    			//System.out.println("simon");
+    			
+    			
     			new Database();
     			des.setVisible(false);
     			ayuda.setVisible(false);

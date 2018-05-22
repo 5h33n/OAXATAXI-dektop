@@ -51,7 +51,7 @@ public class AyudaAdmin extends JPanel {
     cerrar.setForeground(Color.black);
     ImageIcon a = new ImageIcon(getClass().getResource("/img/cerrarSesion.png"));
     cerrar.setIcon(a);
-    //cerrar.setBounds(500,0,128,30);
+    //cerrar.setBounds(500,0,128,30)ñ
     this.add(cerrar);
     cerrar.addActionListener(
             new ActionListener() {
@@ -74,7 +74,7 @@ public class AyudaAdmin extends JPanel {
     acerca.setForeground(Color.black);
     ImageIcon b = new ImageIcon(getClass().getResource("/img/acerca.png"));
     acerca.setIcon(b);
-    //acerca.setBounds(500,0,128,30);
+   
     acerca.setBounds(new Rectangle(50,50,100,75));
     this.add(acerca);
     acerca.addActionListener(
