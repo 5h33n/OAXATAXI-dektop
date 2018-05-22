@@ -59,6 +59,7 @@ public class AyudaAdmin extends JPanel {
 
             //System.out.println("cerro");
             new Login().setVisible(true);
+            
            
      		
             

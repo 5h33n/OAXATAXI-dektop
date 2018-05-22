@@ -386,6 +386,7 @@ public class Principal extends JFrame implements Runnable {
     			//System.out.println(dateChooser.getDate().getDate()+"/"+dateChooser.getDate().getMonth()+"/"+dateChooser.getDate().getYear());
     		}else {
     			des.setVisible(false);
+    			ayuda.setVisible(false);
     			
     			
     		}
