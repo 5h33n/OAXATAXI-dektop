@@ -87,7 +87,7 @@ public class Principal extends JFrame implements Runnable {
         this.add(des);
         
         
-        ayuda = new AyudaAdmin();
+        ayuda = new AyudaAdmin(this);
         ayuda.setLocation(1000, 30);
         ayuda.setVisible(false);
         ayuda.addFocusListener(new FocusListener() {

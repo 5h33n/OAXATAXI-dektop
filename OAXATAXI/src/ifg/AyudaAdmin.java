@@ -20,12 +20,12 @@ public class AyudaAdmin extends JPanel {
     Principal p;
     AyudaAdmin y;
     
-    
-    public AyudaAdmin()  {
+    public AyudaAdmin(Principal p)  {
     
     this.setVisible(true);
     this.setSize(165, 145);
     this.setLayout(new BorderLayout());
+    this.p= p;
     crearComponente();
     }
     
@@ -59,7 +59,7 @@ public class AyudaAdmin extends JPanel {
 
             //System.out.println("cerro");
             new Login().setVisible(true);
-            
+            p.setVisible(false);
            
      		
             
