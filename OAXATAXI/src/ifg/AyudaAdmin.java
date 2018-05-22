@@ -57,7 +57,7 @@ public class AyudaAdmin extends JPanel {
             new ActionListener() {
         public void actionPerformed(ActionEvent evento) {
 
-            //System.out.println("cerro");
+            
             new Login().setVisible(true);
             p.setVisible(false);
            

@@ -328,7 +328,7 @@ public class Principal extends JFrame implements Runnable {
     			
     		}
     		else if(e.getSource() == admin) {
-    			//System.out.println("hola");
+    			
     			ayuda.setVisible(true);
     		}
     		else if (e.getSource() == verMapa) {
