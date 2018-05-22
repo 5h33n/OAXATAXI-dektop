@@ -1,6 +1,7 @@
 package ifg;
 import javax.swing.*;
 
+import recursos.Conexion;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -29,6 +30,7 @@ public class VentanaAgregar extends JFrame {
     String insert;
     JPanel sPanel;
     JComboBox cbPersonas;
+    Conexion c = new Conexion();
     
     private Connection conexion=null;
     ResultSet resultado;
@@ -54,7 +56,7 @@ public class VentanaAgregar extends JFrame {
     				JOptionPane.showMessageDialog(null, "Campos vacios");
             } else {
             	try {
-    				conexionDB();
+        			conexion = c.conexionDB();
     				sentencia = conexion.createStatement();
         			r = sentencia.executeQuery("select * from oaxataxi.taxi where id_taxi="+cajaid.getText()+";");
         			if(r.next()) {
@@ -90,7 +92,7 @@ public class VentanaAgregar extends JFrame {
 	    		   +" VALUES ("+ cajaId.getText() +", '"+ cajaNombre.getText().toLowerCase() +"', '"+ cajaAp.getText().toLowerCase() +"', '"+ cajaAm.getText().toLowerCase() +"', 'htt://temporalmente.ausente', '"+ cajaTel.getText() +"', '+52', "
 	    		      +"      'https://ausente', 'Recientemente agregado', '', NULL);";
 	    		    try {
-	    				conexionDB();
+	    				conexion = c.conexionDB();
 	    			} catch (SQLException ex) {
 	    				// TODO Auto-generated catch block
 	    				ex.printStackTrace();
@@ -354,28 +356,14 @@ public class VentanaAgregar extends JFrame {
     cajaplacas.setBounds(220,90,100,30);
     sPanel.add(cajaplacas);
     }
-    public void conexionDB() throws SQLException {
-    	try {
-			Class.forName("org.postgresql.Driver");
-			String url="jdbc:postgresql://localhost:5432/oaxataxi";
-			conexion = DriverManager.getConnection(url,"postgres","8357");
-			if (conexion!=null) {
-				//System.out.println("Conexion exitosa");
-			}else {
-				JOptionPane.showMessageDialog(null,"Conexion fallida alv");
-			}
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
+    
     public void insertar (String s) throws SQLException {
     	try {
-			conexionDB();
+			conexion = c.conexionDB();
 			//sentencia.ex
 			sentencia = conexion.createStatement();
 			
-			sentencia.executeQuery(s);
+			sentencia.executeUpdate(s);
 	         resultado.close();
 	         sentencia.close();
 	         conexion.close();

@@ -9,6 +9,8 @@ import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
 
+import recursos.Conexion;
+
 import java.util.*;
 import java.io.*;
 import java.sql.Connection;
@@ -23,7 +25,7 @@ public class Principal extends JFrame implements Runnable {
     private JButton cerrar,notif, alerta,minimizar,cont;
     private JLabel titulo = new JLabel();
     private JButton admin = new JButton();
-    private JLabel viajes = new JLabel("Viajes del día");
+    private JLabel viajes = new JLabel("Viajes del dï¿½a");
     private Button verMapa, notificar,options;
     private JButton ver,agregar;
     private DefaultTableModel dtm;
@@ -423,21 +425,6 @@ public class Principal extends JFrame implements Runnable {
     
     
     //conexion bd
-    public void conexionDB() throws SQLException {
-    	try {
-			Class.forName("org.postgresql.Driver");
-			String url="jdbc:postgresql://localhost:5432/oaxataxi";
-			conexion = DriverManager.getConnection(url,"postgres","8357");
-			if (conexion!=null) {
-				//System.out.println("Conexion exitosa");
-			}else {
-				JOptionPane.showMessageDialog(null,"Conexion fallida alv");
-			}
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
     public void mostrar(int d, int m, int y) throws SQLException {
     	try {
     			
@@ -446,7 +433,8 @@ public class Principal extends JFrame implements Runnable {
     				y=y-100;
     				y=y+2000;
     			}
-			conexionDB();
+    			Conexion c = new Conexion();
+			conexion = c.conexionDB();
 			sentencia = conexion.createStatement();
 			String s = "SELECT id_taxi,no_placas,taxista_viaje_taxi.id_viaje,nickname_u,hora_inicio,hora_final,origen,destino,viaje.estado,monto_pagado,taxista_viaje_taxi.id_taxista,nombre,apaterno FROM oaxataxi.taxista_viaje_taxi INNER JOIN oaxataxi.viaje ON taxista_viaje_taxi.id_viaje = viaje.id_viaje INNER JOIN oaxataxi.taxista ON taxista_viaje_taxi.id_taxista = taxista.id_taxista where viaje.fecha ='"+y+"-"+(m+1)+"-"+d+"'";
 			resultado = sentencia.executeQuery(s);

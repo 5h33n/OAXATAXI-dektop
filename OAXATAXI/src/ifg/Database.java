@@ -22,17 +22,20 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
+import recursos.Conexion;
+
 public class Database extends JFrame {
 	public DefaultTableModel dtm1;
 	public DefaultTableModel dtm2;
 	public DefaultTableModel dtm3;
 	public DefaultTableModel dtm4;
+	Conexion c = new Conexion();
 	Object[][] a1 = {};
 	String[] b1 = {"id_Taxi:","Número de placas:","Estado:","Comentarios:","Puntuación"};
 
 	
 	String[] b2 = {"id_Taxista:","Nombre:","Apellidos:","Licencia enlace:","Telefono:","Foto enlace:","Estado:","Comentarios:","Puntuación:"};
-	String[] b3 = {"id_Usuario:","Nombre:","Apellidos:","Nickname","RFC:","Tel�fono:","Sexo:","Email:","Fecha de nacimiento:"};
+	String[] b3 = {"id_Usuario:","Nombre:","Apellidos:","Nickname","RFC:","Tel�fono:","Sexo:","Email:","Fecha de nacimiento:"};
 	String[] b4 = {"id_viaje","id_taxista","Conductor","id_taxi","Placas","Usuario","Estado","Hora inicio","Hora final","Origen","Destino","Monto"};
 
 	
@@ -72,10 +75,10 @@ public class Database extends JFrame {
 		
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         
-		pt = new PanelTabla(a1,b1);
-		ptt = new PanelTabla(a1,b2);
-		pu = new PanelTabla(a1,b3);
-		pv = new PanelTabla(a1,b4);
+		pt = new PanelTabla(a1,b1,this);
+		ptt = new PanelTabla(a1,b2,this);
+		pu = new PanelTabla(a1,b3,this);
+		pv = new PanelTabla(a1,b4,this);
 		//pt.setBounds(0,0,500,200);
 		//ptt.setBounds(0,0,500,200);
 		content.add(ptt,"Taxistas");
@@ -106,21 +109,6 @@ public class Database extends JFrame {
         this.setVisible(true);
         this.pack();
 	}
-	public void conexionDB() throws SQLException {
-    	try {
-			Class.forName("org.postgresql.Driver");
-			String url="jdbc:postgresql://localhost:5432/oaxataxi";
-			conexion = DriverManager.getConnection(url,"postgres","8357");
-			if (conexion!=null) {
-				//System.out.println("Conexion exitosa");
-			}else {
-				JOptionPane.showMessageDialog(null,"Conexion fallida alv");
-			}
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
 	 private class Click extends MouseAdapter{
 	    	public void mouseClicked(MouseEvent e) {
 	    		if(e.getSource() == del){
@@ -135,7 +123,7 @@ public class Database extends JFrame {
 		 int id;
 		 id = Integer.parseInt(pv.getFields()[0].getText());
 		 try {
-			conexionDB();
+			conexion = c.conexionDB();
 			sentencia = conexion.createStatement();
 			String s = "delete from oaxataxi.taxista_viaje_taxi where id_viaje="+id+";";
 			System.out.println(s);
@@ -154,7 +142,7 @@ public class Database extends JFrame {
  	}
     public void mostrar(int n) throws SQLException {
     	try {
-			conexionDB();
+			conexion = c.conexionDB();
 			sentencia = conexion.createStatement();
 			switch(n) {
 			case 0:
@@ -189,7 +177,7 @@ public class Database extends JFrame {
 		         }
 				break;
 			case 2:
-				conexionDB();
+				conexion = c.conexionDB();
 				sentencia = conexion.createStatement();
 				resultado = sentencia.executeQuery("SELECT * FROM oaxataxi.usuario");
 				while ( resultado.next() ) {
@@ -211,8 +199,7 @@ public class Database extends JFrame {
 				
 				break;
 			case 3:
-				
-				conexionDB();
+				conexion = c.conexionDB();
 				sentencia = conexion.createStatement();
 				resultado = sentencia.executeQuery("SELECT id_taxi,no_placas,taxista_viaje_taxi.id_viaje,nickname_u,hora_inicio,hora_final,origen,destino,viaje.estado,monto_pagado,taxista_viaje_taxi.id_taxista,nombre,apaterno FROM oaxataxi.taxista_viaje_taxi INNER JOIN oaxataxi.viaje ON taxista_viaje_taxi.id_viaje = viaje.id_viaje INNER JOIN oaxataxi.taxista ON taxista_viaje_taxi.id_taxista = taxista.id_taxista");
 				while ( resultado.next() ) {

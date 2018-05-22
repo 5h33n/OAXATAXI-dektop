@@ -39,7 +39,7 @@ public class PanelTabla extends JPanel{
 	private static String[] b;
 	private int id;
 	private int efe;
-	
+	private Database db;
 	
 	public DefaultTableModel getDtm() {
 		return dtm;
@@ -48,7 +48,8 @@ public class PanelTabla extends JPanel{
 		this.dtm = dtm;
 		table.setModel(dtm);
 	}
-	public PanelTabla(Object[][] a, String[] b) {		
+	public PanelTabla(Object[][] a, String[] b,Database db) {	
+			this.db = db;
 		 	this.a =a;
 		 	this.b =b;
 		 	init();

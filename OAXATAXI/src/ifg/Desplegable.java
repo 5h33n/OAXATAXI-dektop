@@ -4,6 +4,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
+import recursos.Conexion;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -25,7 +26,7 @@ public class Desplegable extends JPanel {
     ResultSet resultado;
     Statement sentencia;
     JPanel panel;
-
+    Conexion c = new Conexion();
 	private JLabel fondo;
     public Desplegable() throws SQLException {
     		busqueda = new JTextField();
@@ -101,7 +102,7 @@ public class Desplegable extends JPanel {
     		
     		if(isNumeric(consulta)) {
     			String[] cadena = new String[3];
-        		conexionDB();
+    			conexion = c.conexionDB();
         		sentencia = conexion.createStatement();
         		resultado = sentencia.executeQuery("SELECT * from oaxataxi.taxi where id_taxi="+consulta+";");
         		ResultSetMetaData rsmd = resultado.getMetaData();
@@ -163,7 +164,7 @@ public class Desplegable extends JPanel {
   	       conexion.close();
     		}else {
     			String[] cadena = new String[3];
-        		conexionDB();
+    			conexion = c.conexionDB();
         		sentencia = conexion.createStatement();
         		resultado = sentencia.executeQuery("SELECT * from oaxataxi.taxi where no_placas='"+consulta+"';");
         		ResultSetMetaData rsmd = resultado.getMetaData();
@@ -295,19 +296,5 @@ public class Desplegable extends JPanel {
         			break;
         }
     }
-    public void conexionDB() throws SQLException {
-    	try {
-			Class.forName("org.postgresql.Driver");
-			String url="jdbc:postgresql://localhost:5432/oaxataxi";
-			conexion = DriverManager.getConnection(url,"postgres","8357");
-			if (conexion!=null) {
-				//System.out.println("Conexion exitosa");
-			}else {
-				JOptionPane.showMessageDialog(null,"Conexion fallida alv");
-			}
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
+    
 }
