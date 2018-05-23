@@ -112,7 +112,20 @@ public class PanelTabla extends JPanel{
 	     table = new JTable(dtm);
 	     
 	     table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+	    	 
 	    	 public void valueChanged(ListSelectionEvent e) {
+	    		 if(db.act.getText().equals("Guardar")) {
+	    			 int r = JOptionPane.showConfirmDialog(null, "¿Desea guardar los cambios del elementos que estaba editando?","¿Guardar?",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+	    			 if(r==0) {
+	    				 db.guardar(fields);
+	    			 }else {
+	    				 for(int j=0;j<fields.length;j++) {
+	    					 fields[j].setEditable(false);
+	    				 }
+	    			 }
+	    			 
+	    			 db.act.setText("Editar");
+	    		 }
 	    		 if (e.getValueIsAdjusting())
 	    			 	return;
 	    		 int sRow = filaseleccionada();
@@ -124,7 +137,8 @@ public class PanelTabla extends JPanel{
      			fields[j].setText(cadena);
 	    			 }
 	    		 }
-	    		 if((db.cbPersonas.getSelectedItem().equals("Taxistas") || db.cbPersonas.getSelectedItem().equals("Taxis")) && filaseleccionada()>0) {
+	    		 
+	    		 if((db.cbPersonas.getSelectedItem().equals("Taxistas") || db.cbPersonas.getSelectedItem().equals("Taxis")) && filaseleccionada()!=-1) {
 	    			 db.del.setEnabled(false);
 	    			 db.act.setEnabled(true);
 	    		 }else if(db.cbPersonas.getSelectedItem().equals("Usuarios")) {
@@ -134,6 +148,7 @@ public class PanelTabla extends JPanel{
 	    			 db.del.setEnabled(true);
 	    			 db.act.setEnabled(false);
 	    		 }
+	    		 db.anterior=filaseleccionada();
 	    		 //editar.setVisible(true);
 	    	 }
 	    	 });

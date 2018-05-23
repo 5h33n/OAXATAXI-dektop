@@ -20,6 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
@@ -50,6 +51,7 @@ public class Database extends JFrame {
     public JButton del = new JButton("Eliminar");
     public JButton act = new JButton("Editar");
     private JLabel titulo = new JLabel("Base de datos");
+    public int anterior;
     
 	public Database() {
 		del.addMouseListener(new Click());
@@ -105,7 +107,7 @@ public class Database extends JFrame {
         JPanel botones = new JPanel();
         botones.setLayout(new FlowLayout());
         del.setEnabled(false);
-        del.setEnabled(false);
+        act.setEnabled(false);
         botones.add(del);
         botones.add(act);
         v.add(botones);
@@ -127,51 +129,57 @@ public class Database extends JFrame {
 	    			}
 	    			
 		    	}if(e.getSource() == act && act.isEnabled()){
-	    			guardar();
+		    		if(cbPersonas.getSelectedItem().equals("Taxis")) {
+		    			guardar(pt.getFields());
+		    		}else {
+		    			guardar(ptt.getFields());
+		    		}
+	    			
 		    	}
 	    	}
 	  }
-	 public void guardar() {
+	 public void guardar(JTextField[] fields) {
 		 if(act.getText().equals("Editar")) {
 			 act.setText("Guardar");
 			 if(cbPersonas.getSelectedItem().equals("Taxis")) {
-				 for(int a=2;a<pt.getFields().length;a++) {
-					 pt.getFields()[a].setEditable(true);
+				 for(int a=2;a<fields.length;a++) {
+					 fields[a].setEditable(true);
 				 }
 			 }else if(cbPersonas.getSelectedItem().equals("Taxistas")) {
-				 for(int a=1;a<ptt.getFields().length;a++) {
-					 ptt.getFields()[a].setEditable(true);
+				 for(int a=1;a<fields.length;a++) {
+					 fields[a].setEditable(true);
 				 }
 			 }
 		 }else{
 			 act.setText("Editar");
 			 if(cbPersonas.getSelectedItem().equals("Taxis")) {
-				 for(int a=2;a<pt.getFields().length;a++) {
-					 pt.getFields()[a].setEditable(false);
-					 dtm1.setValueAt(pt.getFields()[a].getText(), pt.filaseleccionada(), a);
+				 for(int a=2;a<fields.length;a++) {
+					 fields[a].setEditable(false);
+					 dtm1.setValueAt(fields[a].getText(), anterior, a);
 				 }
 				 String value="";
 				 
 				 value = "UPDATE oaxataxi.taxi\n" + 
-				 		"   SET estado='"+pt.getFields()[2].getText()+"', comentarios='"+pt.getFields()[3].getText()+"', puntuacion="+pt.getFields()[4].getText()+"\n" + 
-				 		" WHERE id_taxi="+pt.getFields()[0].getText()+";";
+				 		"   SET estado='"+fields[2].getText()+"', comentarios='"+fields[3].getText()+"', puntuacion="+fields[4].getText()+"\n" + 
+				 		" WHERE id_taxi="+fields[0].getText()+";";
 				 guardanding(value);
 			 }else if(cbPersonas.getSelectedItem().equals("Taxistas")) {
-				 for(int a=1;a<ptt.getFields().length;a++) {
-					 ptt.getFields()[a].setEditable(false);
-					 dtm2.setValueAt(ptt.getFields()[a].getText(), ptt.filaseleccionada(), a);
+				 for(int a=1;a<fields.length;a++) {
+					 fields[a].setEditable(false);
+					 dtm2.setValueAt(fields[a].getText(), anterior, a);
 				 }	
 				 String value="";
 				 String ctel="",tel="";
 				 String[] apellidos = new String[2];
-				 apellidos = ptt.getFields()[2].getText().split("");
-				 ctel = ptt.getFields()[4].getText().substring(1,3);
-				 tel = ptt.getFields()[4].getText().substring(4);
+				 apellidos = fields[2].getText().split("");
+				 ctel = fields[4].getText().substring(0,3);
+				 tel = fields[4].getText().substring(3);
 				 value = "UPDATE oaxataxi.taxista\n" + 
-				 		"   SET nombre='"+ptt.getFields()[4].getText()+"', apaterno='"+apellidos[0]+"', amaterno='"+apellidos[1]+"', licencia='"+ptt.getFields()[3].getText()+"', telefono='"+tel+"', \n" + 
-				 		"       c_tel='"+ctel+"', foto='"+ptt.getFields()[5].getText()+"', estado='"+ptt.getFields()[6].getText()+"', comentarios='"+ptt.getFields()[7].getText()+"', puntuacion="+ptt.getFields()[8].getText()+"\n" + 
-				 		" WHERE id_taxista="+ptt.getFields()[0].getText()+";";
+				 		"   SET nombre='"+fields[1].getText()+"', apaterno='"+apellidos[0]+"', amaterno='"+apellidos[1]+"', licencia='"+fields[3].getText()+"', telefono='"+tel+"', \n" + 
+				 		"       c_tel='"+ctel+"', foto='"+fields[5].getText()+"', estado='"+fields[6].getText()+"', comentarios='"+fields[7].getText()+"', puntuacion="+fields[8].getText()+"\n" + 
+				 		" WHERE id_taxista="+fields[0].getText()+";";
 				 guardanding(value);
+				 System.out.println(value);
 			 }
 		 }
 	 }
@@ -215,7 +223,7 @@ public class Database extends JFrame {
 			switch(n) {
 			case 0:
 				
-				resultado = sentencia.executeQuery("SELECT * FROM oaxataxi.taxi");
+				resultado = sentencia.executeQuery("SELECT * FROM oaxataxi.taxi order by taxi.id_taxi");
 				while ( resultado.next() ) {
 					String id_taxi = resultado.getString("id_taxi");
 					String no_placas = resultado.getString("no_placas");
@@ -227,7 +235,7 @@ public class Database extends JFrame {
 		         }
 				break;
 			case 1:
-				resultado = sentencia.executeQuery("SELECT * FROM oaxataxi.taxista");
+				resultado = sentencia.executeQuery("SELECT * FROM oaxataxi.taxista order by taxista.id_taxista");
 				while ( resultado.next() ) {
 					String id_taxista = resultado.getString("id_taxista");
 					String nombre = resultado.getString("nombre");
@@ -247,7 +255,7 @@ public class Database extends JFrame {
 			case 2:
 				conexion = c.conexionDB();
 				sentencia = conexion.createStatement();
-				resultado = sentencia.executeQuery("SELECT * FROM oaxataxi.usuario");
+				resultado = sentencia.executeQuery("SELECT * FROM oaxataxi.usuario order by usuario.id_usuario");
 				while ( resultado.next() ) {
 					String id_usuario = resultado.getString("id_usuario");
 					String nickname = resultado.getString("nickname");
@@ -269,7 +277,7 @@ public class Database extends JFrame {
 			case 3:
 				conexion = c.conexionDB();
 				sentencia = conexion.createStatement();
-				resultado = sentencia.executeQuery("SELECT id_taxi,no_placas,taxista_viaje_taxi.id_viaje,nickname_u,hora_inicio,hora_final,origen,destino,viaje.estado,monto_pagado,taxista_viaje_taxi.id_taxista,nombre,apaterno FROM oaxataxi.taxista_viaje_taxi INNER JOIN oaxataxi.viaje ON taxista_viaje_taxi.id_viaje = viaje.id_viaje INNER JOIN oaxataxi.taxista ON taxista_viaje_taxi.id_taxista = taxista.id_taxista");
+				resultado = sentencia.executeQuery("SELECT id_taxi,no_placas,taxista_viaje_taxi.id_viaje,nickname_u,hora_inicio,hora_final,origen,destino,viaje.estado,monto_pagado,taxista_viaje_taxi.id_taxista,nombre,apaterno FROM oaxataxi.taxista_viaje_taxi INNER JOIN oaxataxi.viaje ON taxista_viaje_taxi.id_viaje = viaje.id_viaje INNER JOIN oaxataxi.taxista ON taxista_viaje_taxi.id_taxista = taxista.id_taxista order by viaje.id_viaje");
 				while ( resultado.next() ) {
 					String id_taxi = resultado.getString("id_taxi");
 					String no_placas = resultado.getString("no_placas");
