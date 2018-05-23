@@ -124,6 +124,16 @@ public class PanelTabla extends JPanel{
      			fields[j].setText(cadena);
 	    			 }
 	    		 }
+	    		 if((db.cbPersonas.getSelectedItem().equals("Taxistas") || db.cbPersonas.getSelectedItem().equals("Taxis")) && filaseleccionada()>0) {
+	    			 db.del.setEnabled(false);
+	    			 db.act.setEnabled(true);
+	    		 }else if(db.cbPersonas.getSelectedItem().equals("Usuarios")) {
+	    			 db.del.setEnabled(false);
+	    			 db.act.setEnabled(false);
+	    		 }else if(db.cbPersonas.getSelectedItem().equals("Viajes")) {
+	    			 db.del.setEnabled(true);
+	    			 db.act.setEnabled(false);
+	    		 }
 	    		 //editar.setVisible(true);
 	    	 }
 	    	 });

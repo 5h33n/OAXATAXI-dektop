@@ -1,6 +1,7 @@
 package ifg;
 
 import java.awt.CardLayout;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -46,8 +47,8 @@ public class Database extends JFrame {
     Statement sentencia;
     JComboBox cbPersonas;
     PanelTabla pt,ptt,pu,pv;
-    private JButton del = new JButton("Eliminar");
-    private JButton act = new JButton("Actulizar");
+    public JButton del = new JButton("Eliminar");
+    public JButton act = new JButton("Editar");
     private JLabel titulo = new JLabel("Base de datos");
     
 	public Database() {
@@ -55,19 +56,18 @@ public class Database extends JFrame {
 		act.addMouseListener(new Click());
 		v.setLayout(new BoxLayout(v,BoxLayout.Y_AXIS));
 		content.setLayout(new CardLayout());
-		String [] unidades = {"","Taxis","Taxistas","Usuarios","Viajes"};
+		String [] unidades = {"Taxis","Taxistas","Usuarios","Viajes"};
         cbPersonas = new JComboBox(unidades);
         v.add(cbPersonas);
-        v.add(del);
-        v.add(act);
         cbPersonas.addItemListener( new ItemListener(){
-
             @Override
             public void itemStateChanged(ItemEvent e) {
             	CardLayout cl = (CardLayout)(content.getLayout());
-                cl.show(content, (String)e.getItem());
+            		String item = (String)e.getItem();
+                cl.show(content, item);
+                del.setEnabled(false);
+                act.setEnabled(false);
             }
-
          });
         
 		titulo.setFont(new Font("Arial", Font.BOLD, 20));
@@ -81,8 +81,8 @@ public class Database extends JFrame {
 		pv = new PanelTabla(a1,b4,this);
 		//pt.setBounds(0,0,500,200);
 		//ptt.setBounds(0,0,500,200);
-		content.add(ptt,"Taxistas");
 		content.add(pt,"Taxis");
+		content.add(ptt,"Taxistas");
 		content.add(pu,"Usuarios");
 		content.add(pv,"Viajes");
 		dtm1 = pt.getDtm();
@@ -102,8 +102,16 @@ public class Database extends JFrame {
 		
         v.add(content);
         content.setSize(1200,300);
+        JPanel botones = new JPanel();
+        botones.setLayout(new FlowLayout());
+        del.setEnabled(false);
+        del.setEnabled(false);
+        botones.add(del);
+        botones.add(act);
+        v.add(botones);
         this.setContentPane(v);
         //this.setLocationRelativeTo(null);
+        
         this.setSize(1200,400);
         this.setBounds(250,200,1200,500);
         this.setVisible(true);
@@ -111,28 +119,88 @@ public class Database extends JFrame {
 	}
 	 private class Click extends MouseAdapter{
 	    	public void mouseClicked(MouseEvent e) {
-	    		if(e.getSource() == del){
-	    			borrarFila();
-		    	}if(e.getSource() == act){
-	    			act.setText("Guardar");
+	    		if(e.getSource() == del && del.isEnabled()){
+	    			
+	    			int r = JOptionPane.showConfirmDialog(null, "¿Está seguro que desea borrar este elemento?","Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+	    			if(r==0) {
+	    				borrarFila();
+	    			}
+	    			
+		    	}if(e.getSource() == act && act.isEnabled()){
+	    			guardar();
 		    	}
-	    		
 	    	}
-	    }
+	  }
+	 public void guardar() {
+		 if(act.getText().equals("Editar")) {
+			 act.setText("Guardar");
+			 if(cbPersonas.getSelectedItem().equals("Taxis")) {
+				 for(int a=2;a<pt.getFields().length;a++) {
+					 pt.getFields()[a].setEditable(true);
+				 }
+			 }else if(cbPersonas.getSelectedItem().equals("Taxistas")) {
+				 for(int a=1;a<ptt.getFields().length;a++) {
+					 ptt.getFields()[a].setEditable(true);
+				 }
+			 }
+		 }else{
+			 act.setText("Editar");
+			 if(cbPersonas.getSelectedItem().equals("Taxis")) {
+				 for(int a=2;a<pt.getFields().length;a++) {
+					 pt.getFields()[a].setEditable(false);
+					 dtm1.setValueAt(pt.getFields()[a].getText(), pt.filaseleccionada(), a);
+				 }
+				 String value="";
+				 
+				 value = "UPDATE oaxataxi.taxi\n" + 
+				 		"   SET estado='"+pt.getFields()[2].getText()+"', comentarios='"+pt.getFields()[3].getText()+"', puntuacion="+pt.getFields()[4].getText()+"\n" + 
+				 		" WHERE id_taxi="+pt.getFields()[0].getText()+";";
+				 guardanding(value);
+			 }else if(cbPersonas.getSelectedItem().equals("Taxistas")) {
+				 for(int a=1;a<ptt.getFields().length;a++) {
+					 ptt.getFields()[a].setEditable(false);
+					 dtm2.setValueAt(ptt.getFields()[a].getText(), ptt.filaseleccionada(), a);
+				 }	
+				 String value="";
+				 String ctel="",tel="";
+				 String[] apellidos = new String[2];
+				 apellidos = ptt.getFields()[2].getText().split("");
+				 ctel = ptt.getFields()[4].getText().substring(1,3);
+				 tel = ptt.getFields()[4].getText().substring(4);
+				 value = "UPDATE oaxataxi.taxista\n" + 
+				 		"   SET nombre='"+ptt.getFields()[4].getText()+"', apaterno='"+apellidos[0]+"', amaterno='"+apellidos[1]+"', licencia='"+ptt.getFields()[3].getText()+"', telefono='"+tel+"', \n" + 
+				 		"       c_tel='"+ctel+"', foto='"+ptt.getFields()[5].getText()+"', estado='"+ptt.getFields()[6].getText()+"', comentarios='"+ptt.getFields()[7].getText()+"', puntuacion="+ptt.getFields()[8].getText()+"\n" + 
+				 		" WHERE id_taxista="+ptt.getFields()[0].getText()+";";
+				 guardanding(value);
+			 }
+		 }
+	 }
+	 public void guardanding(String value) {
+		 try {
+			 conexion = c.conexionDB();
+			 sentencia = conexion.createStatement();
+			 sentencia.executeUpdate(value);
+			 JOptionPane.showMessageDialog(null, "Valor guardado con éxito");
+		 }catch (SQLException e) {
+				e.printStackTrace();
+		 }
+	 }
 	 public void borrarFila(){
+		 for(int a=1;a<pv.getFields().length;a++) {
+			 pv.getFields()[a].setText("");
+		 }
 		 int id;
 		 id = Integer.parseInt(pv.getFields()[0].getText());
 		 try {
 			conexion = c.conexionDB();
 			sentencia = conexion.createStatement();
 			String s = "delete from oaxataxi.taxista_viaje_taxi where id_viaje="+id+";";
-			System.out.println(s);
+			
 		
 			sentencia.executeUpdate(s);
 			s = "delete from oaxataxi.viaje where id_viaje="+id+";";
-			System.out.println(s);
-		
 			sentencia.executeUpdate(s);
+			JOptionPane.showMessageDialog(null, "Valor eliminado correctamente");
 			//sentencia.execute(s);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
