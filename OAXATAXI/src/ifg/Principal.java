@@ -208,7 +208,7 @@ public class Principal extends JFrame implements Runnable {
         notificar.addMouseListener(new Click());
         this.add(notificar);
         
-        String [] d = {"id_viaje","id_taxista","Conductor","id_taxi","Placas","Usuario","Estado","Hora inicio","Hora final","Origen","Destino","Monto"};
+        String [] d = {"id_viaje","id_taxista","Conductor","Placas","Usuario","Estado","Hora inicio","Hora final","Origen","Destino","Monto"};
         JPanel t = new JPanel();
         t.setLayout(new BoxLayout(t,BoxLayout.Y_AXIS));
         //t.add(new JButton("puta madre"));
@@ -436,10 +436,9 @@ public class Principal extends JFrame implements Runnable {
     			Conexion c = new Conexion();
 			conexion = c.conexionDB();
 			sentencia = conexion.createStatement();
-			String s = "SELECT id_taxi,no_placas,taxista_viaje_taxi.id_viaje,nickname_u,hora_inicio,hora_final,origen,destino,viaje.estado,monto_pagado,taxista_viaje_taxi.id_taxista,nombre,apaterno FROM oaxataxi.taxista_viaje_taxi INNER JOIN oaxataxi.viaje ON taxista_viaje_taxi.id_viaje = viaje.id_viaje INNER JOIN oaxataxi.taxista ON taxista_viaje_taxi.id_taxista = taxista.id_taxista where viaje.fecha ='"+y+"-"+(m+1)+"-"+d+"'";
+			String s = "SELECT taxista_viaje_taxi.id_viaje,no_placas,nickname_u,hora_inicio,hora_final,origen,destino,viaje.estado,monto_pagado,taxista_viaje_taxi.id_taxista,nombre,apaterno FROM oaxataxi.taxista_viaje_taxi INNER JOIN oaxataxi.viaje ON taxista_viaje_taxi.id_viaje = viaje.id_viaje INNER JOIN oaxataxi.taxista ON taxista_viaje_taxi.id_taxista = taxista.id_taxista where viaje.fecha ='"+y+"-"+(m+1)+"-"+d+"'";
 			resultado = sentencia.executeQuery(s);
 			while ( resultado.next() ) {
-				String id_taxi = resultado.getString("id_taxi");
 				String no_placas = resultado.getString("no_placas");
 				String id_viaje = resultado.getString("id_viaje");
 	    		String nickname = resultado.getString("nickname_u");
@@ -452,7 +451,7 @@ public class Principal extends JFrame implements Runnable {
 	    		String id_taxista = resultado.getString("id_taxista");
 	    		String nombre = resultado.getString("nombre");
 	    		String apaterno = resultado.getString("apaterno");
-	    		String [] modelo={id_viaje,id_taxista,nombre+" "+apaterno,id_taxi,no_placas,nickname,estado,hora_inicio,hora_final,origen,destino,"$"+monto_pagado};
+	    		String [] modelo={id_viaje,id_taxista,nombre+" "+apaterno,no_placas,nickname,estado,hora_inicio,hora_final,origen,destino,"$"+monto_pagado};
 	    		dtm.addRow(modelo);
 	    		
 	         }

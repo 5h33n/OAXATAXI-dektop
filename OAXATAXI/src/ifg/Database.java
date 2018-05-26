@@ -33,12 +33,12 @@ public class Database extends JFrame {
 	public DefaultTableModel dtm4;
 	Conexion c = new Conexion();
 	Object[][] a1 = {};
-	String[] b1 = {"id_Taxi:","Número de placas:","Estado:","Comentarios:","Puntuación"};
+	String[] b1 = {"id_Taxi:","Número de placas:","Modelo:","Foto:","Estado:","Comentarios:","Puntuación"};
 
 	
-	String[] b2 = {"id_Taxista:","Nombre:","Apellidos:","Licencia enlace:","Telefono:","Foto enlace:","Estado:","Comentarios:","Puntuación:"};
-	String[] b3 = {"id_Usuario:","Nombre:","Apellidos:","Nickname","RFC:","Tel�fono:","Sexo:","Email:","Fecha de nacimiento:"};
-	String[] b4 = {"id_viaje","id_taxista","Conductor","id_taxi","Placas","Usuario","Estado","Hora inicio","Hora final","Origen","Destino","Monto"};
+	String[] b2 = {"id_Taxista:","Nombre:","Apellidos:","Licencia enlace:","Email:","Telefono:","Fecha de nacimiento:","Foto enlace:","Estado:","Comentarios:","Puntuación:"};
+	String[] b3 = {"id_Usuario:","Nombre:","Apellidos:","Nickname","Foto enlace:","RFC:","Telefono:","Sexo:","Email:","Fecha de nacimiento:"};
+	String[] b4 = {"id_viaje","id_taxista","Conductor","Placas","Usuario","Estado","Hora inicio","Hora final","Origen","Destino","Monto"};
 
 	
 	private Connection conexion=null;
@@ -132,7 +132,15 @@ public class Database extends JFrame {
 		    		if(cbPersonas.getSelectedItem().equals("Taxis")) {
 		    			guardar(pt.getFields());
 		    		}else {
-		    			guardar(ptt.getFields());
+		    			if(ptt.getFields()[2].getText().split(" ").length != 2 && act.getText().equals("Guardar")) {
+		    				//System.out.println(ptt.getFields()[2].getText());
+		    				JOptionPane.showMessageDialog(null, "El campo 'Apellidos' requiere dos apellidos separados por un espacio");
+		    				ptt.getFields()[2].requestFocus();
+		    				
+		    			}else {
+		    				guardar(ptt.getFields());
+		    			}
+		    			
 		    		}
 	    			
 		    	}
@@ -160,7 +168,7 @@ public class Database extends JFrame {
 				 String value="";
 				 
 				 value = "UPDATE oaxataxi.taxi\n" + 
-				 		"   SET estado='"+fields[2].getText()+"', comentarios='"+fields[3].getText()+"', puntuacion="+fields[4].getText()+"\n" + 
+				 		"   SET modelo='"+fields[2].getText()+"', foto='"+fields[3].getText()+"', estado='"+fields[4].getText()+"', comentarios='"+fields[5].getText()+"', puntuacion="+fields[6].getText()+"\n" + 
 				 		" WHERE id_taxi="+fields[0].getText()+";";
 				 guardanding(value);
 			 }else if(cbPersonas.getSelectedItem().equals("Taxistas")) {
@@ -170,21 +178,28 @@ public class Database extends JFrame {
 				 }	
 				 String value="";
 				 String ctel="",tel="";
+				 
+				 //falta comprobacion de apellido y numero para generalizar
 				 String[] apellidos = new String[2];
-				 apellidos = fields[2].getText().split("");
-				 ctel = fields[4].getText().substring(0,3);
-				 tel = fields[4].getText().substring(3);
+				 apellidos = fields[2].getText().split(" ");
+				 ctel = fields[5].getText().substring(0,3);
+				 tel = fields[5].getText().substring(3);
+				 /*
+				 for(int b=0;b<fields.length;b++) {
+					 System.out.println(fields[b].getText());
+				 }
+				 */
 				 value = "UPDATE oaxataxi.taxista\n" + 
-				 		"   SET nombre='"+fields[1].getText()+"', apaterno='"+apellidos[0]+"', amaterno='"+apellidos[1]+"', licencia='"+fields[3].getText()+"', telefono='"+tel+"', \n" + 
-				 		"       c_tel='"+ctel+"', foto='"+fields[5].getText()+"', estado='"+fields[6].getText()+"', comentarios='"+fields[7].getText()+"', puntuacion="+fields[8].getText()+"\n" + 
+				 		"   SET nombre='"+fields[1].getText()+"', apaterno='"+apellidos[0]+"', amaterno='"+apellidos[1]+"', licencia='"+fields[3].getText()+"', email='"+fields[4].getText()+"', telefono='"+tel+"', \n" + 
+				 		"       c_tel='"+ctel+"', fecha_nacimiento='"+fields[6].getText()+"', foto='"+fields[7].getText()+"', estado='"+fields[8].getText()+"', comentarios='"+fields[9].getText()+"', puntuacion="+fields[10].getText()+"\n" + 
 				 		" WHERE id_taxista="+fields[0].getText()+";";
 				 guardanding(value);
-				 System.out.println(value);
 			 }
 		 }
 	 }
 	 public void guardanding(String value) {
 		 try {
+			 System.out.println(value);
 			 conexion = c.conexionDB();
 			 sentencia = conexion.createStatement();
 			 sentencia.executeUpdate(value);
@@ -228,9 +243,11 @@ public class Database extends JFrame {
 					String id_taxi = resultado.getString("id_taxi");
 					String no_placas = resultado.getString("no_placas");
 					String estado = resultado.getString("estado");
+					String model = resultado.getString("modelo");
+					String foto = resultado.getString("foto");
 					String comentarios = resultado.getString("comentarios");
 					String puntuacion = resultado.getString("puntuacion");
-		    			String [] modelo={id_taxi,no_placas,estado,comentarios,puntuacion};
+		    			String [] modelo={id_taxi,no_placas,model,foto,estado,comentarios,puntuacion};
 		    			dtm1.addRow(modelo);
 		         }
 				break;
@@ -242,13 +259,15 @@ public class Database extends JFrame {
 					String apaterno = resultado.getString("apaterno");
 					String amaterno = resultado.getString("amaterno");
 					String licencia = resultado.getString("licencia");
+					String email = resultado.getString("email");
 					String telefono = resultado.getString("telefono");
 					String c_tel = resultado.getString("c_tel");
+					String fecha_nacimiento = resultado.getString("fecha_nacimiento");
 					String foto = resultado.getString("foto");
 					String estado = resultado.getString("estado");
 					String comentarios = resultado.getString("comentarios");
 					String puntuacion = resultado.getString("puntuacion");
-		    			String [] modelo={id_taxista,nombre,apaterno+" "+amaterno,licencia,c_tel+telefono,foto,estado,comentarios,puntuacion};
+		    			String [] modelo={id_taxista,nombre,apaterno+" "+amaterno,licencia,email,c_tel+telefono,fecha_nacimiento,foto,estado,comentarios,puntuacion};
 		    			dtm2.addRow(modelo);
 		         }
 				break;
@@ -262,13 +281,14 @@ public class Database extends JFrame {
 					String nombre = resultado.getString("nombre");
 		    		String apaterno = resultado.getString("apaterno");
 		    		String amaterno = resultado.getString("amaterno");
+		    		String foto = resultado.getString("rfc");
 		    		String rfc = resultado.getString("rfc");
 		    		String telefono = resultado.getString("telefono");
 		    		String c_tel = resultado.getString("c_tel");
 		    		String sexo = resultado.getString("sexo");
 		    		String email = resultado.getString("email");
 		    		String fecha_nacimiento = resultado.getString("fecha_nacimiento");
-		    		String [] modelo={id_usuario,nombre,apaterno + " " + amaterno,nickname,rfc,c_tel + telefono,sexo,email,fecha_nacimiento};
+		    		String [] modelo={id_usuario,nombre,apaterno + " " + amaterno,nickname,foto,rfc,c_tel + telefono,sexo,email,fecha_nacimiento};
 		    		dtm3.addRow(modelo);
 		    		
 		         }
@@ -277,9 +297,8 @@ public class Database extends JFrame {
 			case 3:
 				conexion = c.conexionDB();
 				sentencia = conexion.createStatement();
-				resultado = sentencia.executeQuery("SELECT id_taxi,no_placas,taxista_viaje_taxi.id_viaje,nickname_u,hora_inicio,hora_final,origen,destino,viaje.estado,monto_pagado,taxista_viaje_taxi.id_taxista,nombre,apaterno FROM oaxataxi.taxista_viaje_taxi INNER JOIN oaxataxi.viaje ON taxista_viaje_taxi.id_viaje = viaje.id_viaje INNER JOIN oaxataxi.taxista ON taxista_viaje_taxi.id_taxista = taxista.id_taxista order by viaje.id_viaje");
+				resultado = sentencia.executeQuery("SELECT taxista_viaje_taxi.id_viaje,no_placas,nickname_u,hora_inicio,hora_final,origen,destino,viaje.estado,monto_pagado,taxista_viaje_taxi.id_taxista,nombre,apaterno FROM oaxataxi.taxista_viaje_taxi INNER JOIN oaxataxi.viaje ON taxista_viaje_taxi.id_viaje = viaje.id_viaje INNER JOIN oaxataxi.taxista ON taxista_viaje_taxi.id_taxista = taxista.id_taxista order by viaje.id_viaje");
 				while ( resultado.next() ) {
-					String id_taxi = resultado.getString("id_taxi");
 					String no_placas = resultado.getString("no_placas");
 					String id_viaje = resultado.getString("id_viaje");
 		    		String nickname = resultado.getString("nickname_u");
@@ -292,7 +311,7 @@ public class Database extends JFrame {
 		    		String id_taxista = resultado.getString("id_taxista");
 		    		String nombre = resultado.getString("nombre");
 		    		String apaterno = resultado.getString("apaterno");
-		    		String [] modelo={id_viaje,id_taxista,nombre+" "+apaterno,id_taxi,no_placas,nickname,estado,hora_inicio,hora_final,origen,destino,"$"+monto_pagado};
+		    		String [] modelo={id_viaje,id_taxista,nombre+" "+apaterno,no_placas,nickname,estado,hora_inicio,hora_final,origen,destino,"$"+monto_pagado};
 		    		dtm4.addRow(modelo);
 		    		
 		         }

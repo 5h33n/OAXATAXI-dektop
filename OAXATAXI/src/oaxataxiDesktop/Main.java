@@ -1,5 +1,8 @@
 package oaxataxiDesktop;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
+
 import ifg.*;
 
 public class Main {
