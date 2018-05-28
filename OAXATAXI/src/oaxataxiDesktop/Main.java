@@ -8,6 +8,7 @@ import ifg.*;
 public class Main {
 	public static void main(String...args) throws SQLException{
 		Login l = new Login();
+		System.out.println("");
 		
 		/*		try {
 					Principal p = new Principal();
