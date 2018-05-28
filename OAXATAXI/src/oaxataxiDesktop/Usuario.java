@@ -49,7 +49,9 @@ public class Usuario extends JPanel {
 	private JTextField email;
 	private String foto1, id_usuario, nomb, apaterno, amaterno, nicknam, rf, tele, c_tel, sex, correo, fecha_nacimiento;
 	private JButton editar, guardar;
-	private int xd;
+	private static final String PATTERN_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+	private int f;
 	private JFormattedTextField telef;
 	// VARIABLES DE DB
 	private Connection conexion = null;
@@ -60,12 +62,12 @@ public class Usuario extends JPanel {
 	 * Create the panel.
 	 * 
 	 * @throws SQLException
-	 * @throws ParseException 
+	 * @throws ParseException
 	 */
-	public Usuario() throws SQLException, ParseException {
+	public Usuario(String xd) throws SQLException, ParseException {
 		setLayout(null);
-		xd = Integer.parseInt(JOptionPane.showInputDialog("ID"));
-		consultar(xd);
+		f = Integer.parseInt(xd);
+		consultar(f);
 		String[] modelo = { nicknam, nomb, apaterno + " " + amaterno, c_tel, tele, rf, foto1, sex, correo,
 				fecha_nacimiento };
 
@@ -91,13 +93,15 @@ public class Usuario extends JPanel {
 
 		} catch (IOException e) {
 			String image = "/img/sinfoto.jpg";
-			ImageIcon fot = new ImageIcon(image);
+			URL url = this.getClass().getResource(image);
+			ImageIcon fot = new ImageIcon(url);
 			Icon icono = new ImageIcon(
+
 					fot.getImage().getScaledInstance(label_1.getWidth(), label_1.getHeight(), Image.SCALE_DEFAULT));
 			label_1.setIcon(icono);
 			label_1.setText("");
 			System.out.println(e);
-			// add(foto);
+
 		}
 		add(label_1);
 
@@ -106,21 +110,18 @@ public class Usuario extends JPanel {
 		apellidos.setColumns(10);
 		apellidos.setBounds(140, 232, 136, 20);
 		add(apellidos);
-		apellidos.addKeyListener(
-                new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                char c = e.getKeyChar();
-               
-                if (((c < 'a' || c > 'z')) && (c < 'A' || c > 'Z')&&(c!=' ')) {
+		apellidos.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char c = e.getKeyChar();
 
-                    e.consume();
-                 
-                	
-                }
-            }
-        }
-        );
+				if (((c < 'a' || c > 'z')) && (c < 'A' || c > 'Z') && (c != ' ')) {
+
+					e.consume();
+
+				}
+			}
+		});
 
 		nombre = new JTextField();
 		nombre.setText((String) null);
@@ -128,26 +129,22 @@ public class Usuario extends JPanel {
 		nombre.setColumns(10);
 		nombre.setBounds(140, 187, 136, 20);
 		add(nombre);
-		nombre.addKeyListener(
-                new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                char c = e.getKeyChar();
-               
-                if (((c < 'a' || c > 'z')) && (c < 'A' || c > 'Z')&&(c!=' ')) {
+		nombre.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char c = e.getKeyChar();
 
-                    e.consume();
-                 
-                	
-                }
-            }
-        }
-        );
+				if (((c < 'a' || c > 'z')) && (c < 'A' || c > 'Z') && (c != ' ')) {
+
+					e.consume();
+
+				}
+			}
+		});
 
 		JLabel nom = new JLabel("Nombre");
 		nom.setBounds(55, 190, 46, 14);
 		add(nom);
-        
 		JLabel ap = new JLabel("Apellidos");
 		ap.setBounds(55, 235, 72, 14);
 		add(ap);
@@ -160,9 +157,9 @@ public class Usuario extends JPanel {
 		nickname.setEditable(false);
 		nickname.setBounds(248, 110, 161, 20);
 		add(nickname);
-	    nickname.setColumns(10);
-		
-	    MaskFormatter formatter = new MaskFormatter("(###) ###-####");
+		nickname.setColumns(10);
+
+		MaskFormatter formatter = new MaskFormatter("(###) ###-####");
 
 		JLabel guion = new JLabel("-");
 		guion.setHorizontalAlignment(SwingConstants.CENTER);
@@ -176,7 +173,6 @@ public class Usuario extends JPanel {
 		ctel.setColumns(10);
 		ctel.setBounds(111, 281, 33, 20);
 		add(ctel);
-		
 
 		JLabel label_2 = new JLabel("Telefono");
 		label_2.setBounds(55, 284, 62, 14);
@@ -186,13 +182,13 @@ public class Usuario extends JPanel {
 		lblRfc.setBounds(264, 284, 46, 14);
 		add(lblRfc);
 
-		rfc = new JTextField();
+		MaskFormatter formatter2 = new MaskFormatter("UUUU#######AAA");
+		rfc = new JFormattedTextField(formatter2);
 		rfc.setEditable(false);
-		rfc.setBounds(298, 281, 111, 20);
+		rfc.setBounds(298, 281, 115, 20);
 		add(rfc);
 		rfc.setColumns(10);
 		
-
 		JLabel lblSexo = new JLabel("Sexo");
 		lblSexo.setBounds(286, 190, 46, 14);
 		add(lblSexo);
@@ -202,22 +198,21 @@ public class Usuario extends JPanel {
 		sexo.setBounds(319, 187, 86, 20);
 		add(sexo);
 		sexo.setColumns(10);
-		sexo.addKeyListener(
-                new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-            	if(sexo.getText().length()== 10) {
-            		e.consume();
-            	}else {
-                char c = e.getKeyChar();
-                if (((c < 'a' || c > 'z')) && (c < 'A' || c > 'Z')) {
+		sexo.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if (sexo.getText().length() == 10) {
+					e.consume();
+				} else {
+					char c = e.getKeyChar();
+					if (((c < 'a' || c > 'z')) && (c < 'A' || c > 'Z')) {
 
-                    e.consume();
+						e.consume();
 
-                }}
-            }
-        }
-        );
+					}
+				}
+			}
+		});
 
 		JLabel fn = new JLabel("Fecha de Nacimiento");
 		fn.setBounds(43, 338, 123, 14);
@@ -236,22 +231,16 @@ public class Usuario extends JPanel {
 		email = new JTextField();
 		email.setEditable(false);
 		email.setBounds(166, 384, 243, 20);
-		/*Pattern pat = Pattern.compile("([a-z0-9]+(\\.?[a-z0-9])*)+@(([a-z]+)\\.([a-z]+))+");
-		Matcher mather = pat.matcher(email.getText());
-		 
-        if (mather.find() == true) {
-            System.out.println("El email ingresado es v�lido.");
-        } else {
-            System.out.println("El email ingresado es inv�lido.");
-        }*/
+
 		add(email);
 		email.setColumns(10);
 
 		editar = new JButton("edi");
 		editar.addMouseListener(new Click());
 		editar.setBounds(402, 19, 33, 30);
-		String image = "/img/editaru.png";
-		ImageIcon fot = new ImageIcon(image);
+		String path2 = "/img/editaru.png";
+		URL url2 = this.getClass().getResource(path2);
+		ImageIcon fot = new ImageIcon(url2);
 		Icon icono = new ImageIcon(
 				fot.getImage().getScaledInstance(editar.getWidth(), editar.getHeight(), Image.SCALE_DEFAULT));
 		editar.setIcon(icono);
@@ -261,16 +250,17 @@ public class Usuario extends JPanel {
 		guardar = new JButton("gua");
 		guardar.addMouseListener(new Click());
 		guardar.setBounds(402, 19, 33, 30);
-		String image2 = "/img/guardar2.png";
-		ImageIcon fot2 = new ImageIcon(image2);
+		String path = "/img/guardar2.png";
+		URL url = this.getClass().getResource(path);
+		ImageIcon fot2 = new ImageIcon(url);
 		Icon icono2 = new ImageIcon(
 				fot2.getImage().getScaledInstance(guardar.getWidth(), guardar.getHeight(), Image.SCALE_DEFAULT));
 		guardar.setIcon(icono2);
 		guardar.setText("");
 		guardar.setVisible(false);
 		add(guardar);
-		
-		 telef = new JFormattedTextField(formatter);
+
+		telef = new JFormattedTextField(formatter);
 		telef.setBounds(166, 281, 95, 20);
 		telef.setEditable(false);
 		add(telef);
@@ -284,15 +274,13 @@ public class Usuario extends JPanel {
 		sexo.setText(modelo[7]);
 		email.setText(modelo[8]);
 		fechanac.setText(modelo[9]);
-		
-		
 
-		/*JFrame frame = new JFrame("Ventas");
-		// frame.add(new TapJpan(a,b,e));
-		frame.add(this);
-		frame.pack();
-		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		frame.setVisible(true);*/
+		/*
+		 * JFrame frame = new JFrame("Ventas"); // frame.add(new TapJpan(a,b,e));
+		 * frame.add(this); frame.pack();
+		 * frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		 * frame.setVisible(true);
+		 */
 	}
 
 	public void consultar(int xd) throws SQLException {
@@ -346,50 +334,60 @@ public class Usuario extends JPanel {
 				fechanac.setEditable(true);
 				rfc.setEditable(true);
 			} else if (e.getSource() == guardar) {
-				String value = "";
-				String[] apell = new String[2];
-				apell = apellidos.getText().split(" ");
-				String tels = telef.getText();
-				String numero = "";
-				for (int i = 0; i < tels.length(); i++)
-				{
-					char caracter = tels.charAt(i);
-					if(isNumeric(caracter))
-					{
-					numero += caracter;
+
+				Pattern pattern = Pattern.compile(PATTERN_EMAIL);
+				Matcher matcher = pattern.matcher(email.getText());
+				if (matcher.matches()) {
+					String value = "";
+					String[] apell = new String[2];
+					apell = apellidos.getText().split(" ");
+					String tels = telef.getText();
+					String numero = "";
+					for (int i = 0; i < tels.length(); i++) {
+						char caracter = tels.charAt(i);
+						if (isNumeric(caracter)) {
+							numero += caracter;
+						}
 					}
+					System.out.println(numero);
+					System.out.println(apell.length);
+					String rfc2 = rfc.getText().toUpperCase();
+					rfc.setText(rfc2);
+					value = "UPDATE oaxataxi.usuario\n" + "   SET nombre='" + nombre.getText() + "', apaterno='"
+							+ apell[0] + "', amaterno='" + apell[1] + "',  telefono='" + numero + "', \n"
+							+ "       c_tel='" + ctel.getText() + "' , nickname='" + nickname.getText() + "',email='"
+							+ email.getText() + "',sexo='" + sexo.getText() + "'," + "fecha_nacimiento='"
+							+ fechanac.getText() + "', rfc='" + rfc2 + "' " + " WHERE id_usuario=" + f + ";";
+					guardanding(value);
+					System.out.println(value);
+					guardar.setVisible(false);
+					editar.setVisible(true);
+					nombre.setEditable(false);
+					nickname.setEditable(false);
+					apellidos.setEditable(false);
+					ctel.setEditable(false);
+					telef.setEditable(false);
+					sexo.setEditable(false);
+					email.setEditable(false);
+					fechanac.setEditable(false);
+					rfc.setEditable(false);
+
+				} else {
+					JOptionPane.showMessageDialog(null, "El correo es Invalido");
 				}
-				System.out.println(numero);
-				System.out.println(apell.length);
-				value = "UPDATE oaxataxi.usuario\n" + "   SET nombre='" + nombre.getText() + "', apaterno='" + apell[0]
-						+ "', amaterno='" + apell[1] + "',  telefono='" + numero + "', \n" + "       c_tel='"
-						+ ctel.getText() + "' , nickname='" + nickname.getText() + "',email='" + email.getText()
-						+ "',sexo='" + sexo.getText() + "'," + "fecha_nacimiento='" + fechanac.getText() + "', rfc='"
-						+ rfc.getText() + "' " + " WHERE id_usuario=" + xd + ";";
-				guardanding(value);
-				System.out.println(value);
-				guardar.setVisible(false);
-				editar.setVisible(true);
-				nombre.setEditable(false);
-				nickname.setEditable(false);
-				apellidos.setEditable(false);
-				ctel.setEditable(false);
-				telef.setEditable(false);
-				sexo.setEditable(false);
-				email.setEditable(false);
-				fechanac.setEditable(false);
-				rfc.setEditable(false);
+
 			}
 		}
 	}
-	private  boolean isNumeric(char caracter){
+
+	private boolean isNumeric(char caracter) {
 		try {
-		Integer.parseInt(String.valueOf(caracter));
-		return true;
-		} catch (NumberFormatException ex){
-		return false;
+			Integer.parseInt(String.valueOf(caracter));
+			return true;
+		} catch (NumberFormatException ex) {
+			return false;
 		}
-		}
+	}
 
 	public void guardanding(String value) {
 		try {
@@ -403,7 +401,8 @@ public class Usuario extends JPanel {
 		}
 	}
 
-	/*public static void main(String[] args) throws SQLException, ParseException {
-		InfoUsuario iu = new InfoUsuario();
-	}*/
+	/*
+	 * public static void main(String[] args) throws SQLException, ParseException {
+	 * InfoUsuario iu = new InfoUsuario(); }
+	 */
 }

@@ -18,9 +18,9 @@ public class Conexion {
     	try {
 			Class.forName("org.postgresql.Driver");
 			String url="jdbc:postgresql://localhost:5432/oaxataxi";
-			conexion = DriverManager.getConnection(url,"postgres","Pacomegoma12");
+			conexion = DriverManager.getConnection(url,"postgres","icrolko12");
 			if (conexion!=null) {
-				//System.out.println("Conexion exitosa");
+			//	System.out.println("Conexion exitosa");
 			}else {
 				JOptionPane.showMessageDialog(null,"Conexion fallida alv");
 			}

@@ -7,6 +7,7 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.text.MaskFormatter;
 
+
 import recursos.Conexion;
 
 import java.awt.Color;
@@ -33,6 +34,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
 
@@ -43,9 +46,11 @@ public class Taxista extends JPanel {
 	private JTextField tel;
 	private JTextField pun;
 	private String foto1, id_taxista, nombre, apaterno, amaterno, licencia, telefono, c_tel, estado, comentarios,
-			puntuacion;
+			puntuacion, email1,fecha_nac ;
 	private JButton editar, guardar;
-	private int xd;
+	private int f;
+	private static final String PATTERN_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 	
 	// VARIABLES DE DB
 	private Connection conexion = null;
@@ -54,12 +59,12 @@ public class Taxista extends JPanel {
 	private JTextField email;
 	private JTextField fechanac;
 
-	public Taxista() throws SQLException, ParseException, IOException {
+	public Taxista(String xd) throws SQLException, ParseException, IOException {
 		setLayout(null);
-		 xd = Integer.parseInt(JOptionPane.showInputDialog("ID"));
-		consultar(xd);
+		 f =Integer.parseInt(xd);
+		consultar(f);
 		String[] modelo = { id_taxista, nombre, apaterno + " " + amaterno, licencia, telefono, c_tel, foto1, estado,
-				comentarios, puntuacion };
+				comentarios, puntuacion, email1, fecha_nac };
 
 		JLabel lblInformacinDelTaxista = new JLabel("Informaci\u00F3n del taxista");
 		lblInformacinDelTaxista.setHorizontalAlignment(SwingConstants.CENTER);
@@ -71,7 +76,7 @@ public class Taxista extends JPanel {
 		foto.setForeground(new Color(0, 0, 0));
 		foto.setHorizontalAlignment(SwingConstants.CENTER);
 		foto.setBounds(47, 60, 95, 93);
-		/* try {
+		 try {
 			
 			String ruta = modelo[6];
 			URL url = new URL(ruta);
@@ -83,13 +88,16 @@ public class Taxista extends JPanel {
 			foto.setText("");
 			
 
-		} catch (IllegalArgumentException | IOException e) { 
-		*/
-		ImageIcon icono = new ImageIcon(getClass().getResource("/img/sinfoto.jpg"));
-		foto.setIcon(icono);
+		} catch (IllegalArgumentException | IOException e) { 	
+			String image = "/img/sinfoto.jpg";  
+			URL url = this.getClass().getResource(image);
+			ImageIcon fot = new ImageIcon(url);
+			Icon icono = new ImageIcon(
+					fot.getImage().getScaledInstance(foto.getWidth(), foto.getHeight(), Image.SCALE_DEFAULT));
+			foto.setIcon(icono);
 			foto.setText("");
-			//System.out.println(e);
-		/* } */
+			System.out.println(e);
+		 } 
 		add(foto);
 
 		JLabel lblNombre = new JLabel("Nombre");
@@ -116,7 +124,7 @@ public class Taxista extends JPanel {
 		JLabel fotolic = new JLabel("foto licencia");
 		fotolic.setHorizontalAlignment(SwingConstants.CENTER);
 		fotolic.setBounds(134, 292, 277, 104);
-		/* try {
+		 try {
 			String ruta = modelo[3];
 			URL url = new URL(ruta);
 			Image image = ImageIO.read(url);
@@ -126,16 +134,19 @@ public class Taxista extends JPanel {
 			fotolic.setIcon(icono);
 			fotolic.setText("");
 
-		} catch (IOException e) { */
+		} catch (IOException e) { 
 			// poner la foto de una licencia sin datos
-			//
-			//
-			//
-			ImageIcon iconol = new ImageIcon(getClass().getResource("/img/licencia.jpg"));fotolic.setIcon(iconol);
-			fotolic.setIcon(iconol);
+
+			String image = "/img/licencia.jpg";  
+			URL url = this.getClass().getResource(image);
+			ImageIcon fot = new ImageIcon(url);
+			Icon icono = new ImageIcon(
+			
+					fot.getImage().getScaledInstance(fotolic.getWidth(), fotolic.getHeight(), Image.SCALE_DEFAULT));
+			fotolic.setIcon(icono);
 			fotolic.setText("");
-			//System.out.println(e);
-		/*} */
+			System.out.println(e);
+		} 
 		add(fotolic);
 
 		JLabel lblComentarios = new JLabel("Comentarios:");
@@ -203,35 +214,42 @@ public class Taxista extends JPanel {
 		pun.setBounds(316, 164, 83, 20);
 		add(pun);
 		pun.setColumns(10);
-		nom.setText(modelo[1]);
-		ape.setText(modelo[2]);
-		ctel.setText(modelo[5]);
-		tel.setText(modelo[4]);
-
-		pun.setText(modelo[9]);
+		
 
 		editar = new JButton("edi");
 		editar.addMouseListener(new Click());
 		
+		editar = new JButton("edi");
+		editar.addMouseListener(new Click());
 		editar.setBounds(402, 19, 33, 30);
-		ImageIcon iconoe = new ImageIcon(getClass().getResource("/img/editaru.png"));editar.setIcon(iconoe);
-		editar.setIcon(iconoe);
+		String path2 = "/img/editaru.png";  
+		URL url2 = this.getClass().getResource(path2);
+		ImageIcon fot = new ImageIcon(url2);
+		Icon icono = new ImageIcon(
+				fot.getImage().getScaledInstance(editar.getWidth(), editar.getHeight(), Image.SCALE_DEFAULT));
+		editar.setIcon(icono);
 		editar.setText("");
 		add(editar);
-
+		
+		guardar = new JButton("gua");
+		guardar.addMouseListener(new Click());
+		guardar.setBounds(402, 19, 33, 30);
+		String path = "/img/guardar2.png";  
+		URL url = this.getClass().getResource(path);
+		ImageIcon fot2 = new ImageIcon(url);
+		Icon icono2 = new ImageIcon(
+				fot2.getImage().getScaledInstance(guardar.getWidth(), guardar.getHeight(), Image.SCALE_DEFAULT));
+		guardar.setIcon(icono2);
+		guardar.setText("");
+		guardar.setVisible(false);
+		add(guardar);
+		
 		JTextArea textArea = new JTextArea();
 		textArea.setEditable(false);
 		textArea.setBounds(134, 407, 277, 93);
 		textArea.setText(modelo[8]);
 		add(textArea);
 
-		guardar = new JButton("gua");
-		guardar.addMouseListener(new Click());
-		guardar.setBounds(402, 19, 33, 30);
-		ImageIcon icono2 = new ImageIcon(getClass().getResource("/img/guardar2.png"));guardar.setIcon(icono2);
-		guardar.setText("");
-		guardar.setVisible(false);
-		add(guardar);
 
 		JLabel guion = new JLabel("-");
 		guion.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -260,6 +278,15 @@ public class Taxista extends JPanel {
 		JLabel label_1 = new JLabel("Fecha de Nacimiento");
 		label_1.setBounds(45, 247, 123, 14);
 		add(label_1);
+		
+		nom.setText(modelo[1]);
+		ape.setText(modelo[2]);
+		ctel.setText(modelo[5]);
+		tel.setText(modelo[4]);
+
+		pun.setText(modelo[9]);
+		email.setText(modelo[10]);
+		fechanac.setText(modelo[11]);
 	/*	JFrame frame = new JFrame("Ventas");
 		// frame.add(new TapJpan(a,b,e));
 		frame.add(this);
@@ -288,6 +315,8 @@ public class Taxista extends JPanel {
 				estado = resultado.getString("estado");
 				comentarios = resultado.getString("comentarios");
 				puntuacion = resultado.getString("puntuacion");
+				email1 = resultado.getString("email");
+				fecha_nac = resultado.getString("fecha_nacimiento");
 
 			}
 
@@ -315,6 +344,9 @@ public class Taxista extends JPanel {
 				email.setEditable(true);
 				fechanac.setEditable(true);
 			}else if(e.getSource() == guardar) {
+				Pattern pattern = Pattern.compile(PATTERN_EMAIL);
+				Matcher matcher = pattern.matcher(email.getText());
+				if (matcher.matches()) {
 				 String value="";
 				 String[] apell = new String[2];
 				 String tels = tel.getText();
@@ -327,13 +359,11 @@ public class Taxista extends JPanel {
 						numero += caracter;
 						}
 					}
-					System.out.println(numero);
 				 apell = ape.getText().split(" ");	
-				 System.out.println(apell.length);
 				 value = "UPDATE oaxataxi.taxista\n" + 
 				 		"   SET nombre='"+nom.getText()+"', apaterno='"+apell[0]+"', amaterno='"+apell[1]+"',  telefono='"+ numero+"', \n" + 
-				 		"       c_tel='"+ctel.getText()+"',c_tel='"+email.getText()+"',c_tel='"+fechanac.getText()+"'" + 
-				 		" WHERE id_taxista="+xd+";";
+				 		"       c_tel='"+ctel.getText()+"',email='"+email.getText()+"',fecha_nacimiento='"+fechanac.getText()+"'" + 
+				 		" WHERE id_taxista="+f+";";
 				 guardanding(value);
 				 System.out.println(value);
 				 guardar.setVisible(false);
@@ -344,6 +374,10 @@ public class Taxista extends JPanel {
 					tel.setEditable(false);
 					email.setEditable(false);
 					fechanac.setEditable(false);
+					}else {
+						JOptionPane.showMessageDialog(null, "El correo es Invalido");
+					}
+
 			}
 		}
 	}

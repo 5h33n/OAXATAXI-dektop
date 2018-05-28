@@ -4,6 +4,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
+import oaxataxiDesktop.Taxi;
+import oaxataxiDesktop.Taxista;
+import oaxataxiDesktop.Usuario;
 import recursos.Conexion;
 
 import java.awt.*;
@@ -15,10 +18,11 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
 public class Desplegable extends JPanel {
     private Button ocultar;
     private JLabel et = new JLabel("Buscar:");
-    private JTextField busqueda;
+    static JTextField busqueda;
     private JPanel container;
     private int contenedores = 0;
     private JScrollPane scrollPane;
@@ -36,8 +40,9 @@ public class Desplegable extends JPanel {
         this.setLayout(new BorderLayout());
         crearComponentes();
         
+        
     }
-    
+   
     
     
     
@@ -47,24 +52,36 @@ public class Desplegable extends JPanel {
  
         @Override
         public void changedUpdate(DocumentEvent documentEvent) {
-            printIt(documentEvent);
+            
+				try {
+					printIt(documentEvent);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
         }
- 
         @Override
         public void insertUpdate(DocumentEvent documentEvent) {
-            printIt(documentEvent);
+            try {
+				printIt(documentEvent);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
         }
  
         @Override
         public void removeUpdate(DocumentEvent documentEvent) {
-            printIt(documentEvent);
+            try {
+				printIt(documentEvent);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
         }
         };
         txt.getDocument().addDocumentListener(documentListener);
  
     }
  
-    private void printIt(DocumentEvent documentEvent) {
+    private void printIt(DocumentEvent documentEvent) throws ParseException {
         DocumentEvent.EventType type = documentEvent.getType();
  
         if (type.equals(DocumentEvent.EventType.CHANGE))
@@ -76,7 +93,6 @@ public class Desplegable extends JPanel {
         		try {
 					consultar(this.busqueda.getText());
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
         }
@@ -95,7 +111,7 @@ public class Desplegable extends JPanel {
     		return false;
     	}
     }
-    public void consultar(String consulta) throws SQLException {
+    public void consultar(String consulta) throws SQLException, ParseException {
     		panel.removeAll();
     		
     		
@@ -106,15 +122,18 @@ public class Desplegable extends JPanel {
         		sentencia = conexion.createStatement();
         		resultado = sentencia.executeQuery("SELECT * from oaxataxi.taxi where id_taxi="+consulta+";");
         		ResultSetMetaData rsmd = resultado.getMetaData();
+        		
 
     		   while (resultado.next()) {
     			   cadena[0] = "";cadena[1] = "";cadena[2] = "";
     		            for (int i = 1; i <= 3; i++) {
-    		            		cadena[i-1] = cadena[i-1] + rsmd.getColumnName(i) +":"+ resultado.getString(i);
+    		            		cadena[i-1] = cadena[i-1] + rsmd.getColumnName(i) +": "+ resultado.getString(i);
     		          
     		            }
     		            Busqueda_c p= new Busqueda_c("Taxi:",cadena[0],cadena[1],cadena[2]);
+    		            p.addMouseListener(new Click());
     		 		   	panel.add(p);
+    		 		
     		   }
     		   
     		   
@@ -125,7 +144,7 @@ public class Desplegable extends JPanel {
    		   while (resultado.next()) {
    			   cadena[0] = "";cadena[1] = "";cadena[2] = "";
    		            for (int i = 1; i <= 3; i++) {
-   		            		cadena[i-1] = cadena[i-1] + rsmd.getColumnName(i) +":"+ resultado.getString(i);
+   		            		cadena[i-1] = cadena[i-1] + rsmd.getColumnName(i) +": "+ resultado.getString(i);
    		          
    		            }
    		            Busqueda_c p= new Busqueda_c("Taxista:",cadena[0],cadena[1],cadena[2]);
@@ -139,7 +158,7 @@ public class Desplegable extends JPanel {
 		   while (resultado.next()) {
 			   cadena[0] = "";cadena[1] = "";cadena[2] = "";
 		            for (int i = 1; i <= 3; i++) {
-		            		cadena[i-1] = cadena[i-1] + rsmd.getColumnName(i) +":"+ resultado.getString(i);
+		            		cadena[i-1] = cadena[i-1] + rsmd.getColumnName(i) +": "+ resultado.getString(i);
 		          
 		            }
 		            Busqueda_c p= new Busqueda_c("Usuario:",cadena[0],cadena[1],cadena[2]);
@@ -153,7 +172,7 @@ public class Desplegable extends JPanel {
   		   while (resultado.next()) {
   			   cadena[0] = "";cadena[1] = "";cadena[2] = "";
   		            for (int i = 1; i <= 3; i++) {
-  		            		cadena[i-1] = cadena[i-1] + rsmd.getColumnName(i) +":"+ resultado.getString(i);
+  		            		cadena[i-1] = cadena[i-1] + rsmd.getColumnName(i) +": "+ resultado.getString(i);
   		          
   		            }
   		            Busqueda_c p= new Busqueda_c("Viaje:",cadena[0],cadena[1],cadena[2]);
@@ -173,7 +192,7 @@ public class Desplegable extends JPanel {
     		   while (resultado.next()) {
     			   cadena[0] = "";cadena[1] = "";cadena[2] = "";
     		            for (int i = 1; i <= 3; i++) {
-    		            		cadena[i-1] = cadena[i-1] + rsmd.getColumnName(i) +":"+ resultado.getString(i);
+    		            		cadena[i-1] = cadena[i-1] + rsmd.getColumnName(i) +": "+ resultado.getString(i);
     		          
     		            }
     		            Busqueda_c p= new Busqueda_c("Taxi:",cadena[0],cadena[1],cadena[2]);
@@ -189,7 +208,7 @@ public class Desplegable extends JPanel {
       		   while (resultado.next()) {
       			   cadena[0] = "";cadena[1] = "";cadena[2] = "";
       		            for (int i = 1; i <= 3; i++) {
-      		            		cadena[i-1] = cadena[i-1] + rsmd.getColumnName(i) +":"+ resultado.getString(i);
+      		            		cadena[i-1] = cadena[i-1] + rsmd.getColumnName(i) +": "+ resultado.getString(i);
       		          
       		            }
       		            Busqueda_c p= new Busqueda_c("Taxista:",cadena[0],cadena[1],cadena[2]);
@@ -203,19 +222,20 @@ public class Desplegable extends JPanel {
    		   while (resultado.next()) {
    			   cadena[0] = "";cadena[1] = "";cadena[2] = "";
    		            for (int i = 1; i <= 3; i++) {
-   		            		cadena[i-1] = cadena[i-1] + rsmd.getColumnName(i) +":"+ resultado.getString(i);
+   		            		cadena[i-1] = cadena[i-1] + rsmd.getColumnName(i) +": "+ resultado.getString(i);
    		          
    		            }
    		            Busqueda_c p= new Busqueda_c("Usuario:",cadena[0],cadena[1],cadena[2]);
    		 		   	panel.add(p);
    		   }
+   		   
+   		
     		   
     		}
-		   
+    		refrescarResultados(panel.getComponents().length);
 		   
 		
-		
-		refrescarResultados(panel.getComponents().length);
+    		
     }
     private class Click extends MouseAdapter{
     	public void mouseClicked(MouseEvent e) {

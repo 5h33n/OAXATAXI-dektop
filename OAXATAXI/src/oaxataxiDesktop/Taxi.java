@@ -26,6 +26,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
+import java.time.LocalTime;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
@@ -43,19 +46,20 @@ public class Taxi extends JPanel {
 	private JTextField estado;
 	private JTextField puntuacion;
 	private JTextField taxactual;
-	private String foto1, id_taxi, model, status, comentarios, puntuation, noplacas;
+	private String foto1, id_taxi, model, status, comentarios, puntuation, noplacas,nombre,aPaterno,aMaterno;
 	private JButton editar, guardar;
-	private int xd;
+	private int f;
 	// VARIABLES DE DB
 	private Connection conexion = null;
-	ResultSet resultado;
+	ResultSet resultado,resultado2;
 	Statement sentencia;
+	Calendar calendario = new GregorianCalendar();
 	
-	public Taxi() throws SQLException, ParseException {
+	public Taxi(String xd) throws SQLException, ParseException {
 		setLayout(null);
-		xd = Integer.parseInt(JOptionPane.showInputDialog("ID"));
-		consultar(xd);
-		String[] modelado = { id_taxi, noplacas, model, foto1,status,  comentarios, puntuation};
+		f =Integer.parseInt(xd);
+		consultar(f);
+		String[] modelado = { id_taxi, noplacas, model, foto1,status,  comentarios, puntuation, nombre + " "+aPaterno+" "+ aMaterno};
 		
 		JLabel lblNewLabel = new JLabel("Informaci\u00F3n del taxi");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -78,9 +82,11 @@ public class Taxi extends JPanel {
 			foto.setText("");
 
 		} catch (IOException e) {
-			String image = "/img/sinfoto.jpg";
-			ImageIcon fot = new ImageIcon(image);
+			String image = "/img/sinfoto.jpg";  
+			URL url = this.getClass().getResource(image);
+			ImageIcon fot = new ImageIcon(url);
 			Icon icono = new ImageIcon(
+			
 					fot.getImage().getScaledInstance(foto.getWidth(), foto.getHeight(), Image.SCALE_DEFAULT));
 			foto.setIcon(icono);
 			foto.setText("");
@@ -185,8 +191,9 @@ public class Taxi extends JPanel {
 		editar = new JButton("edi");
 		editar.addMouseListener(new Click());
 		editar.setBounds(402, 19, 33, 30);
-		String image = "/img/editaru.png";
-		ImageIcon fot = new ImageIcon(image);
+		String path2 = "/img/editaru.png";  
+		URL url2 = this.getClass().getResource(path2);
+		ImageIcon fot = new ImageIcon(url2);
 		Icon icono = new ImageIcon(
 				fot.getImage().getScaledInstance(editar.getWidth(), editar.getHeight(), Image.SCALE_DEFAULT));
 		editar.setIcon(icono);
@@ -196,8 +203,9 @@ public class Taxi extends JPanel {
 		guardar = new JButton("gua");
 		guardar.addMouseListener(new Click());
 		guardar.setBounds(402, 19, 33, 30);
-		String image2 = "/img/guardar2.png";
-		ImageIcon fot2 = new ImageIcon(image2);
+		String path = "/img/guardar2.png";  
+		URL url = this.getClass().getResource(path);
+		ImageIcon fot2 = new ImageIcon(url);
 		Icon icono2 = new ImageIcon(
 				fot2.getImage().getScaledInstance(guardar.getWidth(), guardar.getHeight(), Image.SCALE_DEFAULT));
 		guardar.setIcon(icono2);
@@ -210,6 +218,7 @@ public class Taxi extends JPanel {
 		estado.setText(modelado[4]);
 		comentarios.setText(modelado[5]);
 		puntuacion.setText(modelado[6]);
+		taxactual.setText(modelado[7]);
 		
 		/*JFrame frame = new JFrame("Ventas");
 		// frame.add(new TapJpan(a,b,e));
@@ -217,7 +226,7 @@ public class Taxi extends JPanel {
 		frame.pack();
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setVisible(true);*/
-
+       
 	}
 	
 
@@ -234,9 +243,9 @@ private class Click extends MouseAdapter {
 				 String value="";
 				 value = "UPDATE oaxataxi.taxi\n" + 
 				 		"   SET no_placas='"+placas.getText()+"', modelo='"+modelo.getText()+"', estado='"+estado.getText()+"' " + 
-				 		" WHERE id_taxi="+xd+";";
+				 		" WHERE id_taxi="+ f +";";
 				 guardanding(value);
-				 System.out.println(value);
+				// System.out.println(value);
 				 guardar.setVisible(false);
 				 editar.setVisible(true);
 				placas.setEditable(false);
@@ -252,7 +261,17 @@ public void consultar(int xd) throws SQLException {
 		Conexion c = new Conexion();
 		conexion = c.conexionDB();
 		sentencia = conexion.createStatement();
-		// int xd=Integer.parseInt(JOptionPane.showInputDialog("ID"));
+		//LocalTime justoAhora = LocalTime.now(); 	
+		int hora, minutos;
+		hora =calendario.get(Calendar.HOUR_OF_DAY);
+		minutos = calendario.get(Calendar.MINUTE);
+		String hour = String.valueOf(hora);
+		String minute = String.valueOf(minutos);
+		if(minutos<10) {
+			 minute = String.valueOf("0"+minutos);
+		}
+		
+		String ahorita = "'"+hour +":" +minute+"'";
 		resultado = sentencia.executeQuery("SELECT * from oaxataxi.taxi" + " WHERE id_taxi=" + xd + "");
 		while (resultado.next()) {
 			id_taxi = resultado.getString("id_taxi");
@@ -264,6 +283,15 @@ public void consultar(int xd) throws SQLException {
 			puntuation = resultado.getString("puntuacion");
 
 		}
+		resultado2 =sentencia.executeQuery("SELECT  taxista.nombre, taxista.aPaterno,taxista.aMaterno from oaxataxi.taxista" + 
+		" inner join oaxataxi.taxista_taxi on taxista.id_taxista = taxista_taxi.id_taxista and  taxista_taxi.hora_i <= "+ ahorita+"and taxista_taxi.hora_f >= "
+				+ ""+ahorita + "");
+		while (resultado2.next()) {
+			nombre = resultado2.getString("nombre");
+			aPaterno = resultado2.getString("aPaterno");
+			aMaterno = resultado2.getString("aMaterno");
+		}
+		
 
 		resultado.close();
 		sentencia.close();
@@ -284,6 +312,7 @@ public void consultar(int xd) throws SQLException {
 			 Conexion c = new Conexion();
 				conexion = c.conexionDB();
 			 sentencia = conexion.createStatement();
+			 System.out.println(value);
 			 sentencia.executeUpdate(value);
 			 JOptionPane.showMessageDialog(null, "Valor guardado con éxito");
 		 }catch (SQLException e) {
