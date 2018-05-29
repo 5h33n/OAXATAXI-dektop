@@ -314,7 +314,7 @@ public void consultar(int xd) throws SQLException {
 			 sentencia = conexion.createStatement();
 			 System.out.println(value);
 			 sentencia.executeUpdate(value);
-			 JOptionPane.showMessageDialog(null, "Valor guardado con éxito");
+			 JOptionPane.showMessageDialog(this, "Valor guardado con éxito");
 		 }catch (SQLException e) {
 				e.printStackTrace();
 		 }

@@ -375,20 +375,22 @@ public class Taxista extends JPanel {
 					email.setEditable(false);
 					fechanac.setEditable(false);
 					}else {
-						JOptionPane.showMessageDialog(null, "El correo es Invalido");
+						alerta();
 					}
 
 			}
 		}
 	}
-	
+	public void alerta() {
+		JOptionPane.showMessageDialog(this, "El correo es Invalido");
+	}
 	public void guardanding(String value) {
 		 try {
 			 Conexion c = new Conexion();
 			 conexion = c.conexionDB();
 			 sentencia = conexion.createStatement();
 			 sentencia.executeUpdate(value);
-			 JOptionPane.showMessageDialog(null, "Valor guardado con éxito");
+			 JOptionPane.showMessageDialog(this, "Valor guardado con éxito");
 		 }catch (SQLException e) {
 				e.printStackTrace();
 		 }
