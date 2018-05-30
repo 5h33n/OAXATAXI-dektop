@@ -72,8 +72,8 @@ public class Mapa extends JFrame {
 				ocultar();
 			}
 		}
-}
-public void ocultar() {
+    }	
+    public void ocultar() {
 		this.dispose();
-}
+    }
 }

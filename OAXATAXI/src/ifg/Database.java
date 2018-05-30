@@ -37,7 +37,7 @@ public class Database extends JFrame {
 
 	
 	String[] b2 = {"id_Taxista:","Nombre:","Apellidos:","Licencia enlace:","Email:","Telefono:","Fecha de nacimiento:","Foto enlace:","Estado:","Comentarios:","Puntuación:"};
-	String[] b3 = {"id_Usuario:","Nombre:","Apellidos:","Nickname","Foto enlace:","RFC:","Telefono:","Sexo:","Email:","Fecha de nacimiento:"};
+	String[] b3 = {"id_Usuario:","Nombre:","Apellidos:","Nickname","Foto enlace:","Estado","RFC:","Telefono:","Sexo:","Email:","Fecha de nacimiento:"};
 	String[] b4 = {"id_viaje","id_taxista","Conductor","Placas","Usuario","Estado","Hora inicio","Hora final","Origen","Destino","Monto"};
 
 	
@@ -283,12 +283,13 @@ public class Database extends JFrame {
 		    		String amaterno = resultado.getString("amaterno");
 		    		String foto = resultado.getString("rfc");
 		    		String rfc = resultado.getString("rfc");
+		    		String estado = resultado.getString("estado");
 		    		String telefono = resultado.getString("telefono");
 		    		String c_tel = resultado.getString("c_tel");
 		    		String sexo = resultado.getString("sexo");
 		    		String email = resultado.getString("email");
 		    		String fecha_nacimiento = resultado.getString("fecha_nacimiento");
-		    		String [] modelo={id_usuario,nombre,apaterno + " " + amaterno,nickname,foto,rfc,c_tel + telefono,sexo,email,fecha_nacimiento};
+		    		String [] modelo={id_usuario,nombre,apaterno + " " + amaterno,nickname,foto,estado,rfc,c_tel + telefono,sexo,email,fecha_nacimiento};
 		    		dtm3.addRow(modelo);
 		    		
 		         }
