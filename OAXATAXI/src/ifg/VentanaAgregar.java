@@ -1,20 +1,28 @@
 package ifg;
 import javax.swing.*;
-
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.MaskFormatter;
 import recursos.Conexion;
-
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 public class VentanaAgregar extends JFrame {
     JLabel titulo = new JLabel("Agregar");
     JLabel descripcion = new JLabel("Seleccione el elemento que desea agregar:");
     JLabel agregar = new JLabel("Agregar nuevo");
     JLabel foto = new JLabel();
+    File fichero;
+    private static final String PATTERN_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     Button botAgregar = new Button(true);
     Button cancelar = new Button(true);
     Button adFoto = new Button(true);
@@ -27,10 +35,15 @@ public class VentanaAgregar extends JFrame {
 	JTextField cajaAm;
 	JTextField cajaAp;
 	JTextField cajaNac;
-	JTextField cajaTel;
+	JFormattedTextField cajaTel;
+	JTextField cajaEst;
+	JTextField cajaEstax;
+	JLabel foto1 = new JLabel("foto:");
+	JScrollPane scrollPane ;
+	JButton cambiar = new JButton("cambiar:");
 	
     String insert;
-    JPanel sPanel;
+    JPanel sPanel,cambiarf;
     JComboBox cbPersonas;
     Conexion c = new Conexion();
     
@@ -64,7 +77,7 @@ public class VentanaAgregar extends JFrame {
         			if(r.next()) {
         				JOptionPane.showMessageDialog(null,"ERROR no se añadió el elemento, duplicidad en datos primarios");
         			}else {
-        				insert = "INSERT INTO oaxataxi.taxi(no_placas,modelo,foto,estado, comentarios, puntuacion) VALUES ('"+cajaplacas.getText().toLowerCase()+"','"+cajamodel.getText().toLowerCase()+"','htt://temporalmente.ausente', "+"'Agregado recientemente', '', NULL);";
+        				insert = "INSERT INTO oaxataxi.taxi(no_placas,modelo,foto,estado, comentarios, puntuacion) VALUES ('"+cajaplacas.getText().toLowerCase()+"','"+cajamodel.getText().toLowerCase()+"','htt://temporalmente.ausente','"+ cajaEstax.getText().toLowerCase() +"', '', NULL);";
     	    		    //System.out.println(insert);
     	
     	    		    try {
@@ -82,23 +95,43 @@ public class VentanaAgregar extends JFrame {
 	    			
 	    		    cajamodel.setText("");
 	    		    cajaplacas.setText("");
+	    		    cajaEstax.setText("");
+	    		    String image = "/img/sinfoto.jpg";
+	    			URL url = this.getClass().getResource(image);
+	    			ImageIcon fot = new ImageIcon(url);
+	    			Icon icono = new ImageIcon(
+
+	    					fot.getImage().getScaledInstance(foto1.getWidth(), foto1.getHeight(), Image.SCALE_DEFAULT));
+	    			foto1.setIcon(icono);
+	    			foto1.setText("");
             }
     		}if (e.getSource() == botAgregar && cbPersonas.getSelectedItem() == "Taxista"){
     			if (cajaemail.getText().length() == 0 || cajaNombre.getText().length() == 0 || cajaAp.getText().length() == 0 || cajaAm.getText().length() == 0 || cajaTel.getText().length() == 0) {
                     JOptionPane.showMessageDialog(null, "Campos vacios");
             } else {
-            	
+            	Pattern pattern = Pattern.compile(PATTERN_EMAIL);
+				Matcher matcher = pattern.matcher(cajaemail.getText());
+				if (matcher.matches()) {
+            	String tels = cajaTel.getText();
+				String numero = "";
+				for (int i = 0; i < tels.length(); i++) {
+					char caracter = tels.charAt(i);
+					if (isNumeric(caracter)) {
+						numero += caracter;
+					}
+				}
 	    			insert = "INSERT INTO oaxataxi.taxista( "
 	    		        +"    nombre, apaterno, amaterno, licencia, email, telefono, c_tel, "
 	    		        +"    fecha_nacimiento, foto, estado, comentarios, puntuacion)"
-	    		   +" VALUES ('"+ cajaNombre.getText().toLowerCase() +"', '"+ cajaAp.getText().toLowerCase() +"', '"+ cajaAm.getText().toLowerCase() +"', 'htt://temporalmente.ausente', '"+ cajaemail.getText() +"','"+ cajaTel.getText() +"', '+52', "
-	    		      +"      '"+ cajaNac.getText().toLowerCase() +"','https://ausente', 'Recientemente agregado', '', NULL);";
+	    		   +" VALUES ('"+ cajaNombre.getText().toLowerCase() +"', '"+ cajaAp.getText().toLowerCase() +"', '"+ cajaAm.getText().toLowerCase() +"', 'htt://temporalmente.ausente', '"+ cajaemail.getText() +"','"+ numero +"', '+52', "
+	    		      +"      '"+ cajaNac.getText().toLowerCase() +"','https://ausente', '"+ cajaEst.getText().toLowerCase() +"', '', NULL);";
 	    		    try {
 	    				conexion = c.conexionDB();
 	    			} catch (SQLException ex) {
 	    				// TODO Auto-generated catch block
 	    				ex.printStackTrace();
 	    			}
+	    		    cajaemail.setBorder(UIManager.getBorder("TextField.border"));
 	    		    try {
 	    				insertar(insert);
 	    			} catch (SQLException ex) {
@@ -111,8 +144,54 @@ public class VentanaAgregar extends JFrame {
 	    		    cajaAp.setText("");
 	    		    cajaAm.setText("");
 	    		    cajaTel.setText("");
+	    		    cajaEst.setText("");
+	    		    String image = "/img/sinfoto.jpg";
+	    			URL url = this.getClass().getResource(image);
+	    			ImageIcon fot = new ImageIcon(url);
+	    			Icon icono = new ImageIcon(
+
+	    					fot.getImage().getScaledInstance(foto1.getWidth(), foto1.getHeight(), Image.SCALE_DEFAULT));
+	    			foto1.setIcon(icono);
+	    			foto1.setText("");} else {
+						JOptionPane.showMessageDialog(null, "El correo es Invalido");
+						cajaemail.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+					}
             }
-    		}
+    		}else if (e.getSource() == cambiar) {
+
+				int resultado;
+
+				CargarFoto ventana = new CargarFoto();
+
+				FileNameExtensionFilter filtro = new FileNameExtensionFilter("JPG y PNG", "jpg", "png");
+
+				ventana.jfchCargarfoto.setFileFilter(filtro);
+
+				resultado = ventana.jfchCargarfoto.showOpenDialog(null);
+
+				if (JFileChooser.APPROVE_OPTION == resultado) {
+
+					fichero = ventana.jfchCargarfoto.getSelectedFile();
+
+					try {
+
+						ImageIcon icon = new ImageIcon(fichero.toString());
+
+						Icon icono = new ImageIcon(icon.getImage().getScaledInstance(foto1.getWidth(), foto1.getHeight(),
+								Image.SCALE_DEFAULT));
+                       
+
+						foto1.setIcon(icono);
+						foto1.setText("");
+
+					} catch (Exception ex) {
+
+						JOptionPane.showMessageDialog(null, "Error abriendo la                   imagen " + ex);
+
+					}
+
+				}
+			}
     	}
     }
     public void bye() {
@@ -148,13 +227,15 @@ public class VentanaAgregar extends JFrame {
               
         sPanel = new JPanel();       
         //sPanel.setLayout(new GridLayout(0,4));
-        JScrollPane scrollPane = new JScrollPane(sPanel);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setBounds(0, 0, 400,300);
+        // scrollPane = new JScrollPane(sPanel);
+       // scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+       // scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+       // scrollPane.setBounds(0, 0, 400,300);
         JPanel contentPane = new JPanel(null);
         contentPane.setPreferredSize(new Dimension(400, 200));
-        contentPane.add(scrollPane);
+       // contentPane.add(scrollPane);
+        sPanel.setBounds(0, 0, 400,300);
+        contentPane.add(sPanel);
         contentPane.setBounds(100,100,400,300);
         this.add(contentPane);
         
@@ -174,9 +255,19 @@ public class VentanaAgregar extends JFrame {
             public void itemStateChanged(ItemEvent e) {
             		if ( e.getStateChange() == ItemEvent.SELECTED ) {
             			if(e.getItem() == "Taxista") {
-            				agregarTaxista();
+            				try {
+								agregarTaxista();
+							} catch (ParseException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
             			}else if(e.getItem() == "Taxi") {
-            				agregarTaxi();
+            				try {
+								agregarTaxi();
+							} catch (ParseException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
             			}else {
             				sPanel.removeAll();
             				sPanel.repaint();
@@ -196,7 +287,7 @@ public class VentanaAgregar extends JFrame {
         this.add(fondo);
         
     }
-    public void agregarTaxista() {
+    public void agregarTaxista() throws ParseException {
     sPanel.removeAll();
     	sPanel.repaint();
     	
@@ -206,7 +297,11 @@ public class VentanaAgregar extends JFrame {
     	JLabel am = new JLabel("Apellido materno:");
     	JLabel email = new JLabel("Email:");
     	JLabel tel = new JLabel("Telefono");
-    	JLabel nac = new JLabel("Fecha de nacimiento:");
+    	JLabel nac = new JLabel("Fecha nacimiento:");
+    	JLabel estado = new JLabel("Estado:");
+    	
+    	
+    	
     	
     	
     	
@@ -215,46 +310,79 @@ public class VentanaAgregar extends JFrame {
     	 cajaAm = new JTextField(20);
     	 cajaAp = new JTextField(20);
     	 cajaemail = new JTextField(20);
-    	 cajaTel = new JTextField(20);
+    	 
     	 cajaNac = new JTextField(20);
+    	 cajaEst = new JTextField(20);
     	
     	nombre.setFont(new Font("Arial", Font.BOLD, 13));
-        nombre.setBounds(100,30,120,25);
+        nombre.setBounds(150,10,120,25);
         sPanel.add(nombre);
-        cajaNombre.setBounds(220,30,100,25);
+        cajaNombre.setBounds(270,10,100,25);
         sPanel.add(cajaNombre);
         
         
         ap.setFont(new Font("Arial", Font.BOLD, 13));
-        ap.setBounds(100,80,150,25);
+        ap.setBounds(150,50,150,25);
         sPanel.add(ap);
-        cajaAp.setBounds(220,80,100,25);
+        cajaAp.setBounds(270,50,100,25);
         sPanel.add(cajaAp);
         
         am.setFont(new Font("Arial", Font.BOLD, 13));
-        am.setBounds(100,120,150,25);
+        am.setBounds(150,90,150,25);
         sPanel.add(am);
-        cajaAm.setBounds(220,120,100,25);
+        cajaAm.setBounds(270,90,100,25);
         sPanel.add(cajaAm);
         
         email.setFont(new Font("Arial", Font.BOLD, 13));
-        email.setBounds(100,170,150,30);
+        email.setBounds(150,140,150,30);
         sPanel.add(email);
-        cajaemail.setBounds(220,170,100,25);
+        cajaemail.setBounds(270,140,100,25);
         sPanel.add(cajaemail);
         
         tel.setFont(new Font("Arial", Font.BOLD, 13));
-        tel.setBounds(100,220,150,30);
+        tel.setBounds(150,180,150,30);
         sPanel.add(tel);
-        cajaTel.setBounds(220,220,100,25);
+        MaskFormatter formatter = new MaskFormatter("(###) ###-####");
+        cajaTel = new JFormattedTextField(formatter);
+        cajaTel.setBounds(270,180,100,25);
         sPanel.add(cajaTel);
         
         nac.setFont(new Font("Arial", Font.BOLD, 13));
-        nac.setBounds(100,240,150,30);
+        nac.setBounds(150,220,150,30);
         sPanel.add(nac);
-        cajaNac.setBounds(220,240,100,25);
+        cajaNac.setBounds(270,220,100,25);
         sPanel.add(cajaNac);
         
+        estado.setFont(new Font("Arial", Font.BOLD, 13));
+        estado.setBounds(150,260,150,30);
+        sPanel.add(estado);
+        cajaEst.setBounds(270,260,100,25);
+        sPanel.add(cajaEst);
+        
+       // foto1 = new JLabel("foto");
+		
+		foto1.setForeground(Color.BLACK);
+		foto1.setBounds(31, 74, 100, 93);
+		String image = "/img/sinfoto.jpg";
+		URL url = this.getClass().getResource(image);
+		ImageIcon fot = new ImageIcon(url);
+		Icon icono = new ImageIcon(
+
+				fot.getImage().getScaledInstance(foto1.getWidth(), foto1.getHeight(), Image.SCALE_DEFAULT));
+		foto1.setIcon(icono);
+		foto1.setText("");
+        sPanel.add(foto1);
+        cambiar.setFont(new Font("Arial", Font.BOLD, 13));
+        cambiar.setBounds(31,170,100,30);
+        cambiar.setBackground(new Color(220, 220, 220));
+        cambiar.addMouseListener(new Click());
+        sPanel.add(cambiar);
+
+        
+        
+        
+     
+       
         cajaNombre.addKeyListener(
                 new KeyAdapter() {
             @Override
@@ -310,40 +438,51 @@ public class VentanaAgregar extends JFrame {
 
 
     }
-    public void agregarTaxi() {
+    public void agregarTaxi() throws ParseException {
     	sPanel.removeAll();
     	sPanel.repaint();
     	
     	JLabel nPlacas = new JLabel("Número de placas:");
     JLabel model = new JLabel("Modelo:");
-    cajaplacas = new JTextField();
+    JLabel estadotax = new JLabel("Estado:");
     cajamodel = new JTextField();
-  //Validacion de cajas
-    cajaplacas.addKeyListener(
-            new KeyAdapter() {
-        @Override
-        public void keyTyped(KeyEvent e) {
-            char c = e.getKeyChar();
-            if (((c < 'a' || c > 'z')) && (c != '\b') && ('-' != c) && (c < '0' || c > '9')) {
+    cajaEstax = new JTextField();
 
-                e.consume();
-
-            }
-        }
-    }
-    );
-
-    
+    MaskFormatter formatter = new MaskFormatter("UUU-##-##");
+	cajaplacas = new JFormattedTextField(formatter);
+	cajaplacas.setText((String) null);
 	nPlacas.setFont(new Font("Arial", Font.BOLD, 13));
-    nPlacas.setBounds(100,30,120,30);
+    nPlacas.setBounds(150,30,100,30);
     sPanel.add(nPlacas);
-    model.setFont(new Font("Arial", Font.BOLD, 13));
-    model.setBounds(100,90,150,30);
-    sPanel.add(model);
-    cajaplacas.setBounds(220,30,100,30);
+    cajaplacas.setBounds(270,30,100,30);
     sPanel.add(cajaplacas);
-    cajamodel.setBounds(220,90,100,30);
+    model.setFont(new Font("Arial", Font.BOLD, 13));
+    model.setBounds(150,90,150,30);
+    sPanel.add(model);
+    cajamodel.setBounds(270,90,100,30);
     sPanel.add(cajamodel);
+    estadotax.setFont(new Font("Arial", Font.BOLD, 13));
+    estadotax.setBounds(150,150,150,30);
+    sPanel.add(estadotax);
+    cajaEstax.setBounds(270,150,100,30);
+    sPanel.add(cajaEstax);
+    
+    foto1.setForeground(Color.BLACK);
+	foto1.setBounds(31, 74, 100, 93);
+	String image = "/img/sinfoto.jpg";
+	URL url = this.getClass().getResource(image);
+	ImageIcon fot = new ImageIcon(url);
+	Icon icono = new ImageIcon(
+
+			fot.getImage().getScaledInstance(foto1.getWidth(), foto1.getHeight(), Image.SCALE_DEFAULT));
+	foto1.setIcon(icono);
+	foto1.setText("");
+    sPanel.add(foto1);
+    cambiar.setFont(new Font("Arial", Font.BOLD, 13));
+    cambiar.setBounds(31,170,100,30);
+    cambiar.setBackground(new Color(220, 220, 220));
+    cambiar.addMouseListener(new Click());
+    sPanel.add(cambiar);
     }
     
     public void insertar (String s) throws SQLException {
@@ -365,4 +504,12 @@ public class VentanaAgregar extends JFrame {
 	        
 	    }
     }
+    private boolean isNumeric(char caracter) {
+		try {
+			Integer.parseInt(String.valueOf(caracter));
+			return true;
+		} catch (NumberFormatException ex) {
+			return false;
+		}
+	}
 }
