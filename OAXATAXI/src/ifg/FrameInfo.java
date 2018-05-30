@@ -14,7 +14,7 @@ public class FrameInfo extends JFrame {
 		this.setAlwaysOnTop( true );
 		setBounds(100, 100, 465, 511);
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 	}

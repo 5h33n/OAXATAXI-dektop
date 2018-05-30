@@ -5,6 +5,7 @@ import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -16,6 +17,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -28,13 +30,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.WindowConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.MaskFormatter;
 
+import ifg.CargarFoto;
 import recursos.Conexion;
 
 import java.awt.Color;
+import java.awt.Component;
+
 import javax.swing.JTextField;
+import javax.swing.BorderFactory;
 import javax.swing.DropMode;
 
 public class Usuario extends JPanel {
@@ -42,16 +50,21 @@ public class Usuario extends JPanel {
 	private JTextField nombre;
 	private JTextField nickname;
 	private JTextField tel;
+	private JTextField estado;
 	private JTextField ctel;
 	private JTextField rfc;
 	private JTextField sexo;
 	private JTextField fechanac;
 	private JTextField email;
-	private String foto1, id_usuario, nomb, apaterno, amaterno, nicknam, rf, tele, c_tel, sex, correo, fecha_nacimiento;
+	private JPanel cambiarf;
+	File fichero;
+	private String foto1, id_usuario, nomb, apaterno, amaterno, nicknam, rf, tele, c_tel, sex, correo, fecha_nacimiento,
+			status;
 	private JButton editar, guardar;
 	private static final String PATTERN_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 	private int f;
+	private JLabel label_1;
 	private JFormattedTextField telef;
 	// VARIABLES DE DB
 	private Connection conexion = null;
@@ -69,7 +82,7 @@ public class Usuario extends JPanel {
 		f = Integer.parseInt(xd);
 		consultar(f);
 		String[] modelo = { nicknam, nomb, apaterno + " " + amaterno, c_tel, tele, rf, foto1, sex, correo,
-				fecha_nacimiento };
+				fecha_nacimiento, status };
 
 		JLabel lblInformacinDelUsuario = new JLabel("Informaci\u00F3n del Usuario");
 		lblInformacinDelUsuario.setHorizontalAlignment(SwingConstants.CENTER);
@@ -77,7 +90,7 @@ public class Usuario extends JPanel {
 		lblInformacinDelUsuario.setBounds(55, 47, 354, 14);
 		add(lblInformacinDelUsuario);
 
-		JLabel label_1 = new JLabel("foto");
+		label_1 = new JLabel("foto");
 		label_1.setHorizontalAlignment(SwingConstants.CENTER);
 		label_1.setForeground(Color.BLACK);
 		label_1.setBounds(31, 74, 95, 93);
@@ -105,10 +118,38 @@ public class Usuario extends JPanel {
 		}
 		add(label_1);
 
+		JLabel lblNewLabel = new JLabel("Cambiar Foto");
+		lblNewLabel.setForeground(new Color(0, 0, 0));
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		lblNewLabel.setBackground(new Color(255, 255, 255));
+		lblNewLabel.setBounds(62, 172, 64, 20);
+		add(lblNewLabel);
+
+		cambiarf = new JPanel();
+		// cambiarf.setHorizontalAlignment(SwingConstants.TRAILING);
+		// cambiarf.setIcon(null);
+		cambiarf.setBackground(new Color(220, 220, 220));
+		cambiarf.setBounds(31, 171, 95, 20);
+		add(cambiarf);
+		cambiarf.setLayout(null);
+		cambiarf.addMouseListener(new Click());
+
+		JLabel cambiof = new JLabel("fo");
+		cambiof.setBounds(0, 0, 26, 20);
+		cambiarf.add(cambiof);
+		cambiof.setBackground(new Color(255, 255, 255));
+		String imag = "/img/cambiarfotito.png";
+		URL url3 = this.getClass().getResource(imag);
+		ImageIcon fotu = new ImageIcon(url3);
+		Icon iconu = new ImageIcon(
+				fotu.getImage().getScaledInstance(cambiof.getWidth(), cambiof.getHeight(), Image.SCALE_DEFAULT));
+		cambiof.setIcon(iconu);
+		cambiof.setText("");
+
 		apellidos = new JTextField();
 		apellidos.setEditable(false);
 		apellidos.setColumns(10);
-		apellidos.setBounds(140, 232, 136, 20);
+		apellidos.setBounds(225, 168, 184, 20);
 		add(apellidos);
 		apellidos.addKeyListener(new KeyAdapter() {
 			@Override
@@ -127,7 +168,7 @@ public class Usuario extends JPanel {
 		nombre.setText((String) null);
 		nombre.setEditable(false);
 		nombre.setColumns(10);
-		nombre.setBounds(140, 187, 136, 20);
+		nombre.setBounds(225, 131, 184, 20);
 		add(nombre);
 		nombre.addKeyListener(new KeyAdapter() {
 			@Override
@@ -143,19 +184,19 @@ public class Usuario extends JPanel {
 		});
 
 		JLabel nom = new JLabel("Nombre");
-		nom.setBounds(55, 190, 46, 14);
+		nom.setBounds(166, 134, 46, 14);
 		add(nom);
 		JLabel ap = new JLabel("Apellidos");
-		ap.setBounds(55, 235, 72, 14);
+		ap.setBounds(166, 171, 72, 14);
 		add(ap);
 
 		JLabel lblNickname = new JLabel("Usuario");
-		lblNickname.setBounds(166, 113, 57, 14);
+		lblNickname.setBounds(166, 95, 57, 14);
 		add(lblNickname);
 
 		nickname = new JTextField();
 		nickname.setEditable(false);
-		nickname.setBounds(248, 110, 161, 20);
+		nickname.setBounds(225, 92, 184, 20);
 		add(nickname);
 		nickname.setColumns(10);
 
@@ -164,38 +205,38 @@ public class Usuario extends JPanel {
 		JLabel guion = new JLabel("-");
 		guion.setHorizontalAlignment(SwingConstants.CENTER);
 		guion.setFont(new Font("Tahoma", Font.BOLD, 18));
-		guion.setBounds(132, 284, 46, 14);
+		guion.setBounds(202, 311, 46, 14);
 		add(guion);
 		MaskFormatter formatter1 = new MaskFormatter("+##");
 		ctel = new JFormattedTextField(formatter1);
 		ctel.setText((String) null);
 		ctel.setEditable(false);
 		ctel.setColumns(10);
-		ctel.setBounds(111, 281, 33, 20);
+		ctel.setBounds(166, 308, 33, 20);
 		add(ctel);
 
 		JLabel label_2 = new JLabel("Telefono");
-		label_2.setBounds(55, 284, 62, 14);
+		label_2.setBounds(55, 311, 62, 14);
 		add(label_2);
 
 		JLabel lblRfc = new JLabel("RFC");
-		lblRfc.setBounds(264, 284, 46, 14);
+		lblRfc.setBounds(55, 361, 46, 14);
 		add(lblRfc);
 
 		MaskFormatter formatter2 = new MaskFormatter("UUUU#######AAA");
 		rfc = new JFormattedTextField(formatter2);
 		rfc.setEditable(false);
-		rfc.setBounds(298, 281, 115, 20);
+		rfc.setBounds(166, 358, 243, 20);
 		add(rfc);
 		rfc.setColumns(10);
-		
+
 		JLabel lblSexo = new JLabel("Sexo");
-		lblSexo.setBounds(286, 190, 46, 14);
+		lblSexo.setBounds(276, 263, 46, 14);
 		add(lblSexo);
 
 		sexo = new JTextField();
 		sexo.setEditable(false);
-		sexo.setBounds(319, 187, 86, 20);
+		sexo.setBounds(323, 260, 86, 20);
 		add(sexo);
 		sexo.setColumns(10);
 		sexo.addKeyListener(new KeyAdapter() {
@@ -214,24 +255,23 @@ public class Usuario extends JPanel {
 			}
 		});
 
-		JLabel fn = new JLabel("Fecha de Nacimiento");
-		fn.setBounds(43, 338, 123, 14);
+		JLabel fn = new JLabel("Fecha Nacimiento");
+		fn.setBounds(55, 418, 123, 14);
 		add(fn);
 
 		fechanac = new JTextField();
 		fechanac.setEditable(false);
-		fechanac.setBounds(166, 335, 243, 20);
+		fechanac.setBounds(166, 415, 243, 20);
 		add(fechanac);
 		fechanac.setColumns(10);
 
 		JLabel ema = new JLabel("E-mail");
-		ema.setBounds(55, 387, 46, 14);
+		ema.setBounds(55, 217, 46, 14);
 		add(ema);
 
 		email = new JTextField();
 		email.setEditable(false);
-		email.setBounds(166, 384, 243, 20);
-
+		email.setBounds(166, 214, 243, 20);
 		add(email);
 		email.setColumns(10);
 
@@ -261,9 +301,19 @@ public class Usuario extends JPanel {
 		add(guardar);
 
 		telef = new JFormattedTextField(formatter);
-		telef.setBounds(166, 281, 95, 20);
+		telef.setBounds(248, 308, 161, 20);
 		telef.setEditable(false);
 		add(telef);
+
+		JLabel lblEstado = new JLabel("Estado");
+		lblEstado.setBounds(55, 263, 46, 14);
+		add(lblEstado);
+
+		estado = new JTextField();
+		estado.setEditable(false);
+		estado.setBounds(166, 260, 86, 20);
+		add(estado);
+		estado.setColumns(10);
 
 		nickname.setText(modelo[0]);
 		nombre.setText(modelo[1]);
@@ -274,6 +324,7 @@ public class Usuario extends JPanel {
 		sexo.setText(modelo[7]);
 		email.setText(modelo[8]);
 		fechanac.setText(modelo[9]);
+		estado.setText(modelo[10]);
 
 		/*
 		 * JFrame frame = new JFrame("Ventas"); // frame.add(new TapJpan(a,b,e));
@@ -303,6 +354,7 @@ public class Usuario extends JPanel {
 				rf = resultado.getString("rfc");
 				correo = resultado.getString("email");
 				fecha_nacimiento = resultado.getString("fecha_nacimiento");
+				status = resultado.getString("estado");
 
 			}
 
@@ -333,6 +385,7 @@ public class Usuario extends JPanel {
 				email.setEditable(true);
 				fechanac.setEditable(true);
 				rfc.setEditable(true);
+				estado.setEditable(true);
 			} else if (e.getSource() == guardar) {
 
 				Pattern pattern = Pattern.compile(PATTERN_EMAIL);
@@ -357,7 +410,9 @@ public class Usuario extends JPanel {
 							+ apell[0] + "', amaterno='" + apell[1] + "',  telefono='" + numero + "', \n"
 							+ "       c_tel='" + ctel.getText() + "' , nickname='" + nickname.getText() + "',email='"
 							+ email.getText() + "',sexo='" + sexo.getText() + "'," + "fecha_nacimiento='"
-							+ fechanac.getText() + "', rfc='" + rfc2 + "' " + " WHERE id_usuario=" + f + ";";
+							+ fechanac.getText() + "', rfc='" + rfc2 + "', " + "estado='" + estado.getText() + "'"
+							+ " WHERE id_usuario=" + f + ";";
+					email.setBorder(UIManager.getBorder("TextField.border"));
 					guardanding(value);
 					System.out.println(value);
 					guardar.setVisible(false);
@@ -371,11 +426,47 @@ public class Usuario extends JPanel {
 					email.setEditable(false);
 					fechanac.setEditable(false);
 					rfc.setEditable(false);
+					estado.setEditable(false);
 
 				} else {
 					JOptionPane.showMessageDialog(null, "El correo es Invalido");
+					email.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 				}
 
+			} else if (e.getSource() == cambiarf) {
+
+				int resultado;
+
+				CargarFoto ventana = new CargarFoto();
+
+				FileNameExtensionFilter filtro = new FileNameExtensionFilter("JPG y PNG", "jpg", "png");
+
+				ventana.jfchCargarfoto.setFileFilter(filtro);
+
+				resultado = ventana.jfchCargarfoto.showOpenDialog(null);
+
+				if (JFileChooser.APPROVE_OPTION == resultado) {
+
+					fichero = ventana.jfchCargarfoto.getSelectedFile();
+
+					try {
+
+						ImageIcon icon = new ImageIcon(fichero.toString());
+
+						Icon icono = new ImageIcon(icon.getImage().getScaledInstance(label_1.getWidth(),
+								label_1.getHeight(), Image.SCALE_DEFAULT));
+
+						label_1.setText(null);
+
+						label_1.setIcon(icono);
+
+					} catch (Exception ex) {
+
+						JOptionPane.showMessageDialog(null, "Error abriendo la                   imagen " + ex);
+
+					}
+
+				}
 			}
 		}
 	}

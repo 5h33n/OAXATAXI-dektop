@@ -5,9 +5,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.MaskFormatter;
 
-
+import ifg.CargarFoto;
 import recursos.Conexion;
 
 import java.awt.Color;
@@ -15,6 +16,7 @@ import javax.swing.JTextField;
 import java.awt.Font;
 import java.awt.Image;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.imageio.ImageIO;
@@ -25,6 +27,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -57,6 +60,9 @@ public class Taxista extends JPanel {
 	ResultSet resultado;
 	Statement sentencia;
 	private JTextField email;
+	private JPanel cambiarf;
+	private JLabel foto;
+	File fichero;
 	private JTextField fechanac;
 
 	public Taxista(String xd) throws SQLException, ParseException, IOException {
@@ -72,7 +78,7 @@ public class Taxista extends JPanel {
 		lblInformacinDelTaxista.setBounds(114, 26, 221, 14);
 		add(lblInformacinDelTaxista);
 
-		JLabel foto = new JLabel("foto");
+	    foto = new JLabel("foto");
 		foto.setForeground(new Color(0, 0, 0));
 		foto.setHorizontalAlignment(SwingConstants.CENTER);
 		foto.setBounds(47, 60, 95, 93);
@@ -99,31 +105,62 @@ public class Taxista extends JPanel {
 			System.out.println(e);
 		 } 
 		add(foto);
+		
+		JLabel lblNewLabel = new JLabel("Cambiar Foto");
+		lblNewLabel.setForeground(new Color(0, 0, 0));
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		lblNewLabel.setBackground(new Color(255, 255, 255));
+		lblNewLabel.setBounds(76, 155, 64, 20);
+		add(lblNewLabel);
+
+		cambiarf = new JPanel();
+		// cambiarf.setHorizontalAlignment(SwingConstants.TRAILING);
+		// cambiarf.setIcon(null);
+		cambiarf.setBackground(new Color(220, 220, 220));
+		
+		cambiarf.setBounds(47, 155, 95, 20);
+		//(31, 171, 95, 20)
+		//(47, 60, 95, 93)
+		add(cambiarf);
+		cambiarf.setLayout(null);
+		cambiarf.addMouseListener(new Click());
+
+		JLabel cambiof = new JLabel("fo");
+		cambiof.setBounds(0, 0, 26, 20);
+		cambiarf.add(cambiof);
+		cambiof.setBackground(new Color(255, 255, 255));
+		String imag = "/img/cambiarfotito.png";
+		URL url3 = this.getClass().getResource(imag);
+		ImageIcon fotu = new ImageIcon(url3);
+		Icon iconu = new ImageIcon(
+				fotu.getImage().getScaledInstance(cambiof.getWidth(), cambiof.getHeight(), Image.SCALE_DEFAULT));
+		cambiof.setIcon(iconu);
+		cambiof.setText("");
 
 		JLabel lblNombre = new JLabel("Nombre");
-		lblNombre.setBounds(170, 71, 46, 14);
+		lblNombre.setBounds(170, 88, 46, 14);
 		add(lblNombre);
 
 		JLabel lblApellidos = new JLabel("Apellidos");
-		lblApellidos.setBounds(170, 114, 72, 14);
+		lblApellidos.setBounds(170, 125, 72, 14);
 		add(lblApellidos);
 
 		JLabel lblTelefono = new JLabel("Telefono");
-		lblTelefono.setBounds(47, 164, 62, 14);
+		lblTelefono.setBounds(47, 200, 62, 14);
 		add(lblTelefono);
 
 		JLabel lblPuntuacion = new JLabel("Puntuacion");
-		lblPuntuacion.setBounds(252, 164, 73, 14);
+		lblPuntuacion.setBounds(252, 200, 73, 14);
 		add(lblPuntuacion);
 
 		JLabel lblLicencia = new JLabel("Licencia:");
-		lblLicencia.setBounds(47, 297, 83, 14);
+		lblLicencia.setBounds(47, 306, 83, 14);
 
 		add(lblLicencia);
 
 		JLabel fotolic = new JLabel("foto licencia");
 		fotolic.setHorizontalAlignment(SwingConstants.CENTER);
-		fotolic.setBounds(134, 292, 277, 104);
+		fotolic.setBounds(134, 303, 277, 93);
 		 try {
 			String ruta = modelo[3];
 			URL url = new URL(ruta);
@@ -155,7 +192,7 @@ public class Taxista extends JPanel {
 
 		nom = new JTextField();
 		nom.setEditable(false);
-		nom.setBounds(252, 68, 136, 20);
+		nom.setBounds(252, 85, 147, 20);
 		add(nom);
 		nom.addKeyListener(
                 new KeyAdapter() {
@@ -176,7 +213,7 @@ public class Taxista extends JPanel {
 
 		ape = new JTextField();
 		ape.setEditable(false);
-		ape.setBounds(252, 111, 136, 20);
+		ape.setBounds(252, 122, 147, 20);
 		add(ape);
 		ape.addKeyListener(
                 new KeyAdapter() {
@@ -198,20 +235,20 @@ public class Taxista extends JPanel {
 		MaskFormatter formatter1 = new MaskFormatter("+##");
 		ctel = new JFormattedTextField(formatter1);
 		ctel.setEditable(false);
-		ctel.setBounds(102, 164, 33, 20);
+		ctel.setBounds(100, 197, 33, 20);
 		add(ctel);
 		ctel.setColumns(10);
 
 		MaskFormatter formatter = new MaskFormatter("(###) ###-####");
 		tel = new JFormattedTextField(formatter);
 		tel.setEditable(false);
-		tel.setBounds(156, 164, 86, 20);
+		tel.setBounds(156, 197, 86, 20);
 		add(tel);
 		tel.setColumns(10);
 
 		pun = new JTextField();
 		pun.setEditable(false);
-		pun.setBounds(316, 164, 83, 20);
+		pun.setBounds(316, 197, 83, 20);
 		add(pun);
 		pun.setColumns(10);
 		
@@ -246,7 +283,7 @@ public class Taxista extends JPanel {
 		
 		JTextArea textArea = new JTextArea();
 		textArea.setEditable(false);
-		textArea.setBounds(134, 407, 277, 93);
+		textArea.setBounds(134, 407, 277, 65);
 		textArea.setText(modelo[8]);
 		add(textArea);
 
@@ -254,29 +291,29 @@ public class Taxista extends JPanel {
 		JLabel guion = new JLabel("-");
 		guion.setFont(new Font("Tahoma", Font.BOLD, 18));
 		guion.setHorizontalAlignment(SwingConstants.CENTER);
-		guion.setBounds(119, 164, 46, 14);
+		guion.setBounds(124, 200, 46, 14);
 		add(guion);
 		
 		JLabel label = new JLabel("E-mail");
-		label.setBounds(47, 206, 46, 14);
+		label.setBounds(47, 236, 46, 14);
 		add(label);
 		
 		email = new JTextField();
 		email.setText((String) null);
 		email.setEditable(false);
 		email.setColumns(10);
-		email.setBounds(156, 203, 245, 20);
+		email.setBounds(156, 233, 245, 20);
 		add(email);
 		
 		fechanac = new JTextField();
 		fechanac.setText((String) null);
 		fechanac.setEditable(false);
 		fechanac.setColumns(10);
-		fechanac.setBounds(156, 244, 243, 20);
+		fechanac.setBounds(156, 272, 243, 20);
 		add(fechanac);
 		
-		JLabel label_1 = new JLabel("Fecha de Nacimiento");
-		label_1.setBounds(45, 247, 123, 14);
+		JLabel label_1 = new JLabel("Fecha Nacimiento");
+		label_1.setBounds(47, 265, 123, 30);
 		add(label_1);
 		
 		nom.setText(modelo[1]);
@@ -378,6 +415,40 @@ public class Taxista extends JPanel {
 						JOptionPane.showMessageDialog(null, "El correo es Invalido");
 					}
 
+			}else if (e.getSource() == cambiarf) {
+
+				int resultado;
+
+				CargarFoto ventana = new CargarFoto();
+
+				FileNameExtensionFilter filtro = new FileNameExtensionFilter("JPG y PNG", "jpg", "png");
+
+				ventana.jfchCargarfoto.setFileFilter(filtro);
+
+				resultado = ventana.jfchCargarfoto.showOpenDialog(null);
+
+				if (JFileChooser.APPROVE_OPTION == resultado) {
+
+					fichero = ventana.jfchCargarfoto.getSelectedFile();
+
+					try {
+
+						ImageIcon icon = new ImageIcon(fichero.toString());
+
+						Icon icono = new ImageIcon(icon.getImage().getScaledInstance(foto.getWidth(),
+								foto.getHeight(), Image.SCALE_DEFAULT));
+
+						foto.setText(null);
+
+						foto.setIcon(icono);
+
+					} catch (Exception ex) {
+
+						JOptionPane.showMessageDialog(null, "Error abriendo la                   imagen " + ex);
+
+					}
+
+				}
 			}
 		}
 	}
