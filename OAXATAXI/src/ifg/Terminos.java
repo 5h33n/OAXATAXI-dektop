@@ -50,11 +50,14 @@ public class Terminos extends JFrame implements ActionListener, ChangeListener {
 		areaTerminos = new JTextArea();
 		areaTerminos.setEditable(false);
 		areaTerminos.setFont(new Font("Andale Mono", 0, 9));
-		areaTerminos.setText("\n\n          TÉRMINOS Y CONDICIONES" + "\n\n            A.  alv me vale verga"
-				+ "\n            B.  alv me vale verga" + "\n            C.  alv me vale verga"
-				+ "\n\n          alv me vale verga" + "\n          alv me vale verga" + "\n          alv me vale verga"
-				+ "\n          si no acepta alv me vale verga" + "\n\n          alv me vale verga"
-				+ "\n          alv me vale verga");
+		areaTerminos.setText("\n\n          TÉRMINOS Y CONDICIONES" + "\n\n            A.  La cuenta creada por el Usuario es personal e intransferible."
+				+ "\n            B. El Usuario se obliga a notificar inmediatamente cualquier uso indebido de su cuenta. \n" 
+				+ "\n\n            Sólo recopilará información personal para procesamiento y uso en el sistema," 
+				+ "\n            solo si usted voluntariamente decide ingresar la información o da su consentimiento  "
+				+ "\n            expreso por medio del presente. Al hacerlo, usted acepta los siguientes términos de uso."
+				+ "\n\n           Nosotros almacenaremos su información de forma segura y, por lo tanto, tomaremos todas" 
+				+ "\n           las medidas de precaución para proteger su información en contra de pérdida, abuso o cambios."
+				+ "\n          ");
 		scrollpane1 = new JScrollPane(areaTerminos);
 		scrollpane1.setBounds(10, 40, 575, 200);
 		add(scrollpane1);
