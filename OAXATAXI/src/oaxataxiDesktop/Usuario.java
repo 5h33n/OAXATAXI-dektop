@@ -491,6 +491,7 @@ public class Usuario extends JPanel {
 			e.printStackTrace();
 		}
 	}
+	
 
 	/*
 	 * public static void main(String[] args) throws SQLException, ParseException {

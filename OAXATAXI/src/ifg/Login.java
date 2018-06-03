@@ -1,14 +1,25 @@
 package ifg;
 import javax.swing.*;
+
+import recursos.Conexion;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 public class Login extends JFrame {
     //Declaracion de componentes de la ventana
     private JLabel administrador, contrasena, olvidarContrasena;
     private JERoundTextField cajaAdministrador, cajaContrasena;
     private JButton pregunta, cerrar;
     private Button iniciar;
+    String verifi = "";
+	private Connection conexion = null;
+	ResultSet resultado;
+	Statement sentencia;
     private Color colorAdmin = new Color(250, 244, 194);
     private Color colorFondo = new Color(255,200,36);
     
@@ -18,13 +29,32 @@ public class Login extends JFrame {
     				cerrar();
     			}
     			if (e.getSource() == iniciar) {
-    				try {
-    					Principal p = new Principal();
-    					ocultar();
-    				} catch (IOException ex) {
-    					// TODO Auto-generated catch block
-    					ex.printStackTrace();
-    				}
+    				
+    					String nombre= cajaAdministrador.getText();
+    					String password= cajaContrasena.getText();
+    					Conexion c = new Conexion();
+    					
+						try {
+							conexion = c.conexionDB();
+						    sentencia = conexion.createStatement();
+						    resultado = sentencia.executeQuery("select * from oaxataxi.verificar_password('"+nombre+"','"+password+"');");
+							while (resultado.next()) {
+								 verifi = resultado.getString("verificar_password");
+							}
+							if (verifi.equals("t")) {
+								Principal p = new Principal();
+		    					ocultar();
+							}else {
+								JOptionPane.showMessageDialog(null, "Los Datos son incorrectos ");
+							}
+						} catch (SQLException e2) {
+							e2.printStackTrace();
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+						
+						
+    					
     				
     			}
     		}
