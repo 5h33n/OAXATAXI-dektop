@@ -8,32 +8,22 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * Clase que funcionara como un explorador de archivos para cargar alguna foto de 
+ * la pc del administrador, esta clase sera utilizada cuando se desee cambiar la foto 
+ * de algun taxista o una cuenta de un taxi
+ * @author Davisito
+ *
+ */
 public class CargarFoto extends JFrame {
 
 	
 	private JPanel contentPane;
 	public static javax.swing.JFileChooser jfchCargarfoto ;
 	
-
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					CargarFoto frame = new CargarFoto();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
+	 * Constructor de la clase CargarFoto en el cual se crean los componentes 
+	 * 
 	 */
 	public CargarFoto() {
 		this.setAlwaysOnTop( true );
@@ -47,5 +37,23 @@ public class CargarFoto extends JFrame {
 		jfchCargarfoto.setFileHidingEnabled(true);
 		contentPane.add(jfchCargarfoto);
 	}
-
+	/**
+	 * Método principal de la clase CargarFoto, en el cual se creeara la venta donde estara contenido el
+	 * explorador de archivos
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		
+		EventQueue.invokeLater(new Runnable() {
+			
+			public void run() {
+				try {
+					CargarFoto frame = new CargarFoto();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 }

@@ -49,6 +49,13 @@ import java.awt.Component;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
 
+/**
+ * Clase donde se mostrara el perfil de la cuenta de un Taxi, a esta cuenta
+ * podra acceder el dueño
+ * 
+ * @author Davisito
+ *
+ */
 public class Taxi extends JPanel {
 	private JTextField modelo;
 	private JTextField placas;
@@ -67,6 +74,16 @@ public class Taxi extends JPanel {
 	Statement sentencia;
 	Calendar calendario = new GregorianCalendar();
 
+	/**
+	 * Constructor de la clase taxi donde se crean todos los componentes de esta
+	 * ventana
+	 * 
+	 * @param xd
+	 *            String que se le pasa de la clase Busqueda_c este valor es tomado
+	 *            de la base de datos como el id
+	 * @throws SQLException
+	 * @throws ParseException
+	 */
 	public Taxi(String xd) throws SQLException, ParseException {
 		setLayout(null);
 		f = Integer.parseInt(xd);
@@ -141,9 +158,13 @@ public class Taxi extends JPanel {
 		modelo.setColumns(10);
 		modelo.setBounds(251, 137, 148, 20);
 		add(modelo);
-		//modelo.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-		//modelo.setOpaque(false);
 		modelo.addKeyListener(new KeyAdapter() {
+			/**
+			 * Listener que detecta cuando se escribe un caracter y en este caso solo va a
+			 * aceptar letras mayusculas y minusculas y no se podra poner espacios
+			 * 
+			 * @see java.awt.event.KeyAdapter#keyTyped(java.awt.event.KeyEvent)
+			 */
 			@Override
 			public void keyTyped(KeyEvent e) {
 				char c = e.getKeyChar();
@@ -163,8 +184,8 @@ public class Taxi extends JPanel {
 		placas.setColumns(10);
 		placas.setBounds(251, 94, 148, 20);
 		add(placas);
-		//placas.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-		//placas.setOpaque(false);
+		// placas.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+		// placas.setOpaque(false);
 
 		JLabel plac = new JLabel("No_placas");
 		plac.setBounds(169, 97, 72, 14);
@@ -183,9 +204,14 @@ public class Taxi extends JPanel {
 		estado.setBounds(134, 217, 128, 20);
 		add(estado);
 		estado.setColumns(10);
-		//estado.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-		//estado.setOpaque(false);
+
 		estado.addKeyListener(new KeyAdapter() {
+			/**
+			 * Listener que detecta cuando se escribe un caracter en este caso solo acepta
+			 * letras mayusculas y minusculas
+			 * 
+			 * @see java.awt.event.KeyAdapter#keyTyped(java.awt.event.KeyEvent)
+			 */
 			@Override
 			public void keyTyped(KeyEvent e) {
 				if (estado.getText().length() == 20) {
@@ -209,8 +235,8 @@ public class Taxi extends JPanel {
 		puntuacion.setEditable(false);
 		puntuacion.setBounds(335, 217, 64, 20);
 		add(puntuacion);
-		//puntuacion.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-		//puntuacion.setOpaque(false);
+		// puntuacion.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+		// puntuacion.setOpaque(false);
 		puntuacion.setColumns(10);
 
 		JLabel lblTaxistaactual = new JLabel("Taxista Actual");
@@ -221,8 +247,8 @@ public class Taxi extends JPanel {
 		taxactual.setEditable(false);
 		taxactual.setBounds(134, 276, 128, 20);
 		add(taxactual);
-		//taxactual.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-		//taxactual.setOpaque(false);
+		// taxactual.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+		// taxactual.setOpaque(false);
 		taxactual.setColumns(10);
 
 		JLabel lblComentarios = new JLabel("Comentarios:");
@@ -267,15 +293,17 @@ public class Taxi extends JPanel {
 		puntuacion.setText(modelado[6]);
 		taxactual.setText(modelado[7]);
 
-		/*
-		 * JFrame frame = new JFrame("Ventas"); // frame.add(new TapJpan(a,b,e));
-		 * frame.add(this); frame.pack();
-		 * frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		 * frame.setVisible(true);
-		 */
-
 	}
 
+	/**
+	 * Clase heredada de MouseAdapter, que funciona como un Listener para detectar
+	 * cuando el usuario de un clic sobre los botones, si da clic en el boton editar
+	 * todos los JTextfield se pondran editar, y cuando le de clic en guardar se
+	 * realizara un UPDATE en la base de datos con la nueva informacion
+	 * 
+	 * @author Davisito
+	 *
+	 */
 	private class Click extends MouseAdapter {
 		public void mouseClicked(MouseEvent e) {
 			if (e.getSource() == editar) {
@@ -335,6 +363,14 @@ public class Taxi extends JPanel {
 		}
 	}
 
+	/**
+	 * Metodo que nos ayudara a la consulta de los datos
+	 * 
+	 * @param xd
+	 *            Int que se recibe del constructor, sera tomado como el id para
+	 *            realizar consultas en la base de datos
+	 * @throws SQLException
+	 */
 	public void consultar(int xd) throws SQLException {
 		try {
 			Conexion c = new Conexion();
@@ -385,6 +421,14 @@ public class Taxi extends JPanel {
 
 	}
 
+	/**
+	 * Metodo que ejecuta una consulta de tipo UPDATE para guardar la informacion
+	 * editada
+	 * 
+	 * @param value
+	 *            String recibido al momento de dar clic en el boton guardar (
+	 *            consulta UPDATE)
+	 */
 	public void guardanding(String value) {
 		try {
 			Conexion c = new Conexion();
@@ -398,8 +442,4 @@ public class Taxi extends JPanel {
 		}
 	}
 
-	/*
-	 * public static void main(String[] args) throws SQLException, ParseException {
-	 * InfoTaxi it = new InfoTaxi(); }
-	 */
 }

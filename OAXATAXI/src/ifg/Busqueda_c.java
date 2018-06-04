@@ -24,6 +24,10 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.LocalTime;
 
+/**
+ * @author Davisito
+ *
+ */
 public class Busqueda_c extends JPanel {
 	private JButton jb;
 	private String x, y;
@@ -76,13 +80,13 @@ public class Busqueda_c extends JPanel {
 		add(lblNewLabel_3, gbc_lblNewLabel_3);
 		x = titulo;
 		y = info;
-		// jb = new JButton("ver" + titulo);
-		// this.addMouseListener(new Click());
-		// add(jb);
 		addMouseListener(new Click());
-
 	}
 
+	/**
+	 * @author Davisito
+	 *
+	 */
 	private class Click extends MouseAdapter {
 		public void mousePressed(MouseEvent e) {
 

@@ -21,6 +21,7 @@ public class VentanaAgregar extends JFrame {
     JLabel agregar = new JLabel("Agregar nuevo");
     JLabel foto = new JLabel();
     File fichero;
+    //modelo para el email
     private static final String PATTERN_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     Button botAgregar = new Button(true);
@@ -42,6 +43,7 @@ public class VentanaAgregar extends JFrame {
 	JScrollPane scrollPane ;
 	JButton cambiar = new JButton("cambiar:");
 	
+	
     String insert;
     JPanel sPanel,cambiarf;
     JComboBox cbPersonas;
@@ -51,6 +53,7 @@ public class VentanaAgregar extends JFrame {
     ResultSet resultado;
     Statement sentencia;
     public VentanaAgregar() {
+    	
         this.setUndecorated(false);
         this.setSize(399, 399);
         this.setVisible(true);
@@ -276,10 +279,7 @@ public class VentanaAgregar extends JFrame {
             }
 
          });
-        
-        
-        
-        
+ 
         ImageIcon f = new ImageIcon(getClass().getResource("/img/fondo2.png"));
         JLabel fondo = new JLabel();
         fondo.setIcon(f);
@@ -299,13 +299,7 @@ public class VentanaAgregar extends JFrame {
     	JLabel tel = new JLabel("Telefono");
     	JLabel nac = new JLabel("Fecha nacimiento:");
     	JLabel estado = new JLabel("Estado:");
-    	
-    	
-    	
-    	
-    	
-    	
-    	 
+
     	 cajaNombre = new JTextField(20);
     	 cajaAm = new JTextField(20);
     	 cajaAp = new JTextField(20);
@@ -378,11 +372,6 @@ public class VentanaAgregar extends JFrame {
         cambiar.addMouseListener(new Click());
         sPanel.add(cambiar);
 
-        
-        
-        
-     
-       
         cajaNombre.addKeyListener(
                 new KeyAdapter() {
             @Override
@@ -487,9 +476,8 @@ public class VentanaAgregar extends JFrame {
     
     public void insertar (String s) throws SQLException {
     	try {
-    		//System.out.println(s);
 			conexion = c.conexionDB();
-			//sentencia.ex
+
 			sentencia = conexion.createStatement();
 			
 			sentencia.executeUpdate(s);

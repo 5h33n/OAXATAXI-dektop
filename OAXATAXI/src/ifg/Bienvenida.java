@@ -12,6 +12,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.awt.*;
 
+/**
+ * La clase bienvenida solo se ejecutara la primera vez que se utilize el software, ya que aqui el Usuario 
+ * principal o Administrador proporcionara alguno de sus datos para el inicio de sesión
+ * @author Davisito
+ *
+ */
 public class Bienvenida extends JFrame implements ActionListener {
 
 	private JTextField cajaNombreUsuario;
@@ -28,6 +34,10 @@ public class Bienvenida extends JFrame implements ActionListener {
 	private String auxPass = "";
 	private static final String PATTERN_EMAIL = "^(?=\\w*\\d)(?=\\w*[A-Z])(?=\\w*[a-z])\\S{8,16}$";
 
+	/**
+	 * Constructor de la clase Bienvenida donde se crearan todos los componentes de esta ventana
+	 * 
+	 */
 	public Bienvenida() {
 		getContentPane().setLayout(null);
 		setTitle("oaxataxi");
@@ -65,8 +75,6 @@ public class Bienvenida extends JFrame implements ActionListener {
 		getContentPane().add(label4);
 
 		JLabel lblNewLabel = new JLabel("icon");
-		// lblNewLabel.setIcon(new
-		// ImageIcon(Bienvenida.class.getResource("/img/infous.png")));
 		lblNewLabel.setBounds(37, 432, 17, 20);
 		String path2 = "/img/infu.png";
 		URL url2 = this.getClass().getResource(path2);
@@ -82,7 +90,7 @@ public class Bienvenida extends JFrame implements ActionListener {
 		cajaNombreUsuario.setBackground(new Color(255, 255, 255));
 		cajaNombreUsuario.setFont(new Font("Dialog", Font.BOLD, 14));
 		cajaNombreUsuario.setForeground(new Color(0, 0, 0));
-		cajaNombreUsuario.setToolTipText("puedes ingresar lo que quieras no hay pedo");
+		cajaNombreUsuario.setToolTipText("Puedes ingresar cualquier letra y numeros");
 		getContentPane().add(cajaNombreUsuario);
 
 		botonCrear = new JButton("Crear");
@@ -105,7 +113,7 @@ public class Bienvenida extends JFrame implements ActionListener {
 
 		cajaPass1 = new JPasswordField();
 		cajaPass1.setBounds(45, 264, 255, 25);
-		cajaPass1.setToolTipText("puedes ingresar lo que quieras no hay pedo");
+		cajaPass1.setToolTipText("debe contener minusculas, numeros y al menos una mayuscula");
 		getContentPane().add(cajaPass1);
 
 		cajaPass2 = new JPasswordField();
@@ -116,6 +124,11 @@ public class Bienvenida extends JFrame implements ActionListener {
 		getContentPane().add(cajaPass2);
 
 		cajaPass2.addKeyListener(new KeyAdapter() {
+			/**Listener que es requerido cada que se escribe algun caracter
+			 * servira para hacer una comparacion entre las 2 contraseñas cada
+			 * vez que el usuario teclee un caracter
+			 * @see java.awt.event.KeyAdapter#keyTyped(java.awt.event.KeyEvent)
+			 */
 			@Override
 			public void keyTyped(KeyEvent e) {
 
@@ -136,8 +149,6 @@ public class Bienvenida extends JFrame implements ActionListener {
 						cajaPass2.setText(passString2);
 						cajaPass2.setBorder(BorderFactory.createLineBorder(Color.GREEN, 1));
 						cajaPass1.setBorder(BorderFactory.createLineBorder(Color.GREEN, 1));
-						// cajaPass2.setEditable(false);
-						//cajaPass1.setEditable(false);
 					}
 
 				}
@@ -146,6 +157,14 @@ public class Bienvenida extends JFrame implements ActionListener {
 		});
 	}
 
+	/**
+	 * Listener que es invocado cuando ocurre una accion en alguno de los botones
+	 * si se ejecuta una accion en el boton crear, se comprobara que la contraseña escrita
+	 * esta en un rango de 8 a 16 caracteres y contenga minusculas, numeros y al menos una 
+	 * mayuscula, si esto se cumple abrira la ventana siguiente que es aceptar los Terminos y condiciones
+	 * si no se cumple mandara un mensaje para que el usuario vuelva a escribir la contraseña
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == botonCrear) {
 			Pattern pattern = Pattern.compile(PATTERN_EMAIL);
@@ -167,12 +186,16 @@ public class Bienvenida extends JFrame implements ActionListener {
 			} else {
 				JOptionPane.showMessageDialog(null,
 						"La contraseña debe contener numeros, minusculas y al menos una mayuscula");
-				// email.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 			}
 		}
 	}
 
-	public static void main(String args[]) {
+	/**
+	 * Método principal de la clase Bienvenida, donde se creara un nuevo frame con las 
+	 * dimensiones deseadas
+	 * @param args
+	 */
+	public static void main(String []args) {
 		Bienvenida ventanabienvenida = new Bienvenida();
 		ventanabienvenida.setBounds(0, 0, 350, 450);
 		ventanabienvenida.setVisible(true);

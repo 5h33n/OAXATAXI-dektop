@@ -45,6 +45,13 @@ import javax.swing.JTextField;
 import javax.swing.BorderFactory;
 import javax.swing.DropMode;
 
+/**
+ * Clase donde se mostrara la informacion del perfil de algun usuario de la
+ * aplicacion
+ * 
+ * @author Davisito
+ *
+ */
 public class Usuario extends JPanel {
 	private JTextField apellidos;
 	private JTextField nombre;
@@ -72,8 +79,22 @@ public class Usuario extends JPanel {
 	Statement sentencia;
 
 	/**
-	 * Create the panel.
+	 * Constructor de la clase Usuario donde se crearan todos los componentes de la
+	 * ventana
 	 * 
+	 * @param xd
+	 *            String que se le pasa de la clase Busqueda_c este valor es tomado
+	 *            de la base de datos como el id
+	 * @throws SQLException
+	 * @throws ParseException
+	 */
+	/**
+	 * @param xd
+	 * @throws SQLException
+	 * @throws ParseException
+	 */
+	/**
+	 * @param xd
 	 * @throws SQLException
 	 * @throws ParseException
 	 */
@@ -152,6 +173,12 @@ public class Usuario extends JPanel {
 		apellidos.setBounds(225, 168, 184, 20);
 		add(apellidos);
 		apellidos.addKeyListener(new KeyAdapter() {
+			/**
+			 * Listener que detecta cada vez que se escribe un caracter y solo acepta
+			 * mayusculas, minusculas y espacios
+			 * 
+			 * @see java.awt.event.KeyAdapter#keyTyped(java.awt.event.KeyEvent)
+			 */
 			@Override
 			public void keyTyped(KeyEvent e) {
 				char c = e.getKeyChar();
@@ -171,6 +198,12 @@ public class Usuario extends JPanel {
 		nombre.setBounds(225, 131, 184, 20);
 		add(nombre);
 		nombre.addKeyListener(new KeyAdapter() {
+			/**
+			 * Listener que detecta cada vez que se escribe un caracter y solo acepta
+			 * mayusculas, minusculas y espacios
+			 * 
+			 * @see java.awt.event.KeyAdapter#keyTyped(java.awt.event.KeyEvent)
+			 */
 			@Override
 			public void keyTyped(KeyEvent e) {
 				char c = e.getKeyChar();
@@ -240,6 +273,12 @@ public class Usuario extends JPanel {
 		add(sexo);
 		sexo.setColumns(10);
 		sexo.addKeyListener(new KeyAdapter() {
+			/**
+			 * Listener que detecta cada vez que se escribe un caracter y solo acepta
+			 * mayusculas y minusculas y solamente 10 caracteres
+			 * 
+			 * @see java.awt.event.KeyAdapter#keyTyped(java.awt.event.KeyEvent)
+			 */
 			@Override
 			public void keyTyped(KeyEvent e) {
 				if (sexo.getText().length() == 10) {
@@ -326,14 +365,16 @@ public class Usuario extends JPanel {
 		fechanac.setText(modelo[9]);
 		estado.setText(modelo[10]);
 
-		/*
-		 * JFrame frame = new JFrame("Ventas"); // frame.add(new TapJpan(a,b,e));
-		 * frame.add(this); frame.pack();
-		 * frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		 * frame.setVisible(true);
-		 */
 	}
 
+	/**
+	 * Método para la consulta de los datos del usuario segun el id
+	 * 
+	 * @param xd
+	 *            Int que se recibre del constructor y que servira como id para la
+	 *            consulta en la base de datos
+	 * @throws SQLException
+	 */
 	public void consultar(int xd) throws SQLException {
 		try {
 			Conexion c = new Conexion();
@@ -371,6 +412,16 @@ public class Usuario extends JPanel {
 
 	}
 
+	/**
+	 * Clase heredada de MouseAdapter, que funciona como un Listener para detectar
+	 * cuando el usuario de un clic sobre los botones, si da clic en el boton editar
+	 * todos los JTextfield se pondran editar, y cuando le de clic en guardar se
+	 * realizara un UPDATE en la base de datos con la nueva informacion no sin antes
+	 * comprobar si el email esta escrito de forma correcta
+	 * 
+	 * @author Davisito
+	 *
+	 */
 	private class Click extends MouseAdapter {
 		public void mouseClicked(MouseEvent e) {
 			if (e.getSource() == editar) {
@@ -471,6 +522,14 @@ public class Usuario extends JPanel {
 		}
 	}
 
+	/**
+	 * Método para comprobar si un caracter es numero
+	 * 
+	 * @param caracter
+	 *            CHAR recibido para comprobar si es numero o no, esto es al momento
+	 *            de ejecutarse el método KeyTyped
+	 * @return regresa true si el caracter ingresado es numero y false si no lo es
+	 */
 	private boolean isNumeric(char caracter) {
 		try {
 			Integer.parseInt(String.valueOf(caracter));
@@ -480,6 +539,14 @@ public class Usuario extends JPanel {
 		}
 	}
 
+	/**
+	 * Método que ejecuta una sentencia de tipo UPDATE con los datos que el usuario
+	 * edito
+	 * 
+	 * @param value
+	 *            String recibido al momento de dar clic en el boton guardar (
+	 *            consulta UPDATE)
+	 */
 	public void guardanding(String value) {
 		try {
 			Conexion c = new Conexion();
@@ -491,10 +558,5 @@ public class Usuario extends JPanel {
 			e.printStackTrace();
 		}
 	}
-	
 
-	/*
-	 * public static void main(String[] args) throws SQLException, ParseException {
-	 * InfoUsuario iu = new InfoUsuario(); }
-	 */
 }
