@@ -467,7 +467,7 @@ public class Principal extends JFrame implements Runnable {
 	        if (sentencia != null) { sentencia.close(); }
 	    }
     }
-    public static void main (String []args) throws IOException {
-    	Principal p = new Principal();
-    }
+//    public static void main (String []args) throws IOException {
+//    	Principal p = new Principal();
+//    }
 }

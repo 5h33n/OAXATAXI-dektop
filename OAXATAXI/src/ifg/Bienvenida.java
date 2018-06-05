@@ -46,7 +46,7 @@ public class Bienvenida extends JFrame implements ActionListener {
 		// ImageIcon(getClass().getResource("img/icon.png")).getImage());
 
 		ImageIcon imagen = new ImageIcon("img/titulob3.png");
-		imagenTitulo = new JLabel(new ImageIcon(Bienvenida.class.getResource("/img/titulob3.png")));
+		imagenTitulo = new JLabel(new ImageIcon(Bienvenida.class.getResource("/img/nuevo.png")));
 		imagenTitulo.setBackground(new Color(0, 0, 0));
 		imagenTitulo.setVerticalAlignment(SwingConstants.BOTTOM);
 		imagenTitulo.setText("");

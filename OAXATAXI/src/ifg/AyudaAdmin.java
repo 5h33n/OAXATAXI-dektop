@@ -40,9 +40,11 @@ public class AyudaAdmin extends JPanel{
     botones.setLayout(new BoxLayout(botones, BoxLayout.PAGE_AXIS));
     botones.add(Box.createRigidArea(new Dimension(0,3)));
     
-    scrollPane = new JScrollPane(botones);
-    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+//    scrollPane = new JScrollPane();
+//    scrollPane.setLayout(new BoxLayout(botones, BoxLayout.PAGE_AXIS));
+//    scrollPane.add(Box.createRigidArea(new Dimension(0,3)));
+//    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+//    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
     
  
     
@@ -52,13 +54,15 @@ public class AyudaAdmin extends JPanel{
     ImageIcon a = new ImageIcon(getClass().getResource("/img/cerrarSesion.png"));
     cerrar.setIcon(a);
     //cerrar.setBounds(500,0,128,30)ñ
-    this.add(cerrar);
+    
     cerrar.addActionListener(
             new ActionListener() {
         public void actionPerformed(ActionEvent evento) {
 
             
-            new Login().setVisible(true);
+            //new Bienvenida().setVisible(true);
+        	Bienvenida b = new Bienvenida();
+        	b.main(null);
             p.setVisible(false);
            
      		
@@ -67,16 +71,15 @@ public class AyudaAdmin extends JPanel{
     }
     );
     
-    this.add(cerrar);
+
     
     JButton acerca = new JButton();
     acerca= new ifg.Button(true);
     acerca.setForeground(Color.black);
     ImageIcon b = new ImageIcon(getClass().getResource("/img/acerca.png"));
     acerca.setIcon(b);
-   
     acerca.setBounds(new Rectangle(50,50,100,75));
-    this.add(acerca);
+    
     acerca.addActionListener(
             new ActionListener() {
         public void actionPerformed(ActionEvent evento) {
@@ -87,15 +90,15 @@ public class AyudaAdmin extends JPanel{
         }
     }
     );
-    this.add(acerca);
+    
     
     JButton ayuda = new JButton();
     ayuda= new ifg.Button(true);
     ayuda.setForeground(Color.black);
     ImageIcon c = new ImageIcon(getClass().getResource("/img/ayuda.png"));
     ayuda.setIcon(c);
-    //ayuda.setBounds(500,0,128,30);
-    this.add(ayuda);
+    ayuda.setBounds(500,0,128,30);
+   
     ayuda.addActionListener(
             new ActionListener() {
         public void actionPerformed(ActionEvent evento) {
@@ -108,13 +111,15 @@ public class AyudaAdmin extends JPanel{
     );
     this.add(ayuda);
     
+    
+    
     JButton configuracion = new JButton();
     configuracion= new ifg.Button(true);
     configuracion.setForeground(Color.black);
     ImageIcon d = new ImageIcon(getClass().getResource("/img/acerca.png"));
     configuracion.setIcon(d);
-    //ayuda.setBounds(500,0,128,30);
-    this.add(configuracion);
+    ayuda.setBounds(500,0,128,30);
+    
     configuracion.addActionListener(
             new ActionListener() {
         public void actionPerformed(ActionEvent evento) {
@@ -125,20 +130,13 @@ public class AyudaAdmin extends JPanel{
         }
     }
     );
-    this.add(configuracion);
-    
     
     
     botones.add(cerrar);
-    botones.add(acerca);
     botones.add(ayuda);
-    botones.add(configuracion);
+    botones.add(acerca);
     
-    scrollPane.add(botones);
-    
-   
-    
-    this.add(scrollPane);
+    this.add(botones);
 }
     public void cerrar() {
     	
