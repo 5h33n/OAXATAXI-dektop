@@ -14,7 +14,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 public class AyudaAdmin extends JPanel{
-	private JButton cerrar,acerca,ayuda,configuracion;
+	private JPanel cerrar,acerca,ayuda,configuracion;
     private JPanel principal,botones;
     private JScrollPane scrollPane;
     Login l;
@@ -52,7 +52,9 @@ public class AyudaAdmin extends JPanel{
     cerrar= new ifg.Button(true);
     cerrar.setForeground(Color.black);
     ImageIcon a = new ImageIcon(getClass().getResource("/img/cerrarSesion.png"));
+     
     cerrar.setIcon(a);
+    cerrar.setSize(128, 30);
     //cerrar.setBounds(500,0,128,30)ñ
     
     cerrar.addActionListener(
@@ -95,7 +97,8 @@ public class AyudaAdmin extends JPanel{
     ayuda.setForeground(Color.black);
     ImageIcon c = new ImageIcon(getClass().getResource("/img/ayuda.png"));
     ayuda.setIcon(c);
-    ayuda.setBounds(500,0,128,30);
+    ayuda.setSize(128,30);
+    //ayuda.setBounds(500,0,128,30);
    
     ayuda.addActionListener(
             new ActionListener() {
@@ -116,7 +119,8 @@ public class AyudaAdmin extends JPanel{
     configuracion.setForeground(Color.black);
     ImageIcon d = new ImageIcon(getClass().getResource("/img/acerca.png"));
     configuracion.setIcon(d);
-    ayuda.setBounds(500,0,128,30);
+    ayuda.setSize(128,30);
+    //ayuda.setBounds(500,0,128,30);
     
     configuracion.addActionListener(
             new ActionListener() {
@@ -135,6 +139,7 @@ public class AyudaAdmin extends JPanel{
     botones.add(acerca);
     
     this.add(botones);
+    this.setSize(133, 120);
 }
     public void cerrar() {
     	
