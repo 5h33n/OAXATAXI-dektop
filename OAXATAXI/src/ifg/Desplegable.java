@@ -2,28 +2,26 @@ package ifg;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableModel;
-
-import oaxataxiDesktop.Taxi;
-import oaxataxiDesktop.Taxista;
-import oaxataxiDesktop.Usuario;
 import recursos.Conexion;
+import recursos.ConexionServer;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
+/**
+ * Panel desplegable para busquedas
+ * @author sheen
+ *
+ */
 public class Desplegable extends JPanel {
     private Button ocultar;
     private JLabel et = new JLabel("Buscar:");
     static JTextField busqueda;
-    private JPanel container;
     private int contenedores = 0;
     private JScrollPane scrollPane;
     private Connection conexion=null;
@@ -32,20 +30,27 @@ public class Desplegable extends JPanel {
     JPanel panel;
     Conexion c = new Conexion();
 	private JLabel fondo;
+	
+	/*
+	 * Constructor que define las medidas del panel
+	 */
     public Desplegable() throws SQLException {
     		busqueda = new JTextField();
     		
         this.setSize(250, 550);
         this.setVisible(true);
         this.setLayout(new BorderLayout());
+        //Se crean los componentes
         crearComponentes();
         
         
     }
    
-    
-    
-    
+    /**
+     * Método que detecta implementa un documentlistener para escuchar
+     * los cambios en el JTextField que se le envie
+     * @param txt = JTextField donde se va a escuchar cambios
+     */
     private void setJTexFieldChanged(JTextField txt)
     {
         DocumentListener documentListener = new DocumentListener() {
@@ -59,9 +64,13 @@ public class Desplegable extends JPanel {
 					e.printStackTrace();
 				}
         }
+        /**
+         * CUando se actualiza o borra algo del TextField
+         */
         @Override
         public void insertUpdate(DocumentEvent documentEvent) {
             try {
+            		//Se manda a imprimir la busqueda
 				printIt(documentEvent);
 			} catch (ParseException e) {
 				e.printStackTrace();
@@ -80,7 +89,11 @@ public class Desplegable extends JPanel {
         txt.getDocument().addDocumentListener(documentListener);
  
     }
- 
+    /**
+     * Método que recibe el evento del cambio del JTextField
+     * @param documentEvent = Evento de cambio
+     * @throws ParseException
+     */
     private void printIt(DocumentEvent documentEvent) throws ParseException {
         DocumentEvent.EventType type = documentEvent.getType();
  
@@ -90,19 +103,28 @@ public class Desplegable extends JPanel {
         }
         else if (type.equals(DocumentEvent.EventType.INSERT))
         {
+        		//Se intenta manddar a llamar al método consultar con el texto actual del JTextField
+        	
+        		/*
         		try {
 					consultar(this.busqueda.getText());
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
+			*/
+        	consultarDeServer(this.busqueda.getText());
+        		
         }
         else if (type.equals(DocumentEvent.EventType.REMOVE))
         {
         		refrescarResultados(0);
         }
     }
-    
-    
+    /**
+     * Método que comprueba si una cadena se puede convertir a un numero
+     * @param cadena = Cadena de String a evaluar
+     * @return
+     */
     private static boolean isNumeric(String cadena){
     	try {
     		Integer.parseInt(cadena);
@@ -111,19 +133,207 @@ public class Desplegable extends JPanel {
     		return false;
     	}
     }
+    public void consultarDeServer(String consulta){
+		//Se remueve todo del panel y se comprueba si la cadena es numérica
+		panel.removeAll();
+		if(isNumeric(consulta)) {
+			String[] cadena = new String[3];
+			ConexionServer con = new ConexionServer();
+			String bloque[]  = con.Select("SELECT * from taxi where id_taxi="+consulta+";", 30);
+			if(!bloque[0].equals("0 resultdcs ")) {
+				int cont=0;
+				if(bloque.length>1) {
+					cont = bloque.length-1;
+				}else {
+					cont = cont;
+				}
+				for(int a=0;a<cont;a++) {
+					cadena = bloque[a].split("<>");
+					String pase[] = new String[3];
+					pase[0] = "Id:"+cadena[0];
+					pase[1] = "Placas:"+cadena[1];
+					pase[2] = "Modelo:"+cadena[2];
+		            Busqueda_c p= new Busqueda_c("Taxi:",cadena[0],cadena[1],cadena[2]);
+		            p.addMouseListener(new Click());
+		 		   	panel.add(p);
+				}
+			}
+			
+			con = new ConexionServer();
+			bloque =null;
+			bloque = con.Select("SELECT * from taxista where id_taxista="+consulta+";", 40);
+			
+			if(!bloque[0].equals("0 resultdcs ")) {
+				int cont=0;
+				if(bloque.length>1) {
+					cont = bloque.length-1;
+				}else {
+					cont = cont;
+				}
+				for(int a=0;a<cont;a++) {
+					cadena = bloque[a].split("<>");
+					String pase[] = new String[3];
+					pase[0] = "Id:"+cadena[0];
+					pase[1] = "Nombre:"+cadena[1];
+					pase[2] = "Apellido:"+cadena[2];
+		            Busqueda_c p= new Busqueda_c("Taxista:",cadena[0],cadena[1],cadena[2]);
+		            p.addMouseListener(new Click());
+		 		   	panel.add(p);
+				}
+			}
+			con = new ConexionServer();
+			bloque =null;
+			bloque = con.Select("SELECT * from usuario where id_usuario="+consulta+";", 50);
+			if(!bloque[0].equals("0 resultdcs ")) {
+				int cont=0;
+				if(bloque.length>1) {
+					cont = bloque.length-1;
+				}else {
+					cont = cont;
+				}
+				for(int a=0;a<cont;a++) {
+					cadena = bloque[a].split("<>");
+					String pase[] = new String[3];
+					pase[0] = "Id:"+cadena[0];
+					pase[1] = "Nickname:"+cadena[1];
+					pase[2] = "Nombre:"+cadena[2];
+		            Busqueda_c p= new Busqueda_c("Usuario:",cadena[0],cadena[1],cadena[2]);
+		            p.addMouseListener(new Click());
+		 		   	panel.add(p);
+				}
+			}
+			con = new ConexionServer();
+			bloque =null;
+			bloque = con.Select("SELECT * from oaxataxi.viaje where id_viaje="+consulta+";", 60);
+			if(!bloque[0].equals("0 resultdcs ")) {
+				int cont=0;
+				if(bloque.length>1) {
+					cont = bloque.length-1;
+				}else {
+					cont = cont;
+				}
+				for(int a=0;a<cont;a++) {
+					cadena = bloque[a].split("<>");
+					String pase[] = new String[3];
+					pase[0] = "Id:"+cadena[0];
+					pase[1] = "Origen:"+cadena[1];
+					pase[2] = "Destino:"+cadena[2];
+		            Busqueda_c p= new Busqueda_c("Viaje:",cadena[0],cadena[1],cadena[2]);
+		            p.addMouseListener(new Click());
+		 		   	panel.add(p);
+				}
+			}
+			
+		}else {
+			
+			String[] cadena = new String[3];
+			ConexionServer con = new ConexionServer();
+			
+			String bloque[]  = con.Select("SELECT * from taxi where no_placas='"+consulta+"';", 30);
+			if(!bloque[0].equals("0 resultdcs ")) {
+				int cont=0;
+				if(bloque.length>1) {
+					cont = bloque.length-1;
+				}else {
+					cont = cont;
+				}
+				for(int a=0;a<cont;a++) {
+					cadena = bloque[a].split("<>");
+					String pase[] = new String[3];
+					pase[0] = "Id:"+cadena[0];
+					pase[1] = "Placas:"+cadena[1];
+					pase[2] = "Modelo:"+cadena[2];
+		            Busqueda_c p= new Busqueda_c("Taxi:",cadena[0],cadena[1],cadena[2]);
+		            p.addMouseListener(new Click());
+		 		   	panel.add(p);
+				}
+			}
+			
+			con = new ConexionServer();
+			bloque =null;
+			bloque = con.Select("SELECT * from taxista where nombre='"+consulta+"' OR apaterno ='"+consulta+"' OR amaterno='"+consulta+"';", 40);
+			if(!bloque[0].equals("0 resultdcs ")) {
+				int cont=0;
+				if(bloque.length>1) {
+					cont = bloque.length-1;
+				}else {
+					cont = cont;
+				}
+				for(int a=0;a<cont;a++) {
+					cadena = bloque[a].split("<>");
+					String pase[] = new String[3];
+					pase[0] = "Id:"+cadena[0];
+					pase[1] = "Nombre:"+cadena[1];
+					pase[2] = "Apellido:"+cadena[2];
+		            Busqueda_c p= new Busqueda_c("Taxista:",cadena[0],cadena[1],cadena[2]);
+		            p.addMouseListener(new Click());
+		 		   	panel.add(p);
+				}
+			}
+			
+			con = new ConexionServer();
+			bloque =null;
+			bloque = con.Select("SELECT * from usuario where nombre='"+consulta+"' OR apaterno ='"+consulta+"' OR amaterno='"+consulta+"' OR nickname='"+consulta+"';", 50);
+			if(!bloque[0].equals("0 resultdcs ")) {
+				int cont=0;
+				if(bloque.length>1) {
+					cont = bloque.length-1;
+				}else {
+					cont = cont;
+				}
+				for(int a=0;a<cont;a++) {
+					cadena = bloque[a].split("<>");
+					String pase[] = new String[3];
+					pase[0] = "Id:"+cadena[0];
+					pase[1] = "Nickname:"+cadena[1];
+					pase[2] = "Nombre:"+cadena[2];
+		            Busqueda_c p= new Busqueda_c("Usuario:",cadena[0],cadena[1],cadena[2]);
+		            p.addMouseListener(new Click());
+		 		   	panel.add(p);
+				}
+			}
+			
+			con = new ConexionServer();
+			bloque =null;
+			bloque = con.Select("SELECT * from oaxataxi.viaje where origen="+consulta+"' OR destino='"+consulta+"';", 60);
+			if(!bloque[0].equals("0 resultdcs ")) {
+				int cont=0;
+				if(bloque.length>1) {
+					cont = bloque.length-1;
+				}else {
+					cont = cont;
+				}
+				for(int a=0;a<cont;a++) {
+					cadena = bloque[a].split("<>");
+					String pase[] = new String[3];
+					pase[0] = "Id:"+cadena[0];
+					pase[1] = "Origen:"+cadena[1];
+					pase[2] = "Destino:"+cadena[2];
+		            Busqueda_c p= new Busqueda_c("Viaje:",cadena[0],cadena[1],cadena[2]);
+		            p.addMouseListener(new Click());
+		 		   	panel.add(p);
+				}
+			}
+			
+		}
+		refrescarResultados(panel.getComponents().length);
+}
+    
+    /**
+     * Metodo para consultar DE MANERA LOCAL elementos en la base de datos local
+     * @param consulta
+     * @throws SQLException 
+     * @throws ParseException
+     */
     public void consultar(String consulta) throws SQLException, ParseException {
+    		//Se remueve todo del panel y se comprueba si la cadena es numérica
     		panel.removeAll();
-    		
-    		
-    		
     		if(isNumeric(consulta)) {
     			String[] cadena = new String[3];
     			conexion = c.conexionDB();
         		sentencia = conexion.createStatement();
         		resultado = sentencia.executeQuery("SELECT * from oaxataxi.taxi where id_taxi="+consulta+";");
         		ResultSetMetaData rsmd = resultado.getMetaData();
-        		
-
     		   while (resultado.next()) {
     			   cadena[0] = "";cadena[1] = "";cadena[2] = "";
     		            for (int i = 1; i <= 3; i++) {
@@ -233,10 +443,8 @@ public class Desplegable extends JPanel {
     		   
     		}
     		refrescarResultados(panel.getComponents().length);
-		   
-		
-    		
     }
+    
     private class Click extends MouseAdapter{
     	public void mouseClicked(MouseEvent e) {
     		if (e.getSource() == ocultar) {

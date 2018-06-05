@@ -11,8 +11,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Daniel/Desktop/postgresql-42.2.2.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Daniel/Desktop/jdatechooser_bin_doc_1_1_1/lib/DateChooser.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Daniel/Desktop/jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="/Users/sheen/git/OAXATAXI-desktop-g/postgresql-42.2.2.jar"/>
+	<classpathentry kind="lib" path="/Users/sheen/git/OAXATAXI-desktop-g/jcalendar-1.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

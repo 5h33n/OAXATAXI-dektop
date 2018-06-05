@@ -1,7 +1,5 @@
 package ifg;
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -10,6 +8,7 @@ import javax.swing.table.DefaultTableModel;
 import com.toedter.calendar.JDateChooser;
 
 import recursos.Conexion;
+import recursos.ConexionServer;
 
 import java.util.*;
 import java.io.*;
@@ -19,38 +18,47 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-
+/**
+ * JFrame principal, en el se concentra la mayoría de los elementos visibles
+ * @author sheen
+ *
+ */
 public class Principal extends JFrame implements Runnable {
     
+	//COMPONENTES DE DISEÑO
     private JButton cerrar,notif, alerta,minimizar,cont;
     private JLabel titulo = new JLabel();
     private JButton admin = new JButton();
-    private JLabel viajes = new JLabel("Viajes del d�a");
+    private JLabel viajes = new JLabel("Viajes del día");
     private Button verMapa, notificar,options;
     private JButton ver,agregar;
     private DefaultTableModel dtm;
     private JTable table = new JTable(dtm);
     private String hora, minutos, segundos, ampm;
-    private Calendar calendario;
     private JDateChooser dateChooser;
+    
+    //HILO DEL RELOJ
     private Thread h1;
+    
+    //COMPONENTES DE OTRAS CLASES
     Desplegable des;
     AyudaAdmin ayuda;
     Principal p;
     JScrollPane scrollPane;
     JLabel lbHora = new JLabel();
     private JLabel fondo;
-    private String [][] ce = null;
-    private String[] d = null;
     
     //VARIABLES DE DB
     private Connection conexion=null;
     ResultSet resultado;
     Statement sentencia;
     
-    
+    /**
+     * Constructos principal, define las caracteristicas del JFrame
+     * @throws IOException
+     */
     public Principal() throws IOException{
-    	
+    		//Se llama a los componentes
     		crearComponentes();
         this.setUndecorated(true);
         this.setVisible(true);
@@ -58,15 +66,20 @@ public class Principal extends JFrame implements Runnable {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());        
         this.setLocationRelativeTo(null);
-        
+        //Se inicizaliza el reloj
         h1 = new Thread(this);
         h1.start();
     }
-    
+
+    /**
+     * Se crean los componentes con sus respectivas posiciones e instancias de MouseAdapter
+     */
     public void crearComponentes() {
         this.setSize(1200, 580);
         this.setLayout(null);  
         
+        
+        //Se agrega la ventana desplegable de busqueda
         try {
 			des = new Desplegable();
 		} catch (SQLException e1) {
@@ -75,6 +88,7 @@ public class Principal extends JFrame implements Runnable {
 		}
         des.setLocation(0, 30);
         des.setVisible(false);
+        //Focuslistener de la ventana desplegable para comprobar cuando desaparece
         des.addFocusListener(new FocusListener() {
         	   
         	   public void focusLost(FocusEvent e) {
@@ -88,7 +102,7 @@ public class Principal extends JFrame implements Runnable {
         des.addMouseListener(new Click());
         this.add(des);
         
-        
+      //Panel de ayuda
         ayuda = new AyudaAdmin(this);
         ayuda.setLocation(1000, 30);
         ayuda.setVisible(false);
@@ -105,11 +119,15 @@ public class Principal extends JFrame implements Runnable {
         ayuda.addMouseListener(new Click());
         this.add(ayuda);
         
+        
+        
+        //Reloj analógico
         ClockAnalogBuf reloj = new ClockAnalogBuf();
         reloj.setBackground(new Color(250, 244, 194));
         reloj.setBounds(890,50,150,150);
         //this.add(reloj);
         
+        //Botones
         alerta = new JButton();
         notif = new JButton();
         cerrar = new JButton();
@@ -127,38 +145,18 @@ public class Principal extends JFrame implements Runnable {
         barra.setBounds(0,0,911,30);
         this.add(barra);
         
-        ImageIcon al = new ImageIcon(getClass().getResource("/img/alerta1.png"));
+        ImageIcon al = new ImageIcon(getClass().getResource("/img/alerta.png"));
         alerta.setIcon(al);
         alerta.setBounds(911,0,43,30);
         this.add(alerta);
         
-        ImageIcon n = new ImageIcon(getClass().getResource("/img/notificacion2.png"));
+        ImageIcon n = new ImageIcon(getClass().getResource("/img/notificacion.png"));
         notif.setIcon(n);
         notif.setBounds(954,0,46,30);
         this.add(notif);
         
-       
         
-//        options = new ifg.Button(true);
-//        options.setForeground(Color.black);
-//        options.setColor1(new Color(255, 196, 0));
-//        options.setColor2(new Color(202, 147, 0));
-//        ImageIcon tie = new ImageIcon(getClass().getResource("/img/lupa.png"));
-//        options.setIcon(tie);
-//        options.setBounds(0,30,70,55);
-//        options.setBorder(null);
-//        
-//        options.addMouseListener(new Click());
-//        this.add(options);
-//        ver = new JButton();
-//        ver.setForeground(Color.black);
-//        //ver.setColor1(new Color(255, 196, 0));
-//        //ver.setColor2(new Color(202, 147, 0));
-//        ver.setBounds(500,450,150,35);
-//        ver.setText("Todos los registros");
-//        ver.addMouseListener(new Click());
-//        this.add(ver);
-        
+      //Se agregan elementos visuales, como imagenes y fields
         ImageIcon c= new ImageIcon(getClass().getResource("/img/minimizar.png"));
         minimizar.setIcon(c);
         minimizar.setBounds(1128,0,36,30);
@@ -170,7 +168,7 @@ public class Principal extends JFrame implements Runnable {
         this.add(cerrar); 
         
         //titulo.setFont(new Font("Arial", Font.BOLD, 40));
-        ImageIcon ti = new ImageIcon(getClass().getResource("/img/oaxa3.png"));
+        ImageIcon ti = new ImageIcon(getClass().getResource("/img/oaxa.png"));
         titulo.setIcon(ti);
         titulo.setBounds(250,60,500,150);
         titulo.setSize(600, 100);
@@ -208,6 +206,9 @@ public class Principal extends JFrame implements Runnable {
         notificar.addMouseListener(new Click());
         this.add(notificar);
         
+        
+        
+        //SE AGREGA LA TABLA PRINCIPAL QUE MUESTRA LOS VIAJES DEL DÍA
         String [] d = {"id_viaje","id_taxista","Conductor","Placas","Usuario","Estado","Hora inicio","Hora final","Origen","Destino","Monto"};
         JPanel t = new JPanel();
         t.setLayout(new BoxLayout(t,BoxLayout.Y_AXIS));
@@ -226,26 +227,28 @@ public class Principal extends JFrame implements Runnable {
         table.requestFocus();
         table.addMouseListener(new Click());
         this.add(t);
+        Calendar cal= Calendar.getInstance();
+        //MOSTRAR DE MANERA LOCAL VIAJES DEL DIA
+        /*
         try {
-        	Calendar cal= Calendar.getInstance();
+        	
         	
 			mostrar(cal.get(Calendar.DAY_OF_MONTH),cal.get(Calendar.MONTH),cal.get(Calendar.YEAR));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
+        
+        
+        
+        //MOSTRAR DESDE EL SERVIDOR LOS VIAJES DEL DIA
+        mostrarDeServidor(cal.get(Calendar.DAY_OF_MONTH),cal.get(Calendar.MONTH),cal.get(Calendar.YEAR));
         t.setBounds(95,220,700,200);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        
-        
-        
+
         lbHora.setFont(new Font("Arial", Font.BOLD, 25));
         lbHora.setBounds(900,100,200,250);
-        
-        
-        
-        
-        
         this.add(lbHora);
         
         ImageIcon l = new ImageIcon(getClass().getResource("/img/logo.png"));
@@ -301,10 +304,11 @@ public class Principal extends JFrame implements Runnable {
         agregar.addMouseListener(new Click());
         this.add(agregar);
     }
-    
+    /**
+     * Método que calcula la hora y le otorga un formato
+     */
     public void calcular(){
         Calendar calendario = new GregorianCalendar();
-        Date fechaHoraActual = new Date();
         ampm = calendario.get(Calendar.AM_PM)==Calendar.AM?"AM":"PM";
         if(ampm.equals("PM"))
         {
@@ -318,6 +322,11 @@ public class Principal extends JFrame implements Runnable {
         minutos = calendario.get(Calendar.MINUTE)>9?""+calendario.get(Calendar.MINUTE):"0"+calendario.get(Calendar.MINUTE);
         segundos = calendario.get(Calendar.SECOND)>9?""+calendario.get(Calendar.SECOND):"0"+calendario.get(Calendar.SECOND);
     }
+    /**
+     * Clase Click que hereda de MouseAdapter, controla todos los clicks del JFrame principal
+     * @author sheen
+     *
+     */
     private class Click extends MouseAdapter{
     	public void mouseClicked(MouseEvent e) {
     		if (e.getSource() == cerrar) {
@@ -327,7 +336,6 @@ public class Principal extends JFrame implements Runnable {
     			minimizar();
     			des.setVisible(false);
     			ayuda.setVisible(false);
-    			
     		}
     		else if(e.getSource() == admin) {
     			
@@ -373,7 +381,13 @@ public class Principal extends JFrame implements Runnable {
     		}else if(e.getSource() == cont) {
     			des.setVisible(false);
     			ayuda.setVisible(false);
-    			
+    			if(dateChooser.getDate()==null) {
+					JOptionPane.showMessageDialog(null, "La fecha seleccionada es incorrecta");
+					dateChooser.setDate(null);
+				}else {
+					mostrarDeServidor(dateChooser.getDate().getDate(),dateChooser.getDate().getMonth(),dateChooser.getDate().getYear());
+				}
+    			/*
     			try {
 						if(dateChooser.getDate()==null) {
 							JOptionPane.showMessageDialog(null, "La fecha seleccionada es incorrecta");
@@ -382,10 +396,9 @@ public class Principal extends JFrame implements Runnable {
 							mostrar(dateChooser.getDate().getDate(),dateChooser.getDate().getMonth(),dateChooser.getDate().getYear());
 						}	
 				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-    			//System.out.println(dateChooser.getDate().getDate()+"/"+dateChooser.getDate().getMonth()+"/"+dateChooser.getDate().getYear());
+				*/
     		}else {
     			des.setVisible(false);
     			ayuda.setVisible(false);
@@ -395,13 +408,21 @@ public class Principal extends JFrame implements Runnable {
     		
     	}
     }
+    /**
+     * Metodo para cerrar la aplicación
+     */
     public void cerrar() {
     		System.exit(0);
     }
-    
+    /**
+     * Método para minimizar la aplicación
+     */
     public void minimizar() {
 		this.setExtendedState(ICONIFIED);
     }
+    /**
+     * Método run del reloj
+     */
     public void run()
     {
         Thread ct = Thread.currentThread();
@@ -423,8 +444,35 @@ public class Principal extends JFrame implements Runnable {
         }
     }
     
-    
-    //conexion bd
+    public void mostrarDeServidor(int d, int m, int y) {
+    		dtm.setRowCount(0);
+    		if(y<2000) {
+				y=y-100;
+				y=y+2000;
+		}
+    		ConexionServer con = new ConexionServer();
+    		String consulta = "SELECT taxista_viaje_taxi.id_viaje,no_placas,nickname_u,hora_inicio,hora_final,origen,destino,viaje.estado,monto_pagado,taxista_viaje_taxi.id_taxista,nombre,apaterno FROM taxista_viaje_taxi INNER JOIN viaje ON taxista_viaje_taxi.id_viaje = viaje.id_viaje INNER JOIN taxista ON taxista_viaje_taxi.id_taxista = taxista.id_taxista where viaje.fecha ='"+y+"-"+(m+1)+"-"+d+"'";
+    		String resultado[] = con.Select(consulta, 20);
+    		System.out.println(resultado[0]);
+    		if(resultado[0].equals("0 resultdcs ")) {
+    			String modelo[] = {"Sin viajes","Sin viajes","Sin viajes","Sin viajes","Sin viajes","Sin viajes","Sin viajes","Sin viajes","Sin viajes","Sin viajes"};
+    			dtm.addRow(modelo);
+    		}else {
+    			for(int i = 0;i<resultado.length;i++) {
+        			String modelo[] = resultado[i].split("<>");
+        			dtm.addRow(modelo);
+            }
+    		}
+    		
+    }
+
+    /**
+     * Muestra los viajes del día indicado DE MANERA LOCAL
+     * @param d = día
+     * @param m = mes
+     * @param y = año
+     * @throws SQLException
+     */
     public void mostrar(int d, int m, int y) throws SQLException {
     	try {
     			
@@ -459,7 +507,6 @@ public class Principal extends JFrame implements Runnable {
 	         resultado.close();
 	         sentencia.close();
 	         conexion.close();
-			//table = new JTable(dtm);
 	    
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -467,7 +514,4 @@ public class Principal extends JFrame implements Runnable {
 	        if (sentencia != null) { sentencia.close(); }
 	    }
     }
-//    public static void main (String []args) throws IOException {
-//    	Principal p = new Principal();
-//    }
 }

@@ -20,8 +20,8 @@ import java.sql.Statement;
 /**
  * Esta es la clase donde se enuncian los terminos y las condiciones del uso del
  * sistema, asi como la creacion del usuario principal o Administrador
- * 
- * @author Davisito
+ * @implements ActionListener, ChangeListener
+ * @author David de JesÃºs RamÃ­rez Arellano
  *
  */
 public class Terminos extends JFrame implements ActionListener, ChangeListener {
@@ -36,6 +36,8 @@ public class Terminos extends JFrame implements ActionListener, ChangeListener {
 	String verifi = "";
 	String verific = "";
 	private Connection conexion = null;
+	
+	//Variables de consultas de datos
 	ResultSet resultado;
 	ResultSet resultado2;
 	Statement sentencia;
@@ -52,7 +54,7 @@ public class Terminos extends JFrame implements ActionListener, ChangeListener {
 		nombre = ventanaBienvenida.nom;
 		password = ventanaBienvenida.pass;
 
-		etiquetaTerminos = new JLabel("TÉRMINOS Y CONDICIONES");
+		etiquetaTerminos = new JLabel("Tï¿½RMINOS Y CONDICIONES");
 		etiquetaTerminos.setBounds(215, 5, 200, 30);
 		etiquetaTerminos.setFont(new Font("Andale Mono", 1, 14));
 		etiquetaTerminos.setForeground(new Color(0, 0, 0));
@@ -61,14 +63,14 @@ public class Terminos extends JFrame implements ActionListener, ChangeListener {
 		areaTerminos = new JTextArea();
 		areaTerminos.setEditable(false);
 		areaTerminos.setFont(new Font("Andale Mono", 0, 9));
-		areaTerminos.setText("\n\n          TÉRMINOS Y CONDICIONES"
+		areaTerminos.setText("\n\n          TÃ‰RMINOS Y CONDICIONES"
 				+ "\n\n            A.  La cuenta creada por el Usuario es personal e intransferible."
 				+ "\n            B. El Usuario se obliga a notificar inmediatamente cualquier uso indebido de su cuenta. \n"
-				+ "\n\n            Sólo recopilará información personal para procesamiento y uso en el sistema,"
-				+ "\n            solo si usted voluntariamente decide ingresar la información o da su consentimiento  "
-				+ "\n            expreso por medio del presente. Al hacerlo, usted acepta los siguientes términos de uso."
-				+ "\n\n           Nosotros almacenaremos su información de forma segura y, por lo tanto, tomaremos todas"
-				+ "\n           las medidas de precaución para proteger su información en contra de pérdida, abuso o cambios."
+				+ "\n\n            Solo recopilar informaciÃ³n personal para procesamiento y uso en el sistema,"
+				+ "\n            solo si usted voluntariamente decide ingresar la informaciÃ³n o da su consentimiento  "
+				+ "\n            expreso por medio del presente. Al hacerlo, usted acepta los siguientes tÃ©rminos de uso."
+				+ "\n\n           Nosotros almacenaremos su informaciÃ³n de forma segura y, por lo tanto, tomaremos todas"
+				+ "\n           las medidas de precauciÃ³n para proteger su informaciÃ³n en contra de pÃ³rdida, abuso o cambios."
 				+ "\n          ");
 		scrollpane1 = new JScrollPane(areaTerminos);
 		scrollpane1.setBounds(10, 40, 575, 200);
@@ -118,17 +120,17 @@ public class Terminos extends JFrame implements ActionListener, ChangeListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == botonContinuar) {
 			String value = "";
+			
 			Conexion c = new Conexion();
-
 			try {
 				conexion = c.conexionDB();
 				sentencia = conexion.createStatement();
 				sentencia2 = conexion.createStatement();
 				sentencia3 = conexion.createStatement();
-				resultado = sentencia3.executeQuery("select * from oaxataxi.Vefiricar_Existencia('" + nombre + "');");
+				resultado = sentencia3.executeQuery("select * from oaxataxi.\"Verificar_Existencia\"('" + nombre + "'::varchar);");
 
 				while (resultado.next()) {
-					verifi = resultado.getString("vefiricar_existencia");
+					verifi = resultado.getString("verificar_existencia");
 				}
 
 			} catch (SQLException e2) {
@@ -137,20 +139,20 @@ public class Terminos extends JFrame implements ActionListener, ChangeListener {
 			
 			 // sentencia para crear un nuevo usuario heredando del rol administrador
 			
-			value = "create user " + nombre + " login password " + "'" + password + "';" + "grant role_admin to "
+			value = "create user " + nombre + " login password " + "'" + password + "';" + "grant postgres to "
 					+ nombre + ";";
 			if (verifi.equals("f")) {
 				try {
 					sentencia.executeUpdate(value);
 					resultado2 = sentencia3.executeQuery(
-							"select * from oaxataxi.cambiar_contraseña('" + nombre + "','" + password + "');");
+							"select * from oaxataxi.cambiar_contrasena('" + nombre + "','" + password + "');");
 					while (resultado2.next()) {
-						verific = resultado2.getString("cambiar_contraseña");
+						verific = resultado2.getString("cambiar_contrasena");
 					}
 					
 					 //se sobreescribe lo que tiene el archivo comprobacion para que ya no se vuelva a ejecutar
 					 
-					String sFichero = "src\\comprobacion.txt";
+					String sFichero = "/Users/sheen/git/OAXATAXI-desktop-h/oAXATAXI/src/oaxataxiDesktop/comprobacion.txt";
 					BufferedWriter bw = new BufferedWriter(new FileWriter(sFichero));
 					bw.write("segundo");
 					bw.close();

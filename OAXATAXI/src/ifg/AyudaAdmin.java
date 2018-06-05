@@ -55,7 +55,6 @@ public class AyudaAdmin extends JPanel{
      
     cerrar.setIcon(a);
     cerrar.setSize(128, 30);
-    
     //cerrar.setBounds(500,0,128,30)ñ
     
     cerrar.addActionListener(
@@ -80,7 +79,6 @@ public class AyudaAdmin extends JPanel{
     ImageIcon b = new ImageIcon(getClass().getResource("/img/acerca.png"));
     acerca.setIcon(b);
     acerca.setBounds(new Rectangle(50,50,100,75));
-    
     
     acerca.addActionListener(
             new ActionListener() {
