@@ -1,5 +1,6 @@
 package ifg;
 
+import java.awt.Font;
 import java.awt.TextArea;
 import java.awt.TextField;
 import java.io.IOException;
@@ -18,6 +19,7 @@ public class JPanelAcerca extends JFrame {
     
     	  
     	   texto = new JTextArea();
+    	   texto.setFont(new Font("Andale Mono", 0, 9));
     	   texto.setText("\n\n                                                    Este Sistema fue creado por:\n\n"
     			   +"          Lopez Guzman Oscar Eduardo \n"
     			   +"          Garcia Labastida Daniel De Jesus \n"
