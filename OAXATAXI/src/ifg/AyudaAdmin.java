@@ -5,6 +5,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -12,8 +13,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-public class AyudaAdmin extends JPanel {
-	private JButton cerrar,acerca,ayuda;
+public class AyudaAdmin extends JPanel{
+	private JButton cerrar,acerca,ayuda,configuracion;
     private JPanel principal,botones;
     private JScrollPane scrollPane;
     Login l;
@@ -31,14 +32,13 @@ public class AyudaAdmin extends JPanel {
     
     
     
-    @SuppressWarnings("deprecation")
-	public void crearComponente() {
+    public void crearComponente() {
     	
 //    principal = new JPanel();
     
     botones = new JPanel();
     botones.setLayout(new BoxLayout(botones, BoxLayout.PAGE_AXIS));
-    botones.add(Box.createRigidArea(new Dimension(0,2)));
+    botones.add(Box.createRigidArea(new Dimension(0,3)));
     
     scrollPane = new JScrollPane(botones);
     scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -81,7 +81,8 @@ public class AyudaAdmin extends JPanel {
             new ActionListener() {
         public void actionPerformed(ActionEvent evento) {
 
-        	 System.out.println("acerca");
+        	 JPanelAcerca a = new JPanelAcerca();
+        	 a.crearPanel();
             
         }
     }
@@ -107,13 +108,35 @@ public class AyudaAdmin extends JPanel {
     );
     this.add(ayuda);
     
+    JButton configuracion = new JButton();
+    configuracion= new ifg.Button(true);
+    configuracion.setForeground(Color.black);
+    ImageIcon d = new ImageIcon(getClass().getResource("/img/acerca.png"));
+    configuracion.setIcon(d);
+    //ayuda.setBounds(500,0,128,30);
+    this.add(configuracion);
+    configuracion.addActionListener(
+            new ActionListener() {
+        public void actionPerformed(ActionEvent evento) {
+
+        	 System.out.println("configuracion");
+            
+            
+        }
+    }
+    );
+    this.add(configuracion);
+    
     
     
     botones.add(cerrar);
     botones.add(acerca);
     botones.add(ayuda);
+    botones.add(configuracion);
     
-    //principal.add(botones, BorderLayout.CENTER);
+    scrollPane.add(botones);
+    
+   
     
     this.add(scrollPane);
 }
@@ -125,38 +148,7 @@ public class AyudaAdmin extends JPanel {
 }
     
     
-//    private class Click extends MouseAdapter{
-//    	public void mouseClicked(MouseEvent e) {
-//    		if (e.getSource() == cerrar) {
-//    			l.setVisible(true);
-//    			p.dispose();
-//    			System.out.println("cerrar");
-//    		}
-//    		else if (e.getSource() == acerca) {
-//    			
-//    			
-//    			
-//    		}
-//            else if (e.getSource() == ayuda) {
-//    			
-//    			
-//    			
-//    		}
-//	
-//		}
-//    }
-    
-  
-//    
-//    public static void main(String s[]) {
-//
-//       AyudaAdmin listanum = new AyudaAdmin();
-//        listanum.setVisible(true);
-//        listanum.setSize(120, 160);
-//        listanum.setBounds(1000,0,128,30);
-//        
-//
-//    }
+
 }
     
 
