@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="OAXATAXI/src"/>
+	<classpathentry kind="lib" path="C:/Users/Daniel/Desktop/jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Daniel/Desktop/postgresql-42.2.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Daniel/Desktop/jdatechooser_bin_doc_1_1_1/lib/DateChooser.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

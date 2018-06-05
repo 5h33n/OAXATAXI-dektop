@@ -145,12 +145,12 @@ public class Principal extends JFrame implements Runnable {
         barra.setBounds(0,0,911,30);
         this.add(barra);
         
-        ImageIcon al = new ImageIcon(getClass().getResource("/img/alerta.png"));
+        ImageIcon al = new ImageIcon(getClass().getResource("/img/alerta1.png"));
         alerta.setIcon(al);
         alerta.setBounds(911,0,43,30);
         this.add(alerta);
         
-        ImageIcon n = new ImageIcon(getClass().getResource("/img/notificacion.png"));
+        ImageIcon n = new ImageIcon(getClass().getResource("/img/notificacion2.png"));
         notif.setIcon(n);
         notif.setBounds(954,0,46,30);
         this.add(notif);
@@ -168,7 +168,7 @@ public class Principal extends JFrame implements Runnable {
         this.add(cerrar); 
         
         //titulo.setFont(new Font("Arial", Font.BOLD, 40));
-        ImageIcon ti = new ImageIcon(getClass().getResource("/img/oaxa.png"));
+        ImageIcon ti = new ImageIcon(getClass().getResource("/img/oaxa3.png"));
         titulo.setIcon(ti);
         titulo.setBounds(250,60,500,150);
         titulo.setSize(600, 100);
@@ -208,7 +208,7 @@ public class Principal extends JFrame implements Runnable {
         
         
         
-        //SE AGREGA LA TABLA PRINCIPAL QUE MUESTRA LOS VIAJES DEL DÍA
+        //SE AGREGA LA TABLA PRINCIPAL QUE MUESTRA LOS VIAJES DEL DiA
         String [] d = {"id_viaje","id_taxista","Conductor","Placas","Usuario","Estado","Hora inicio","Hora final","Origen","Destino","Monto"};
         JPanel t = new JPanel();
         t.setLayout(new BoxLayout(t,BoxLayout.Y_AXIS));
@@ -513,5 +513,10 @@ public class Principal extends JFrame implements Runnable {
 	    } finally {
 	        if (sentencia != null) { sentencia.close(); }
 	    }
+    	
     }
+    
+    public static void main (String []args) throws IOException {
+		Principal h = new Principal();
+	}
 }

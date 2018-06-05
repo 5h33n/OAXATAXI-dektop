@@ -63,10 +63,7 @@ public class AyudaAdmin extends JPanel{
 
             
             new Login().setVisible(true);
-            p.setVisible(false);
-           
-     		
-            
+            p.setVisible(false); 
         }
     }
     );
@@ -78,7 +75,7 @@ public class AyudaAdmin extends JPanel{
     acerca.setForeground(Color.black);
     ImageIcon b = new ImageIcon(getClass().getResource("/img/acerca.png"));
     acerca.setIcon(b);
-    acerca.setBounds(new Rectangle(50,50,100,75));
+    //acerca.setBounds(new Rectangle(50,50,100,75));
     
     acerca.addActionListener(
             new ActionListener() {
@@ -104,13 +101,13 @@ public class AyudaAdmin extends JPanel{
             new ActionListener() {
         public void actionPerformed(ActionEvent evento) {
 
-        	 System.out.println("ayuda");
-            
+        	 JPanelConfi b = new JPanelConfi();
+        	 b.crearPanelC();
             
         }
     }
     );
-    this.add(ayuda);
+    
     
     
     
