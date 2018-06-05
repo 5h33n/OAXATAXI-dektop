@@ -60,9 +60,7 @@ public class AyudaAdmin extends JPanel{
         public void actionPerformed(ActionEvent evento) {
 
             
-            //new Bienvenida().setVisible(true);
-        	Bienvenida b = new Bienvenida();
-        	b.main(null);
+            new Login().setVisible(true);
             p.setVisible(false);
            
      		
